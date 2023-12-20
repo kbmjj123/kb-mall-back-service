@@ -1,0 +1,24 @@
+{
+  "name": "mongodb-backend-nodejs",
+  "version": "1.0.0",
+  "description": "the project for studying mongodb and backend coding~",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kbmjj123/mongodb-backend-nodejs.git"
+  },
+  "keywords": [
+    "mongodb",
+    "backend",
+    "express"
+  ],
+  "author": "kbmjj123",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kbmjj123/mongodb-backend-nodejs/issues"
+  },
+  "homepage": "https://github.com/kbmjj123/mongodb-backend-nodejs#readme"
+}
