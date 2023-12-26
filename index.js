@@ -1,16 +1,14 @@
 const express = require("express");
 const notFoundMw = require('./middleware/not-found-middleware');
 const serviceErrorMw = require('./middleware/service-error-middleware');
-
+const routes = require('./router');
 const app = express();
+
 
 app.get('/', (req, res) => {
   res.json('服务成功访问了～～');
 })
-app.get('/login', (req, res, next) => {
-  const error = new Error('自定义异常信息')
-  throw error;
-})
+routes(app);  // 借鉴于模块化管理，将路由对外暴露统一的一个接口
 
 // 处理请求404
 app.use(notFoundMw);
