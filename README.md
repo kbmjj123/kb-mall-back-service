@@ -64,4 +64,11 @@ app.get('/login', (req, res, next) => {
 ```
 ![404异常](./assets/访问不存在的链接异常结果.png)
 
-### 
+### 根据业务实际场景，将项目拆分为不同的模块，同时对应于不同的路由模块，同时借鉴于前端模块化开发的方式，将所有的路由模块采用对外仅暴露一个入口的方式 
+```javascript
+  const userRouter = require('./userRouter')
+  // 这里采用对外暴露一个接收app应用程序入口的方式，来对外隐藏注册的方式
+  module.exports = app => {
+    app.use('/user', userRouter);
+  }
+```
