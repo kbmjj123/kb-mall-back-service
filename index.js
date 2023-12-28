@@ -7,8 +7,13 @@ const app = express();
 const dbConnection = require('./config/db-connection.js');// 引入数据库连接器
 require('dotenv').config(); // 加载.env环境变量，使得整个程序可以通过process.env访问到.env文件中定义的变量
 
+const bodyParser = require('body-parser');
+
 //! 追加响应体的中间件，统一格式化响应结果
 app.use(responseWrapperMw);
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.success('服务成功访问了～～');

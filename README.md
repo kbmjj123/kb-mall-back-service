@@ -43,7 +43,7 @@ mongodb-backend-nodejs
 | bcrypt | 加密库，用于加密以及密码校验用途 | [库地址](https://www.npmjs.com/package/bcrypt) |
 | jsonwebtoken | 用于token的校验和处理工作 | [库地址](https://www.npmjs.com/package/jsonwebtoken) |
 | dotenv | 用于加载环境变量的三方库，便于将相关的配置信息通过文件配置化的方式来维护，且在项目中可通过`process.env.*`的方式来访问到 | [库地址](https://www.dotenv.org/) |
-|  |  |  |
+| body-parser | 用于对请求体的解析，使得后续的中间件可以从`res.body`中获取请求参数信息 | [库地址](https://www.npmjs.com/package/body-parser) |
 |  |  |  |
 
 ## express官方的中间件以及自定义中间件
@@ -117,6 +117,23 @@ app.get('/login', (req, res, next) => {
 > 借助于`mongoose`三方库，通过MONGODB_URL来连接到远程数据库中！
 > 将db连接相关的统一到一外部方法`db-connection`中！
 > ✨ 同时在连接成功后，打印相关的日志信息，在`mongoose.connection.on()`相关的回调方法中添加对应的日志代码！
+
+### 开始编写业务处理中间件
+> 在开始编写具体的中间件时，先引入一个请求解析中间件，否则就会出现 👇 这样子的一个结果：
+![未使用body-parser的结果](未使用body-parser的结果.png)
+
+✨ 执行 👇 的命令安装对应的依赖
+```shell
+  npm install --save body-parser
+```
+✨ 将中间件集成到项目代码中
+```javascript
+  
+```
+
+#### 用户模块中间件
+> 根据之前的设置，根据业务场景，拆分为一个个的业务中间件模块，由各自的入口文件进行一个统一的维护
+
 
 
 ## 项目过程中的坑
