@@ -18,6 +18,7 @@ mongodb-backend-nodejs
 ├─ index.js
 ├─ middleware
 │  ├─ not-found-middleware.js
+│  ├─ response-wrapper-middleware.js
 │  └─ service-error-middleware.js
 ├─ model
 │  └─ userModel.js
@@ -41,6 +42,7 @@ mongodb-backend-nodejs
 | mongoose | mongodb的ogm | ![官方地址](https://mongoosejs.com/) |
 | bcrypt | 加密库，用于加密以及密码校验用途 | ![库地址](https://www.npmjs.com/package/bcrypt) |
 | jsonwebtoken | 用于token的校验和处理工作 | ![库地址](https://www.npmjs.com/package/jsonwebtoken) |
+| dotenv | 用于加载环境变量的三方库，便于将相关的配置信息通过文件配置化的方式来维护，且在项目中可通过`process.env.*`的方式来访问到 | ![库地址](https://www.dotenv.org/) |
 |  |  |  |
 |  |  |  |
 
@@ -62,10 +64,13 @@ mongodb-backend-nodejs
 |---|:---|
 | not-found-middleware | 找不到服务，也就是404 |
 | service-error-middleware | 统一的异常处理中间件 |
-|  |  |
+| response-wrapper-middleware | 统一的网络响应自定义格式化中间件，提供自定义的`success`以及`failed`方法来向业务提供一键调用的方法 |
 |  |  |
 |  |  |
 
+### .env配置文件变量声明
+1. MONGODB_URL: mongodb数据库连接地址，这里使用的是官方所提供的免费共享的数据库；
+2. SERVICE_PORT: 后台服务启动绑定的端口号；
 
 ## 项目过程记录
 > 此目录以及后续的内容，将记录整个项目过程中的笔记，便于后续跟踪与反查问题！！
@@ -109,3 +114,8 @@ app.get('/login', (req, res, next) => {
    - object(list+page+total)类型，列表查询类，一般查询列表项目，list存储列表数据，page代表当前页码，total代表当下查询筛选条件的总数;
 
 🤔而这个`express`框架中，则是通过对`res.json()`的方式，将结果返回给客户端的，假如直接针对这个方法进行重写的话，**将有可能因为重写了该方法而导致的其他社区/官方的中间件无法正常使用了！！**因此，可以考虑自定义响应方法，从而在业务场景中根据结果情况直接调用对应的方法～
+
+### 创建数据库连接
+> 借助于`mongoose`三方库，通过MONGODB_URL来连接到远程数据库中！
+> 将db连接相关的统一到一外部方法`db-connection`中！
+> ✨ 同时在连接成功后，打印相关的日志信息，在`mongoose.connection.on()`相关的回调方法中添加对应的日志代码！
