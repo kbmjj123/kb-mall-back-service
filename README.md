@@ -5,6 +5,24 @@
 > 并以此来提升关于`nodejs`学习的熟悉程度
 
 ## 目录结构说明
+```
+mongodb-backend-nodejs
+├─ LICENSE
+├─ README.md
+├─ assets
+│  ├─ watch模式启动服务.png
+│  ├─ 目录结构.png
+│  └─ 访问不存在的链接异常结果.png
+├─ config
+├─ control
+├─ index.js
+├─ middleware
+│  ├─ not-found-middleware.js
+│  └─ service-error-middleware.js
+├─ model
+│  └─ userModel.js
+└─ package.json
+```
 
 ## 启动命令
 > 一般地，我们采用`node index.js`的方式来启动一个程序，😣 但是，在实际的编码过程中，我们会经常更改相关的程序文件，每次都需要关掉旧服务，并重新开启新的服务，因此，可以借助于新的一个库：`nodemon`，关于这个库的说明，详情见 [官网](https://www.npmjs.com/package/nodemon)，通过使用这个`nodeman`命令，可以实现免重启服务实现代码的更新！
