@@ -126,5 +126,5 @@ app.get('/login', (req, res, next) => {
 
 ### 连接mongodb官网提供的免费数据库，一直连接不上，开了代理也是如此
 > 可通过阅读官方的[网络连接](https://www.mongodb.com/docs/atlas/troubleshoot-connection/)，通过设置google的公共DNS，实现远程正常访问数据库的目的！
-![配置允许相关的ip地址访问](配置允许相关的ip地址访问.png)
-![配置DNS](配置DNS.png)
+![配置允许相关的ip地址访问](./assets/配置允许相关的ip地址访问.png)
+![配置DNS](./assets/配置DNS.png)
