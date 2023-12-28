@@ -38,24 +38,22 @@ mongodb-backend-nodejs
 
 | 依赖名称 | 描述 | 相关地址 |
 |---|---|---|
-| express | nodesj轻量级服务库 | ![官方地址](https://expressjs.com/) |
-| mongoose | mongodb的ogm | ![官方地址](https://mongoosejs.com/) |
-| bcrypt | 加密库，用于加密以及密码校验用途 | ![库地址](https://www.npmjs.com/package/bcrypt) |
-| jsonwebtoken | 用于token的校验和处理工作 | ![库地址](https://www.npmjs.com/package/jsonwebtoken) |
-| dotenv | 用于加载环境变量的三方库，便于将相关的配置信息通过文件配置化的方式来维护，且在项目中可通过`process.env.*`的方式来访问到 | ![库地址](https://www.dotenv.org/) |
+| express | nodesj轻量级服务库 | [官方地址](https://expressjs.com/) |
+| mongoose | mongodb的ogm | [官方地址](https://mongoosejs.com/) |
+| bcrypt | 加密库，用于加密以及密码校验用途 | [库地址](https://www.npmjs.com/package/bcrypt) |
+| jsonwebtoken | 用于token的校验和处理工作 | [库地址](https://www.npmjs.com/package/jsonwebtoken) |
+| dotenv | 用于加载环境变量的三方库，便于将相关的配置信息通过文件配置化的方式来维护，且在项目中可通过`process.env.*`的方式来访问到 | [库地址](https://www.dotenv.org/) |
 |  |  |  |
 |  |  |  |
 
 ## express官方的中间件以及自定义中间件
 > 使用`express`来开发的话，一般会配套使用官方所提供的中间件， 👇 是对应的官方中间件说明清单：
 
-| 中间件名称 | 描述 |
-|---|:---|
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+1. `express-async-handler`: 简单的中间件，用于处理`express`路由内的异常，并将它们传递给EXPRESS错误处理程序
+   🤔 用于自动将中间中产生的异常，自动`next`到下一个中间件，省去了在每一个中间件中显示地调用`next()`方法来将任务转移到下一个中间件，详见[官网对比描述](https://www.npmjs.com/package/express-async-handler#usage)
+
+
+
 
 ### 本地自定义中间件
 > 因实际业务开发需要，针对业务进行相应的本地化中间件开发，以便于满足项目的变动发展诉求， 👇 是对应的自定义本地中间件说明清单：
