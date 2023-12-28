@@ -5,6 +5,24 @@
 > 并以此来提升关于`nodejs`学习的熟悉程度
 
 ## 目录结构说明
+```
+mongodb-backend-nodejs
+├─ LICENSE
+├─ README.md
+├─ assets
+│  ├─ watch模式启动服务.png
+│  ├─ 目录结构.png
+│  └─ 访问不存在的链接异常结果.png
+├─ config
+├─ control
+├─ index.js
+├─ middleware
+│  ├─ not-found-middleware.js
+│  └─ service-error-middleware.js
+├─ model
+│  └─ userModel.js
+└─ package.json
+```
 
 ## 启动命令
 > 一般地，我们采用`node index.js`的方式来启动一个程序，😣 但是，在实际的编码过程中，我们会经常更改相关的程序文件，每次都需要关掉旧服务，并重新开启新的服务，因此，可以借助于新的一个库：`nodemon`，关于这个库的说明，详情见 [官网](https://www.npmjs.com/package/nodemon)，通过使用这个`nodeman`命令，可以实现免重启服务实现代码的更新！
@@ -72,3 +90,22 @@ app.get('/login', (req, res, next) => {
     app.use('/user', userRouter);
   }
 ```
+
+### 在以往的项目前后端接口对接中，一般需要严格规定采用商定好的固定数据结构来交互，以免因为后续业务逻辑的迭代导致项目难以维护，因此这里采用 👇 以下这种数据结构
+```json
+  {
+    "status": 0,
+    "message": "business logic operate result",
+    "data": {}
+  }
+```
+🤔️ 关于👆几个字段的描述如下：
+1. status: 代表接口处理结果，一般0代表处理正常，即将返回正常对应的结果目标数据，非0则根据实际业务场景进行枚举清单的罗列，最好是将这个枚举值清单🧾整理到项目中，以便于项目团队同事协同工作；
+2. message: 代表接口处理结果说明，有时可作为接口结果说明提示信息来展示到前端界面上；
+3. data: 这里是统一的结果数据，根据实际业务场景需要，不同的接口逻辑对应不同的data实体对象，这里关于data主要有 👇 4种数据类型：
+   - boolean类型，代表动词类接口，一般true代表执行成功，false代表执行失败；
+   - string/number类型，同boolean类似，结果是对应的string/number;
+   - object类型，一般表示查询结果，比如查询返回某一用户信息对象;
+   - object(list+page+total)类型，列表查询类，一般查询列表项目，list存储列表数据，page代表当前页码，total代表当下查询筛选条件的总数;
+
+🤔而这个`express`框架中，则是通过对`res.json()`的方式，将结果返回给客户端的，假如直接针对这个方法进行重写的话，**将有可能因为重写了该方法而导致的其他社区/官方的中间件无法正常使用了！！**因此，可以考虑自定义响应方法，从而在业务场景中根据结果情况直接调用对应的方法～
