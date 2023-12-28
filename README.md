@@ -119,3 +119,12 @@ app.get('/login', (req, res, next) => {
 > 借助于`mongoose`三方库，通过MONGODB_URL来连接到远程数据库中！
 > 将db连接相关的统一到一外部方法`db-connection`中！
 > ✨ 同时在连接成功后，打印相关的日志信息，在`mongoose.connection.on()`相关的回调方法中添加对应的日志代码！
+
+
+## 项目过程中的坑
+> 本章节主要在实际的项目编码过程中，所遇到的坑，以免后续再踩！！！
+
+### 连接mongodb官网提供的免费数据库，一直连接不上，开了代理也是如此
+> 可通过阅读官方的[网络连接](https://www.mongodb.com/docs/atlas/troubleshoot-connection/)，通过设置google的公共DNS，实现远程正常访问数据库的目的！
+![配置允许相关的ip地址访问](配置允许相关的ip地址访问.png)
+![配置DNS](配置DNS.png)
