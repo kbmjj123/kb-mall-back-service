@@ -17,7 +17,7 @@ module.exports = function(req, res, next) {
     return res.json({
       status: status || FAILED_FLAG,
       data: payload,
-      message: FAILED_MSG || msg
+      message: msg || FAILED_MSG
     })
   }
   next()
