@@ -16,5 +16,6 @@ userRouter.get('/', (req, res, next) => {
 
 // 处理用户注册的中间件
 userRouter.post('/register', userController.createUser);
+userRouter.post('/login', userController.checkUser);
 
 module.exports = userRouter
