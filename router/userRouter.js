@@ -16,10 +16,7 @@ userRouter.get('/', (req, res, next) => {
 
 // 处理用户注册的中间件
 userRouter.post('/register', asyncHandler(async (req, res) => {
-    console.info(req.body)
     const newUser = await userModel.create(req.body);
-    await new userModel(req.body).save();
-    console.info(newUser);
     res.success(newUser);
 }));
 
