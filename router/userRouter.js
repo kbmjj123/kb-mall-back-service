@@ -1,7 +1,7 @@
 const express = require('express')
 const userRouter = express.Router();
 const asyncHandler = require('express-async-handler');
-const userModel = require('../model/userModel');
+const userController = require('../control/userController');
 
 // 定义一"用户模块"路由拦截器中间件
 userRouter.use((req, res, next) => {
@@ -15,9 +15,6 @@ userRouter.get('/', (req, res, next) => {
 })
 
 // 处理用户注册的中间件
-userRouter.post('/register', asyncHandler(async (req, res) => {
-    const newUser = await userModel.create(req.body);
-    res.success(newUser);
-}));
+userRouter.post('/register', userController.createUser);
 
 module.exports = userRouter

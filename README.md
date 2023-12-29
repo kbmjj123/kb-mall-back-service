@@ -51,7 +51,7 @@ mongodb-backend-nodejs
 
 1. `express-async-handler`: 简单的中间件，用于处理`express`路由内的异常，并将它们传递给EXPRESS错误处理程序
    🤔 用于自动将中间中产生的异常，自动`next`到下一个中间件，省去了在每一个中间件中显示地调用`next()`方法来将任务转移到下一个中间件，详见[官网对比描述](https://www.npmjs.com/package/express-async-handler#usage)
-
+2. `morgan`: 请求日志输出中间件，用于将客户端请求的路径、方式、响应时长等信息给输出来，便于调试；
 
 
 
@@ -120,7 +120,7 @@ app.get('/login', (req, res, next) => {
 
 ### 开始编写业务处理中间件
 > 在开始编写具体的中间件时，先引入一个请求解析中间件，否则就会出现 👇 这样子的一个结果：
-![未使用body-parser的结果](未使用body-parser的结果.png)
+![未使用body-parser的结果](./assets/未使用body-parser的结果.png)
 
 ✨ 执行 👇 的命令安装对应的依赖
 ```shell
@@ -128,13 +128,28 @@ app.get('/login', (req, res, next) => {
 ```
 ✨ 将中间件集成到项目代码中
 ```javascript
-  
+  //? 配置解析请求体的中间件
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
+  // ....这里省略一系列代码，然后在响应处理中间件中可访问到req.body
+  const newUser = await userModel.create(req.body);
 ```
+
+### unique属性能否用来做校验？
+![没有任何限制的数据](./assets/没有任何限制的数据.png)
+> 在定义userSchema的时候，发现属性可以配置`unique=true`，那么这种方式是否可以用来配置不能往db中插入同样value的记录？
+> ![unique的真正用途](./assets/unique的真正用途.png)
+> 答案是否定的，因此这个`unique`只是用来告知创建的索引值是否要唯一，仅此而已，详见[官网描述](https://mongoosejs.com/docs/validation.html#the-unique-option-is-not-a-validator)
+
+### 集成请求日志输出中间件
+![请求日志输出中间件](./assets/请求日志输出中间件.png)
+✨ 在调试的时候，我们可以通过`morgan`中间件，来查看当前请求的接口都有哪些，以及请求这些接口的基本信息。
 
 #### 用户模块中间件
 > 根据之前的设置，根据业务场景，拆分为一个个的业务中间件模块，由各自的入口文件进行一个统一的维护
 
-
+##### 新增userController作为用户逻辑控制器
+> 在control目录中新增`userController.js`作为业务逻辑控制器，主要引入相关的model进行db的增删查改等操作！！
 
 ## 项目过程中的坑
 > 本章节主要在实际的项目编码过程中，所遇到的坑，以免后续再踩！！！
@@ -143,3 +158,7 @@ app.get('/login', (req, res, next) => {
 > 可通过阅读官方的[网络连接](https://www.mongodb.com/docs/atlas/troubleshoot-connection/)，通过设置google的公共DNS，实现远程正常访问数据库的目的！
 ![配置允许相关的ip地址访问](./assets/配置允许相关的ip地址访问.png)
 ![配置DNS](./assets/配置DNS.png)
+
+### 关于使用mongodb与mongoose，需要将要连接的数据库也维护到url中
+> 😡 在拿`mongodb`以及`mongoose`两个官方文档对比编码的时候，忘记将数据库也维护到`driver`的链接中，导致数据成功插入了，但是数据在数据库中却没有查询到！！！
+![mongoose连接需要声明要连接的数据库](./assets/mongoose连接需要声明要连接的数据库.png)
