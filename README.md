@@ -135,6 +135,37 @@ app.get('/login', (req, res, next) => {
   const newUser = await userModel.create(req.body);
 ```
 
+#### 用户模块中间件
+> 根据之前的设置，根据业务场景，拆分为一个个的业务中间件模块，由各自的入口文件进行一个统一的维护
+
+##### 新增userController作为用户逻辑控制器
+> 在control目录中新增`userController.js`作为业务逻辑控制器，主要引入相关的model进行db的增删查改等操作！！
+> 一般情况下，我们所使用的密码都是需要密文方式来存储的，这意味着客户端必须按照同一个加密规则，来将密码传递给到后台服务，而且
+> 后台服务需要针对这个密码再次进行一次加密，而且还应该提供一种方式用于对密码正确性的校验服务！
+> 👉 这里，我们通过借助于`bcrypt`库，来 🈵️ 足刚刚提及到的相关目的：
+```javascript
+  userSchema.pre('save', async function(next){
+  //? 在密码存储之前，对密码进行加盐加密
+  this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT));
+  next()
+})
+```
+✨这里我们通过对`save`中间件方法进行拦截，当要保存用户信息时，自动对客户端传递的密码进行加密存储！！
+
+🤔 既然存储成功了，那么当我们使用对应的账号与密码登录的时候，就可以通过判断账号与密码是否分别相等即可判断是否登录成功了，这里借助于`bcrypt.compare()`方法来实现对比校验的目的：
+```javascript
+  userSchema.methods.isPasswordMatched = async function(newPwd){
+    return await bcrypt.compare(newPwd, this.password)
+  }
+```
+✨ 这里在使用对比的同时，将这个对比方法添加在`userSchema.methods`对象上，使得所有的`model`实例拥有`isPasswordMatched`方法，用于`userModel`的密码匹配对比操作！
+
+👉 这里我们当我们需要做一些从数据库中查出来的文档对象要进行相关的操作的时候，可以采用往`schema.methods`中添加实例方法的方式，这样子所有的实例则拥有公共的api方法，但是，这里的方法应该是与db查询无关的！！！
+
+#### 产品模块中间件
+
+#### 订单模块中间件
+
 ### unique属性能否用来做校验？
 ![没有任何限制的数据](./assets/没有任何限制的数据.png)
 > 在定义userSchema的时候，发现属性可以配置`unique=true`，那么这种方式是否可以用来配置不能往db中插入同样value的记录？
@@ -144,12 +175,6 @@ app.get('/login', (req, res, next) => {
 ### 集成请求日志输出中间件
 ![请求日志输出中间件](./assets/请求日志输出中间件.png)
 ✨ 在调试的时候，我们可以通过`morgan`中间件，来查看当前请求的接口都有哪些，以及请求这些接口的基本信息。
-
-#### 用户模块中间件
-> 根据之前的设置，根据业务场景，拆分为一个个的业务中间件模块，由各自的入口文件进行一个统一的维护
-
-##### 新增userController作为用户逻辑控制器
-> 在control目录中新增`userController.js`作为业务逻辑控制器，主要引入相关的model进行db的增删查改等操作！！
 
 ## 项目过程中的坑
 > 本章节主要在实际的项目编码过程中，所遇到的坑，以免后续再踩！！！
