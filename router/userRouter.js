@@ -1,7 +1,7 @@
 const express = require('express')
 const userRouter = express.Router();
-const asyncHandler = require('express-async-handler');
 const userController = require('../control/userController');
+const authWM = require('../middleware/auth-middleware');
 
 // 定义一"用户模块"路由拦截器中间件
 userRouter.use((req, res, next) => {
@@ -17,5 +17,6 @@ userRouter.get('/', (req, res, next) => {
 // 处理用户注册的中间件
 userRouter.post('/register', userController.createUser);
 userRouter.post('/login', userController.checkUser);
+userRouter.get('/:id', authWM, userController.getAUser);
 
 module.exports = userRouter
