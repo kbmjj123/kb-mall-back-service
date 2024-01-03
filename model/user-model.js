@@ -8,7 +8,13 @@ const userSchema = new mogoose.Schema({
       unique: true
     },
     password: String,
-    email: String
+    email: String,
+    refreshToken: String,
+    role: {
+      type: String,
+      enum: ['admin', 'user'],
+      require: true
+    }
 })
 userSchema.pre('save', async function(next){
   //? 在密码存储之前，对密码进行加盐加密
