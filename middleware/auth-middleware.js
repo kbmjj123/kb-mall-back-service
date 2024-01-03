@@ -12,6 +12,8 @@ module.exports = async (req, res, next) => {
     const findUser = await userModel.findById(decode.id);
     console.info(findUser?.account)
     if(findUser.account){
+      // 将已经验证通过的账号信息追加到req.user中，并传递给下一个中间件
+        req.user = findUser
         next();
     }else{
         res.failed(-1, null, '登录超时！')

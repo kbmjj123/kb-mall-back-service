@@ -26,17 +26,23 @@ module.exports = {
         //匹配上了，则追加登录成功的token以及token的有效时间点，返回当前用户节点信息
         const refreshToken = generateToken(findUser._id);
         // 针对找到的用户信息追加token
-        const updateUser = userModel.updateOne({ _id: findUser._id }, { refreshToken })
-        res.cookie("refreshToken", refreshToken, {
-          httpOnly: true,
-          maxAge: Number(process.env.JWT_EXPIRES_IN_TIME)
-        });
-        res.success({
-          _id: findUser._id,
-          email: findUser.email,
-          account: findUser.account,
-          token: refreshToken
-        })
+        const updateUser = await userModel.updateOne({ _id: findUser._id }, { $set: { refreshToken } })
+        console.info(updateUser)
+        if(updateUser.acknowledged && 1 === updateUser.modifiedCount){
+          res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            maxAge: Number(process.env.JWT_EXPIRES_IN_TIME)
+          });
+          res.success({
+            _id: findUser._id,
+            email: findUser.email,
+            account: findUser.account,
+            role: findUser.role,
+            token: refreshToken
+          })
+        }else{
+          res.failed(-1, '', '系统异常，请稍后重试！')
+        }
       }
     }else{
       // 用户不存在
@@ -46,12 +52,15 @@ module.exports = {
   // 查询用户信息
   getAUser: asyncHandler(async (req, res) => {
     const { id } = req.params;
+    console.info('--->', req.user)  // 获取从auth中间件得到的当前操作用户信息，判断是否有这权限可以查询数据(也就是是否是admin权限)，方可继续往下执行
+    if('user' === req.user?.role){
+      return res.failed(403, '', '当前用户无权限')
+    }
     if(id){
       const findUser = await userModel.findOne({ _id: id })
       if(!findUser){
         res.failed(-1, null, '用户不存在，请传递正确的id')
       }else{
-        console.info(findUser.email)
         res.success({
           _id: findUser._id,
           email: findUser.email,

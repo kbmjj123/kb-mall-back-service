@@ -163,6 +163,20 @@ app.get('/login', (req, res, next) => {
 ![使用加密前的密码进行验证登录](./assets/使用加密前的密码进行验证登录.png)
 
 👉 这里我们当我们需要做一些从数据库中查出来的文档对象要进行相关的操作的时候，可以采用往`schema.methods`中添加实例方法的方式，这样子所有的实例则拥有公共的api方法，但是，这里的方法应该是与db查询无关的！！！
+##### 新增用户授权中间件(jsonwebtoken)
+> 一般的，针对不同的用户权限，可以设置其不同的访问权限，这里我们采用定义一个`auth-middle-ware`中间件，本次鉴权借助于`Bearer token(持有者令牌)`
+> `Bearer token` 的工作原理是，当用户通过身份验证服务器获得访问令牌（access token）后，该令牌将被包含在每个请求的头部（通常是 Authorization 头）中。这个令牌的名称是 "Bearer"，因此它被称为 Bearer token。
+> 通过在`req.headers.authorization`请求头中捞对应的token信息，并做一个简单的解析并验证其有效性：
+```javascript
+  let token = req?.headers?.authorization;
+  console.info(token)
+  token = token.split(' ')[1];
+  const decode = jwt.verify(token, process.env.JWT_SECRET);
+```
+✨ 这里使用`jwt.verify()`方法，从`headers.authorization`中的token，使用加密前的密钥要进行有效性的验证，而这里的token则是在用户登录成功后存储于数据库中并返回，由客户端来对这个token进行管理维护，关于这个`jsonwebtoken`的相关介绍，可以查看[关于jwk的描述](https://www.91temaichang.com/2023/07/27/koa-middleware-jwt/index.html#post-info)了解相关的详情。
+👉 说白了，就是将一对象使用密钥加密存储，并具备一定的有效期，然后读取的时候，拿到密文进行对比校验，检测其真伪与时间有效性，通过后，将解密出原来的数据，然后进行下一步操作！！！
+
+👉 校验通过之后，从db中查询到对应的用户信息，通过其属性`role`判断是否拥有相应的权限，这里一开始是将相关鉴权代码维护在各个业务处理中的，但考虑到后续其他场景也需要使用到这个鉴权机制，因此，这边统一将鉴权的动作挪到这个`auth-middle-ware.js`中间件中，只有验证通过了，才能够继续往下执行！！！
 
 #### 产品模块中间件
 
@@ -189,3 +203,18 @@ app.get('/login', (req, res, next) => {
 ### 关于使用mongodb与mongoose，需要将要连接的数据库也维护到url中
 > 😡 在拿`mongodb`以及`mongoose`两个官方文档对比编码的时候，忘记将数据库也维护到`driver`的链接中，导致数据成功插入了，但是数据在数据库中却没有查询到！！！
 ![mongoose连接需要声明要连接的数据库](./assets/mongoose连接需要声明要连接的数据库.png)
+
+### 关于mongoose中的findOne()加不加exec()方法
+> `mongoose`中的`query.exec()`通常用于执行一个操作并返回一个Promise对象，如果没有添加这个`exec()`方法(比如使用Model.findOne()方法)，那么这个时候，
+> `Model.findOne()`方法将返回一个隐藏的Promise，这个时候，我们可以通过对结果直接通过属性访问符即可直接访问到目标结果
+```javascript
+  // 方式一：
+  const findUser = await userModel.findOne({_id: 'xxx_id'}).exec()
+  // 方式二：
+  const findUser = await userModel.findOne({_id: 'xxx_id'})
+  // 以上两种方式，都可以采用 👇 的方式来读取信息
+  console.info(findUser.account)
+```
+
+### 关于mongoose的Model.updateOne()方法不起作用的原因
+> 在项目coding的过程中，发现`Model.updateOne()`始终返回的是`{acknowledged: false}`，检查了其他的连接相关的代码，都正常，最后发现，这个 **mongoose不允许schema修改schema之外的字段**，也就是说，虽然`mongodb`并没有严格限制说追加字段必须像`mysql`那样子来维护，但是，我们在使用`mongoose`的时候，则必须提前将相关涉及到的字段给维护起来，以免在更新的时候，直接执行异常！！！
