@@ -3,20 +3,13 @@ const userRouter = express.Router();
 const userController = require('../control/user-controller');
 const authWM = require('../middleware/auth-middleware');
 
-// 定义一"用户模块"路由拦截器中间件
-userRouter.use((req, res, next) => {
-    console.log('userRouter Time:', Date.now())
-    next()
-})
-
+//! 通过使用公共的鉴权中间件，代表当前的userRouter整个模块都是需要鉴权控制的
+userRouter.use(authWM);
 // 通过id来获取用户信息
 userRouter.get('/', (req, res, next) => {
     res.json('我是来自于userRouter的json内容响应')
 })
 
-// 处理用户注册的中间件
-userRouter.post('/register', userController.createUser);
-userRouter.post('/login', userController.checkUser);
-userRouter.get('/:id', authWM, userController.getAUser);
+userRouter.get('/:id', userController.getAUser);
 
 module.exports = userRouter

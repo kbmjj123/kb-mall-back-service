@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const userModel = require('../model/userModel');
+const userModel = require('../model/user-model');
 
 module.exports = async (req, res, next) => {
     // 获取客户端携带的token信息
