@@ -4,6 +4,7 @@ const userModel = require('../model/userModel');
 module.exports = async (req, res, next) => {
     // 获取客户端携带的token信息
     let token = req?.headers?.authorization;
+    console.info(token)
     token = token.split(' ')[1];
     const decode = jwt.verify(token, process.env.JWT_SECRET);
     // decode.id 存在，则是一个有效的用户id，说明是一个正常的登录状态
