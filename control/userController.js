@@ -52,10 +52,6 @@ module.exports = {
   // 查询用户信息
   getAUser: asyncHandler(async (req, res) => {
     const { id } = req.params;
-    console.info('--->', req.user)  // 获取从auth中间件得到的当前操作用户信息，判断是否有这权限可以查询数据(也就是是否是admin权限)，方可继续往下执行
-    if('user' === req.user?.role){
-      return res.failed(403, '', '当前用户无权限')
-    }
     if(id){
       const findUser = await userModel.findOne({ _id: id })
       if(!findUser){
