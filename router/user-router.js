@@ -10,6 +10,6 @@ userRouter.get('/', (req, res, next) => {
     res.json('我是来自于userRouter的json内容响应')
 })
 
-userRouter.get('/:id', authWM, userController.getAUser);
+userRouter.get('/:id', userController.getAUser);
 
 module.exports = userRouter
