@@ -1,6 +1,6 @@
 const express = require('express')
 const userRouter = express.Router();
-const userController = require('../control/userController');
+const userController = require('../control/user-controller');
 const authWM = require('../middleware/auth-middleware');
 
 // 定义一"用户模块"路由拦截器中间件
