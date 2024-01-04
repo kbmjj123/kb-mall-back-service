@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const userModel = require('../model/user-model');
-const generateToken = require('../config/generate-token.js')
+const tokenGenerator = require('../config/token-generator.js')
+const jwt = require('jsonwebtoken');
 
 module.exports = {
   // 创建用户
@@ -24,21 +25,22 @@ module.exports = {
       //? 用户存在，则校验对应的密码
       if(await findUser.isPasswordMatched(password)){
         //匹配上了，则追加登录成功的token以及token的有效时间点，返回当前用户节点信息
-        const refreshToken = generateToken(findUser._id);
+        const accessToken = tokenGenerator.generateAccessToken(findUser._id);
+        const refreshToken = tokenGenerator.generateRefreshToken(findUser._id);
         // 针对找到的用户信息追加token
-        const updateUser = await userModel.updateOne({ _id: findUser._id }, { $set: { refreshToken } })
-        console.info(updateUser)
+        const updateUser = await userModel.updateOne({ _id: findUser._id }, { $set: { accessToken, refreshToken } })
         if(updateUser.acknowledged && 1 === updateUser.modifiedCount){
-          res.cookie("refreshToken", refreshToken, {
+          res.cookie("accessToken", accessToken, {
             httpOnly: true,
-            maxAge: Number(process.env.JWT_EXPIRES_IN_TIME)
+            maxAge: Number(process.env.JWT_ACCESS_EXPIRES_IN_TIME)
           });
           res.success({
             _id: findUser._id,
             email: findUser.email,
             account: findUser.account,
             role: findUser.role,
-            token: refreshToken
+            accessToken: accessToken,
+            refreshToken: refreshToken
           })
         }else{
           res.failed(-1, '', '系统异常，请稍后重试！')
@@ -47,6 +49,18 @@ module.exports = {
     }else{
       // 用户不存在
       res.failed(-1, null, '用户名或密码错误！')
+    }
+  }),
+  // 刷新用户的token
+  reefreshToken: asyncHandler(async (req, rex) => {
+    // 从请求体中获取提交过来的refreshToken
+    const { refreshToken } = req.body;
+    if(refreshToken){
+      // 如果用户传递了token，则去db中查询是否有对应的
+      const decodeInfo = jwt.decode(refreshToken, { complete: true });
+      // TODO 待实现token的更新机制
+    }else{
+      res.failed(-1, '', '请传递有效的refreshToken!');
     }
   }),
   // 查询用户信息
