@@ -193,6 +193,9 @@ app.get('/login', (req, res, next) => {
   }
 ```
 
+##### 新增刷新token的接口API机制，并采用accessToken+refreshToken并行的机制来保证系统中token的有效性
+
+
 #### 产品模块中间件
 
 #### 订单模块中间件
@@ -232,7 +235,11 @@ app.get('/login', (req, res, next) => {
 ```
 
 ### 关于mongoose的Model.updateOne()方法不起作用的原因
-> 在项目coding的过程中，发现`Model.updateOne()`始终返回的是`{acknowledged: false}`，检查了其他的连接相关的代码，都正常，最后发现，这个 **mongoose不允许schema修改schema之外的字段**，也就是说，虽然`mongodb`并没有严格限制说追加字段必须像`mysql`那样子来维护，但是，我们在使用`mongoose`的时候，则必须提前将相关涉及到的字段给维护起来，以免在更新的时候，直接执行异常！！！
+> 在项目coding的过程中，发现`Model.updateOne()`始终返回的是`{acknowledged: false}`，检查了其他的连接相关的代码，都正常，最后发现，这个 **mongoose不允许schema修改schema之外的字段(mongoose默认为严格模式)**，也就是说，虽然`mongodb`并没有严格限制说追加字段必须像`mysql`那样子来维护，但是，我们在使用`mongoose`的时候，则必须提前将相关涉及到的字段给维护起来，以免在更新的时候，直接执行异常！！！
+
+### 关于jwt异常使用的方式
+> `jwt.verify()`方法在执行的时候，如果这个时候因为过期原因导致的异常，将直接通过`throw error`的方式来将异常抛出，因此，我们在使用这个方法进行token有效性校验的时候，就需要使用`try...catch`的方式，来将可能的异常进行自行捕获，并在异常发生的时候，将异常给丢出来！
+
 
 ## 项目调试
 > 作为后端API服务开发，一般都需要进行接口API的调试与验证，因此，这边采用`postman`来进行调试，通过配置其中的公共逻辑部分以及对应的参数获取逻辑，使得整个项目能够共用同一个接口调试逻辑！
