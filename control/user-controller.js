@@ -52,13 +52,26 @@ module.exports = {
     }
   }),
   // 刷新用户的token
-  reefreshToken: asyncHandler(async (req, rex) => {
+  refreshToken: asyncHandler(async (req, res) => {
     // 从请求体中获取提交过来的refreshToken
-    const { refreshToken } = req.body;
+    let { refreshToken } = req.body;
     if(refreshToken){
       // 如果用户传递了token，则去db中查询是否有对应的
-      const decodeInfo = jwt.decode(refreshToken, { complete: true });
-      // TODO 待实现token的更新机制
+      const decodeInfo = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+      if(decodeInfo && decodeInfo.id){
+        // 有效的token-->更新为新的token
+        console.info(decodeInfo)
+        refreshToken = tokenGenerator.generateRefreshToken(decodeInfo.id);
+        const updateUser = await userModel.findOneAndUpdate({_id: decodeInfo.id}, { $set: { refreshToken } });
+        console.info(updateUser);
+        if(updateUser){
+          res.success(refreshToken);
+        }else{
+          res.failed(-1, '', '请传递有效的refreshToken!');
+        }
+      }else{
+        res.failed(403, '', '当前用户无权限')
+      }
     }else{
       res.failed(-1, '', '请传递有效的refreshToken!');
     }
