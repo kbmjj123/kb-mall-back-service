@@ -51,7 +51,7 @@ module.exports = {
       res.failed(-1, null, '用户名或密码错误！')
     }
   }),
-  // 刷新用户的token
+  // 刷新用户的accessToken与refreshToken
   refreshToken: asyncHandler(async (req, res) => {
     // 从请求体中获取提交过来的refreshToken
     let { refreshToken } = req.body;
@@ -60,12 +60,15 @@ module.exports = {
       const decodeInfo = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
       if(decodeInfo && decodeInfo.id){
         // 有效的token-->更新为新的token
-        console.info(decodeInfo)
         refreshToken = tokenGenerator.generateRefreshToken(decodeInfo.id);
-        const updateUser = await userModel.findOneAndUpdate({_id: decodeInfo.id}, { $set: { refreshToken } });
-        console.info(updateUser);
+        const accessToken = tokenGenerator.generateAccessToken(decodeInfo.id);
+        const updateUser = await userModel.findOneAndUpdate({_id: decodeInfo.id}, { $set: { accessToken, refreshToken } });
         if(updateUser){
-          res.success(refreshToken);
+          // 更新成功后，需要客户端对应的替换本地的accessToken与refreshToken来保持客户端延活
+          res.success({
+            accessToken,
+            refreshToken
+          });
         }else{
           res.failed(-1, '', '请传递有效的refreshToken!');
         }

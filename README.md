@@ -194,7 +194,12 @@ app.get('/login', (req, res, next) => {
 ```
 
 ##### 新增刷新token的接口API机制，并采用accessToken+refreshToken并行的机制来保证系统中token的有效性
+> 当拥有了这个token的时候，由于`jsonwebtoken`的机制，我们所生成的token有一定的时效性，在实际的项目开发中，应该要确保生成的token只要继续使用的话，每次使用都将
+> 自动延长token的时效性，但是`jsonwebtoken`是通过每次都生成新的token来确保延长时长的，然后客户端的token一般是保存在本地的，那么，🤔就需要一种机制，来实现自动“更新”
+> 客户端token的机制，👉这里的“更新”，其实是采用了双token的方式，一个是`accessToken`(有效时长较短，用于鉴权目的)，另外一个是`refreshToken`(有效时长较长，用于刷新token的目的)，完整的双token更新机制如下所示：
+![双token验证流程](./assets/双token验证流程.png)
 
+✨ 同时客户端也要配合一个流程，就是关于**accessToken在接近失效的时候，需要自动发送refreshToken动作，完成客户端token的持续有效性**！！
 
 #### 产品模块中间件
 
