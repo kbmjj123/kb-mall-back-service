@@ -10,6 +10,7 @@ const userSchema = new mogoose.Schema({
     password: String,
     email: String,
     refreshToken: String,
+    accessToken: String,
     role: {
       type: String,
       enum: ['admin', 'user'],
