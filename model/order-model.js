@@ -14,7 +14,23 @@ const orderSchema = new mongoose.Schema({
       message: props => `${props.value}必须至少包含一个`
     }
   },
-  
+  amount: {
+    type: Number,
+    min: 0
+  },
+  beneficAmount: {
+    type: Number,
+    min: 0
+  },
+  payAmount: {
+    type: Number,
+    min: 0
+  },
+  payTime: Date,
+  cancelTime: Date,
+  finishTime: Date,
+  deliveryTime: Date,
+  remark: String
 });
 
 const orderModel = mongoose.model('orderModel', orderSchema, 'orders')
