@@ -1,11 +1,11 @@
 const express = require('express');
-const multer = require('multer');
-const fileUploadRouter = express.Router();
-const { isLogin } = require('../middleware/auth-middleware');
-const fileCtrl = require('../control/file-controller');
-const upload = multer({ dest: 'uploads/' })
 
-fileUploadRouter.use(isLogin);
+const fileUploadRouter = express.Router();
+const authWM = require('../middleware/auth-middleware');
+const fileCtrl = require('../control/file-controller');
+const upload = require('../config/uploader-generator');
+
+fileUploadRouter.use(authWM.isLogin);
 
 fileUploadRouter.post('/uploadFile', upload.single('file'), fileCtrl.wrapFile);
 

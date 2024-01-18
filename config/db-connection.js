@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+//! 开启数据库日志调试
+mongoose.set({
+  debug: true
+})
 
 module.exports = () => {
   try{
