@@ -8,20 +8,25 @@
 ```
 mongodb-backend-nodejs
 ├─ LICENSE
-├─ README.md
-├─ assets
-│  ├─ watch模式启动服务.png
-│  ├─ 目录结构.png
-│  └─ 访问不存在的链接异常结果.png
+├─ README.md 项目介绍文档
+├─ assets 本地说明文档所需图片资源
 ├─ config
+│  ├─ db-connection.js 统一的数据库连接器
+│  ├─ token-generator.js 统一的token生成器，包括访问token以及刷新token
+│  ├─ uploader-generator.js 统一的文件上传配置生成器，用于统一配置文件上传
 ├─ control
 ├─ index.js
 ├─ middleware
-│  ├─ not-found-middleware.js
-│  ├─ response-wrapper-middleware.js
-│  └─ service-error-middleware.js
+│  ├─ auth-middleware.js 授权认证中间件，作为需要授权登录或者需要高级权限的判断拦截器
+│  ├─ not-found-middleware.js 处理未找到时的统一处理拦截器
+│  ├─ response-wrapper-middleware.js 对响应结果进行一自定义包装，确保响应结果的数据结构一致性，方便客户端进行统一管理
+│  └─ service-error-middleware.js 服务异常处理器
 ├─ model
 │  └─ userModel.js
+├─ resources 所有客户端上传过来的最终存储位置
+├─ router 将系统的接口进行模块化管理，也就是模块化接口定义的位置
+├─ uploads 文件上传的临时存储位置，用于提升文件上传的体验以及空间的合理应用
+├─ utils 项目所需的工具类
 └─ package.json
 ```
 
@@ -52,7 +57,8 @@ mongodb-backend-nodejs
 1. `express-async-handler`: 简单的中间件，用于处理`express`路由内的异常，并将它们传递给EXPRESS错误处理程序
    🤔 用于自动将中间中产生的异常，自动`next`到下一个中间件，省去了在每一个中间件中显示地调用`next()`方法来将任务转移到下一个中间件，详见[官网对比描述](https://www.npmjs.com/package/express-async-handler#usage)
 2. `morgan`: 请求日志输出中间件，用于将客户端请求的路径、方式、响应时长等信息给输出来，便于调试；
-
+3. `multer`: 处理文件上传的中间件，获取客户端提交的文件资源，并进行远程服务器存储，然后返回远程路径给回客户端，详见[官网描述](https://github.com/expressjs/multer)；
+4. `serve-static`: 在线静态资源的直接访问，通过配置的方式，对上传上来的文件资源提供在线访问的目的，[详见官网](https://github.com/expressjs/serve-static#readme)
 
 
 ### 本地自定义中间件
@@ -117,6 +123,14 @@ app.get('/login', (req, res, next) => {
 > 借助于`mongoose`三方库，通过MONGODB_URL来连接到远程数据库中！
 > 将db连接相关的统一到一外部方法`db-connection`中！
 > ✨ 同时在连接成功后，打印相关的日志信息，在`mongoose.connection.on()`相关的回调方法中添加对应的日志代码！
+
+### 资源上传中间件
+> :confused: 也许有人会说，已经有这个`multer`中间件啦，直接用就可以啦！是的，的确如此，可以直接使用这个中间件来处理文件上传，并存储到对应的位置， :point_right: 但是在实际的项目过程中，我们会发现，随着时间的推移，项目中的资源会跟随着使用者的使用越来越多，需要对资源进行一个统一管理，假如前提没有很好的提供一个管理机制的话，是当项目起来后，是很难保持项目边运行，边实现改造迁移工作的。
+> 因此，很有必要在前期进行一个设计，并赋予实施！
+> :alien: 我们的目的，就是提供 :one: 个单文件上传以及 :one: 个多文件上传的接口API， :point_right: 借助于`multer`中间件，并结合`fs`、`临时文件存储`的机制，来实现文件资源管理器！
+> :point_down: 是对应的一个流程图：
+
+![文件上传服务流程图](./assets/文件上传服务流程图.png)
 
 ### 开始编写业务处理中间件
 > 在开始编写具体的中间件时，先引入一个请求解析中间件，否则就会出现 👇 这样子的一个结果：

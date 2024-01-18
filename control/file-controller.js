@@ -6,6 +6,7 @@ module.exports = {
     console.info(req.file)
     res.success(req.file)
   }),
+  // 多文件上传处理器
   wrapFiles: asyncHandler(async (req, res) => {
     console.info(req)
   })
