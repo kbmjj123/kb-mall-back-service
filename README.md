@@ -259,6 +259,25 @@ app.get('/login', (req, res, next) => {
 ### 关于jwt异常使用的方式
 > `jwt.verify()`方法在执行的时候，如果这个时候因为过期原因导致的异常，将直接通过`throw error`的方式来将异常抛出，因此，我们在使用这个方法进行token有效性校验的时候，就需要使用`try...catch`的方式，来将可能的异常进行自行捕获，并在异常发生的时候，将异常给丢出来！
 
+### 关于mongoose中ObjectId数组类型的定义
+> 在使用`mongoose`来定义`schema`中的属性类型的时候，假如需要将某个属性定义为`*ObjectId数组外键*`的话，则可以按照 :point_down: 的方式来声明：
+```js
+// 单纯的定义为ObjectId数组
+  const schema = new mongoose.Schema({
+    products: {
+      type: [mongoose.SchemaTypes.ObjectId]
+    }
+  })
+// 定义为对象，并将其设置为后续可通过populate关联查询为对应的商品对象
+  const schema = new mongoose.Schema({
+    products: {
+      type: [{
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'products'
+      }]
+    }
+  })
+```
 
 ## 项目调试
 > 作为后端API服务开发，一般都需要进行接口API的调试与验证，因此，这边采用`postman`来进行调试，通过配置其中的公共逻辑部分以及对应的参数获取逻辑，使得整个项目能够共用同一个接口调试逻辑！
