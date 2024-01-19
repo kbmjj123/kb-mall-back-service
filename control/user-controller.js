@@ -18,7 +18,7 @@ module.exports = {
     }
   }),
   // 修改用户信息，主要由用户自主修改
-  modifyAUser: asyncHandler(async (req, res) => {})
+  modifyAUser: asyncHandler(async (req, res) => {}),
   // 检查用户是否完全正确，校验成功后，自动追加token
   checkUser: asyncHandler(async (req, res) => {
     const { email, password } = req.body;

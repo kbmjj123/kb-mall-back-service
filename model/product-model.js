@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   cates: {
-    type: Array[mongoose.SchemaTypes.ObjectId],
+    type: [{type: mongoose.SchemaTypes.ObjectId}],
+    default: [],
     required: [true, '请维护分类id']
   },
   brand: {
@@ -16,7 +17,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, '请维护商品主图']
   },
-  descPictures: Array[String],
+  descPictures: [String],
   slug: {
     type: String,
     uniqued: true
@@ -50,6 +51,6 @@ const productSchema = new mongoose.Schema({
   richText: String
 });
 
-const productModel = mongoose.model('productModel', productModel, 'products');
+const productModel = mongoose.model('productModel', productSchema, 'products');
 
 module.exports = productModel;
