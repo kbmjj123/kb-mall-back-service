@@ -12,6 +12,6 @@ orderRouter.get('/list', orderCtrl.getOrderList);
 // 订单发货
 orderRouter.post('/:id', orderCtrl.deliveryAOrder);
 // 取消订单
-orderRouter.post('/:id', )
+orderRouter.post('/:id', orderCtrl.cancelAOrder);
 
 module.exports = orderRouter;

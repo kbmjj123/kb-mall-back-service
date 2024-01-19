@@ -12,7 +12,6 @@ module.exports = {
   removeAProduct: asyncHandler(async (req, res) => {}),
   // 获取一个商品明细信息
   getAProduct: asyncHandler(async (req, res) => {}),
-  //
   // 分页获取商品列表信息
   getProductList: asyncHandler(async (req, res) => {})
 };
