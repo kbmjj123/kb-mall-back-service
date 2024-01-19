@@ -42,7 +42,9 @@ module.exports = {
   }),
   // 编辑一品牌
   editABrand: asyncHandler(async (req, res) => {
-    const { id, name } = req.body;
+    const { id } = req.params;
+    console.info(id)
+    const { name } = req.body;
     if(name){
       const updateABrand = await brandModel.findByIdAndUpdate(id, { $set: {name} });
       res.success(updateABrand);
@@ -55,9 +57,8 @@ module.exports = {
     const { id } = req.params;
     if(id){
       const result = await brandModel.findByIdAndDelete(id);
-      console.info(result);
-      if(1 === result.ok){
-        res.success('操作成功！');
+      if(result && result._id){
+        res.success('');
       }else{
         res.failed(-2, null, '操作失败');
       }
