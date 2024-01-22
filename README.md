@@ -59,7 +59,7 @@ mongodb-backend-nodejs
 2. `morgan`: 请求日志输出中间件，用于将客户端请求的路径、方式、响应时长等信息给输出来，便于调试；
 3. `multer`: 处理文件上传的中间件，获取客户端提交的文件资源，并进行远程服务器存储，然后返回远程路径给回客户端，详见[官网描述](https://github.com/expressjs/multer)；
 4. `serve-static`: 在线静态资源的直接访问，通过配置的方式，对上传上来的文件资源提供在线访问的目的，[详见官网](https://github.com/expressjs/serve-static#readme)
-
+5. `cors`: `Cross-Origin Resource Sharing`，一种安全机制，它允许Web页面跨域进行资源共享，默认情况下，来自不同源的Web页面不能够共享资源，源是由协议、域名和端口三者组合定义的，只有当所有三者都匹配时，两个URL才属于同一个源，[详见官网](https://github.com/expressjs/cors#readme)
 
 ### 本地自定义中间件
 > 因实际业务开发需要，针对业务进行相应的本地化中间件开发，以便于满足项目的变动发展诉求， 👇 是对应的自定义本地中间件说明清单：
