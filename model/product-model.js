@@ -17,9 +17,13 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, '请维护商品主图']
   },
-  descPictures: [String],
+  descPictures: {
+    type: [String],
+    require: [true, '请维护商品图片']
+  },
   slug: {
     type: String,
+    required: [true, '请维护商品的唯一码'],
     uniqued: true
   },
   price: {
@@ -48,7 +52,13 @@ const productSchema = new mongoose.Schema({
     type: Number,
     min: 0
   },
-  richText: String
+  richText: String,
+  state: {
+    type: String,
+    enum: ['online', 'offline'],
+    default: 'online'
+    require: [true, '请维护上架状态']
+  }
 });
 
 const productModel = mongoose.model('productModel', productSchema, 'products');
