@@ -31,7 +31,7 @@ module.exports = {
     if(name){
       const findABrand = await brandModel.findOne({name});
       if(findABrand){
-        res.failed(-3, null, `品牌名(：${name})已存在，请勿重复创建`);
+        res.failed(-3, null, `品牌名：(${name})已存在，请勿重复创建`);
       }else{
         const createABrand = await brandModel.create({name});
         res.success(createABrand);
