@@ -229,6 +229,9 @@ app.get('/login', (req, res, next) => {
 ![请求日志输出中间件](./assets/请求日志输出中间件.png)
 ✨ 在调试的时候，我们可以通过`morgan`中间件，来查看当前请求的接口都有哪些，以及请求这些接口的基本信息。
 
+### mongoose自动追加的默认属性
+> 当我们使用`mongoose`的`new model().save()`方法来创建一条记录的时候，在`model`所捆绑的`schema`中的属性，将会自动创建出来，并赋予默认的属性值，方便后续的插入校验验证问题！！
+
 ## 项目过程中的坑
 > 本章节主要在实际的项目编码过程中，所遇到的坑，以免后续再踩！！！
 
@@ -295,6 +298,12 @@ app.get('/login', (req, res, next) => {
   const children = await Promise.all(childCateListPromise);
 ```
 :stars: 这里通过将cateList2转换为promise数组，然后最后再一口气执行全部的promise，实现将结果输出至children属性中！！！
+
+### 关于model.findByIdAndUpdate()方法没有触发属性的校验规则
+> 当我们通过`mongoose`的`model.findByIdAndUpdate()`方法来更新一个属性的时候，如果没有在其第三个参数中声明`runValidators:true`的时候，
+> 虽然我们已经给属性定义的时候，将其`validate`也进行了相应的配置，但是在某些情况下，`mongoose`在更新时，可能允许绕过验证，这是因为`mongoose`默认情况下只会验证传递给
+> `save()`方法的数据，为了确保属性的自我校验规则能够被自动的触发，因此需要往相应的方法(model.findByIdAndUpdate)中传递`runValidators: true`的属性，告知该API
+> 当执行相关的操作的时候，自动进行对应的校验操作！！
 
 ## 项目调试
 > 作为后端API服务开发，一般都需要进行接口API的调试与验证，因此，这边采用`postman`来进行调试，通过配置其中的公共逻辑部分以及对应的参数获取逻辑，使得整个项目能够共用同一个接口调试逻辑！
