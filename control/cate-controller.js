@@ -11,7 +11,7 @@ module.exports = {
       const childCateListPromise = cateList2.map(async (cate2) => {
         const cateList3 = await cateModel.find({parentId: cate2._id});
         return {
-          ...cate2.toObject(),
+          ...cate2.toObject(),  //! 这里将对象转换为普通的js对象输出
           children: cateList3
         }
       });
