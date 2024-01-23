@@ -18,7 +18,7 @@ productRouter.post('/:id', productCtrl.editProduct);
 // 删除一个商品
 productRouter.delete('/:id', productCtrl.removeAProduct);
 // 上/下架商品
-productRouter.post('/:id', productCtrl.upOrDownAProduct);
+productRouter.post('/:id/onOrOff', productCtrl.upOrDownAProduct);
 
 // ********** 以下是分类相关的接口定义 **********
 // 获取分类列表数据
