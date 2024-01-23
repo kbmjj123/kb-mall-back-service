@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema({
   },
   descPictures: {
     type: [String],
-    require: [true, '请维护商品图片']
+    required: [true, '请维护商品图片']
   },
   slug: {
     type: String,
@@ -56,8 +56,8 @@ const productSchema = new mongoose.Schema({
   state: {
     type: String,
     enum: ['online', 'offline'],
-    default: 'online'
-    require: [true, '请维护上架状态']
+    default: 'online',
+    required: [true, '请维护上架状态']
   }
 });
 
