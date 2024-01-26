@@ -59,7 +59,8 @@ mongodb-backend-nodejs
 2. `morgan`: 请求日志输出中间件，用于将客户端请求的路径、方式、响应时长等信息给输出来，便于调试；
 3. `multer`: 处理文件上传的中间件，获取客户端提交的文件资源，并进行远程服务器存储，然后返回远程路径给回客户端，详见[官网描述](https://github.com/expressjs/multer)；
 4. `serve-static`: 在线静态资源的直接访问，通过配置的方式，对上传上来的文件资源提供在线访问的目的，[详见官网](https://github.com/expressjs/serve-static#readme)
-5. `cors`: `Cross-Origin Resource Sharing`，一种安全机制，它允许Web页面跨域进行资源共享，默认情况下，来自不同源的Web页面不能够共享资源，源是由协议、域名和端口三者组合定义的，只有当所有三者都匹配时，两个URL才属于同一个源，[详见官网](https://github.com/expressjs/cors#readme)
+5. `cors`: `Cross-Origin Resource Sharing`，一种安全机制，它允许Web页面跨域进行资源共享，默认情况下，来自不同源的Web页面不能够共享资源，源是由协议、域名和端口三者组合定义的，只有当所有三者都匹配时，两个URL才属于同一个源，[详见官网](https://github.com/expressjs/cors#readme);
+6. `express-validator`: 数据校验中间件，用于处理客户端所传递过来的数据校验动作，基于路由中间件，通常用于校验进入应用程序的请求数据，并在数据进入控制器逻辑之前拦截无效请求。这有助于防止不合理的输入数据导致的潜在错误，减轻后端控制器的负担，[详见官网](https://express-validator.github.io/docs/);
 
 ### 本地自定义中间件
 > 因实际业务开发需要，针对业务进行相应的本地化中间件开发，以便于满足项目的变动发展诉求， 👇 是对应的自定义本地中间件说明清单：
@@ -231,6 +232,33 @@ app.get('/login', (req, res, next) => {
 
 ### mongoose自动追加的默认属性
 > 当我们使用`mongoose`的`new model().save()`方法来创建一条记录的时候，在`model`所捆绑的`schema`中的属性，将会自动创建出来，并赋予默认的属性值，方便后续的插入校验验证问题！！
+
+### 关于请求参数的校验
+> 在进行商品的发布/编辑接口逻辑编写的时候，发现如果手动一个个来编写这个参数的校验的话，将会导致接口方法逻辑比较长，而且好像也没办法复用，因此，这边在使用原本`mongoose`
+> 所提供的校验服务的基础上，另外新增了`express-validator`这个基于路由层面的数据校验中间件，通过对请求中的`body`、`query`、`header`等不同位置的数据进行获取与校验，
+> 在进入到`model`层之前进行数据的校验，减少数据库的自我校验压力。
+```javascript
+  const express = require('express');
+  const app = new express();
+  // 在还未使用校验中间件之前的处理方式
+  app.get('/hello', (req, res) => {
+    let { field1 } = req.body;
+    if(field1){
+      throw new Error('必须传递数值类型的field1')
+    }
+    res.send(`Hello, ${req.body.person}!`);
+  })
+  // 在使用了`express-validate`之后
+  const { body, validationResult } = require('express-validator');
+  app.get('/hello', body('field1').notEmpty(), (req, res) => {
+    const result = validationResult(req);
+    if (result.isEmpty()) {
+      return res.send(`Hello, ${req.body.person}!`);
+    }
+    res.send({ errors: result.array() });
+  })
+```
+:stars: 当需要校验的属性并没有那么多且复杂的时候，单纯的直接将其逻辑维护到方法中并没有什么，但是一旦需要校验的字段属性较多，而且校验规则较为复杂的时候，就需要庞大的校验规则，而且也无法复用已经维护好的校验规则，因此，针对这种场景，采用**express-validator**来对数据进行中间件层面的校验，通过在中间件层面，对客户端请求进行数据拦截处理，并在校验通过后，进入到下一个中间件，提前将错误进行拦截，减少数据库代码逻辑的执行压力！！
 
 ## 项目过程中的坑
 > 本章节主要在实际的项目编码过程中，所遇到的坑，以免后续再踩！！！
