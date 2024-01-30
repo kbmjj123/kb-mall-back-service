@@ -4,6 +4,10 @@ const brandModel = require('../model/brand-model');
 const cateModel = require('../model/cate-model');
 const { ObjectId } = require('mongodb');
 
+const validateProduct = asyncHandler(async (req, res) => {
+  
+})
+
 module.exports = {
   // 发布一个商品
   createProduct: asyncHandler(async (req, res) => {
