@@ -2,15 +2,38 @@ const asyncHandler = require('express-async-handler');
 const productModel = require('../model/product-model');
 const brandModel = require('../model/brand-model');
 const cateModel = require('../model/cate-model');
+const { body } = require('express-validator');
 const { ObjectId } = require('mongodb');
+// 统一的校验处理动作
+const commonResultValidateMW = require('../middleware/common-result-validate-middleware');
 
-const validateProduct = asyncHandler(async (req, res) => {
-  
-})
+// 商品参数校验器
+const validateProduct = [
+  body('cates').notEmpty().isArray(),
+  body('productName', '请维护商品名称').notEmpty().trim().isLength({ max: 60 }),
+  body('masterPicture').notEmpty(),
+  body('descPictures').notEmpty().isArray({ max: 5 }),
+  body('slug').notEmpty().isSlug(),
+  body('price').notEmpty().isNumeric(),
+  body('activityPrice').isNumeric(),
+  // 针对分类属性做是否为合法分类id做校验判断
+  body('cates').custom(async (cateArray) => {
+    const catePromises = cateArray.map(cateId => {
+      return cateModel.findById(cateId);
+    })
+    // 等待所有分类的查询结果
+    const categorys = await Promise.all(catePromises);
+    if(categorys.some(category => !category)){
+      //? 存在空分类，则抛出异常
+      throw new Error('请上传正确的分类！');
+    }
+  }),
+  commonResultValidateMW
+]
 
 module.exports = {
   // 发布一个商品
-  createProduct: asyncHandler(async (req, res) => {
+  createProduct: [validateProduct, asyncHandler(async (req, res) => {
     const params = req.body;
     try{
       // 默认初始化商品相关属性
@@ -42,9 +65,9 @@ module.exports = {
       console.info(error);
       res.failed(-1, null, '创建异常，请检查参数后重试～');
     }
-  }),
+  })],
   // 编辑一个商品
-  editProduct: asyncHandler(async (req, res) => {
+  editProduct: [validateProduct, asyncHandler(async (req, res) => {
     const { id } = req.params;
     const params = req.body;
     if(id){
@@ -54,7 +77,7 @@ module.exports = {
     }else{
       res.failed(-2, null, '请传递需要修改的商品id');
     }
-  }),
+  })],
   // 上/下架商品
   upOrDownAProduct: asyncHandler(async (req, res) => {
     const { id } = req.params;

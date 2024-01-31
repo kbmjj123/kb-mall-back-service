@@ -260,6 +260,84 @@ app.get('/login', (req, res, next) => {
 ```
 :stars: 当需要校验的属性并没有那么多且复杂的时候，单纯的直接将其逻辑维护到方法中并没有什么，但是一旦需要校验的字段属性较多，而且校验规则较为复杂的时候，就需要庞大的校验规则，而且也无法复用已经维护好的校验规则，因此，针对这种场景，采用**express-validator**来对数据进行中间件层面的校验，通过在中间件层面，对客户端请求进行数据拦截处理，并在校验通过后，进入到下一个中间件，提前将错误进行拦截，减少数据库代码逻辑的执行压力！！
 
+:trollface: 实际上在使用的时候，为了更好的维护项目代码，这边采用将校验与逻辑完全的分开，校验中间件单独处理校验动作以及校验结果判断，而逻辑中间件则保留原本的逻辑代码不变化，如下代码所示：
+
+```javascript
+  // ...这里省略一系列相关的代码
+  // 发布一个商品，路由路径以及请求方式保留原本的定义不变
+  productRouter.put('/publish', productCtrl.createProduct);
+  // 同样正常引入express-async-handler
+  const asyncHandler = require('express-async-handler');
+  const { body, validationResult } = require('express-validator');
+  const validateProduct = [
+    body('productName').notEmpty().trim().isLength({ max: 60 }),
+    body('cates').notEmpty().isArray(),
+    // 这里根据实际情况进行各个字段的一系列判断
+    // 这里是结果校验判断中间件，这里可根据实际情况判断是否需要使用异步操作
+    asyncHandler(async (req, res, next) => {
+      const errorResult = validationResult(req);
+      if(!errorResult){
+        // 如果校验通过，则进入到下一个中间件
+        next()
+      }
+      // 校验失败，则提示失败原因，这里走统一的自定义格式输出动作
+      res.failed(-1, { errors: result.array() })
+    })
+  ]
+  export createProduct = [validateProduct, asyncHandler(async (req, res) => {
+    // 这里依旧是正常的逻辑处理动作
+  })]
+```
+:star: 通过上述的方式，将校验动作与原本的逻辑完全的分离开来，最终对外提供一数组方式的中间件成员即可！！
+![express-validator基本使用结果](./assets/express-validator基本使用结果.png)
+:confused: 如果我这个校验动作是异步的话，比如需要从db中查询是否为正确的字段时，需要使用到其自定义校验，如下代码所示：
+```javascript
+  const validateProduct = [
+    body('cates').custom(async value => {
+      // 这里的value字段为实际的字段值
+      const findCates = await productModel.findOne()
+      if(!findCates){
+        throw new Error('请填写正确的分类id')
+      }
+    })
+  ]
+```
+![express-validator自定义校验结果](./assets/express-validator自定义校验结果.png)
+
+:point_right: 如果校验动作都是一致的话，还可以直接将内置的校验结果判断中间件给抽离出来，单独进行统一的维护！！
+
+:confused: 上述的输出结果中，都是英文的输出，是否可以实现针对字段级别进行自定义message的配置输出呢？
+```javascript
+  //... 这里隐藏一系列代码
+  body('productName', '请维护商品名称')
+```
+![express-validator自定义字段校验提示语](./express-validator自定义字段校验提示语.png)
+
+### 自定义mongoose全局插件
+> 在实际的项目过程中，我们不能够完全相信客户端提交过来的数据，比如有些字段可能没有去除字段两端的空格，那么这个时候，可以使用`mongoose`的注册全局插件的方式，对项目中的所有的`schema`中的字符串字段在保存的时候，
+> 提供一个自我转换的功能，来实现这个目的，如下所示： 
+```javascript
+  // 在数据库连接之前，进行全局插件的注册
+  const globalPlugin = (schema, options) => {
+    // 这里的options则代表插件的参数，可实现参数化掉用的目的
+    // schema为mongoose中的所有的schema对象，通过对这个schema中的属性进行遍历处理
+    schema.pre('save', function(next) {
+      Object.keys(schema.paths).forEach(field => {
+        if(this[field]){
+          // 所有插入到db中的字段，都必须进行trim操作，避免存储了左右为空的字符串
+          if(schema.pathType(field) === 'String'){
+            // 如果文档中的field属性存在且为字符串类型的
+            this[field] = this[field].trim();// 统一去除字符串两端的空白字符串
+          }
+        }
+        next();
+      })
+    })
+  }
+  // 在connect到数据库之前
+  mongoose.plugin(globalPlugin);
+```
+
 ## 项目过程中的坑
 > 本章节主要在实际的项目编码过程中，所遇到的坑，以免后续再踩！！！
 
