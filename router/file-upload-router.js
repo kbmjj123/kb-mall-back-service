@@ -3,7 +3,7 @@ const express = require('express');
 const fileUploadRouter = express.Router();
 const authWM = require('../middleware/auth-middleware');
 const fileCtrl = require('../control/file-controller');
-const upload = require('../config/uploader-generator');
+const { upload } = require('../config/uploader-generator');
 
 fileUploadRouter.use(authWM.isLogin);
 

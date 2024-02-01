@@ -18,6 +18,7 @@ mongodb-backend-nodejs
 ├─ index.js
 ├─ middleware
 │  ├─ auth-middleware.js 授权认证中间件，作为需要授权登录或者需要高级权限的判断拦截器
+│  ├─ common-result-validate-middleware.js 统一的请求参数校验结果中间，用以告知客户端关于参数的结果如何进行回复提示的拦截器
 │  ├─ not-found-middleware.js 处理未找到时的统一处理拦截器
 │  ├─ response-wrapper-middleware.js 对响应结果进行一自定义包装，确保响应结果的数据结构一致性，方便客户端进行统一管理
 │  └─ service-error-middleware.js 服务异常处理器
