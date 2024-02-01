@@ -4,7 +4,7 @@ const tokenGenerator = require('../config/token-generator.js')
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-  // 创建用户
+  // 创建用户，主要走自主注册
   createUser: asyncHandler(async (req, res) => {
     const { email, account, password } = req.body;
     const findUser = await userModel.findOne({ email })
@@ -17,6 +17,8 @@ module.exports = {
       res.failed(-1, null, '此邮箱已存在，请勿重复创建！')
     }
   }),
+  // 修改用户信息，主要由用户自主修改
+  modifyAUser: asyncHandler(async (req, res) => {}),
   // 检查用户是否完全正确，校验成功后，自动追加token
   checkUser: asyncHandler(async (req, res) => {
     const { email, password } = req.body;
@@ -96,5 +98,10 @@ module.exports = {
     }else{
       res.failed(-1, null, '请传递有效的用户id')
     }
-  })
+  }),
+  // 删除一个用户
+  deleteAUser: asyncHandler(async (req, res) => {}),
+  // 根据筛选条件来查询用户列表
+  getUserList: asyncHandler(async (req, res) => {}),
+  // 
 }

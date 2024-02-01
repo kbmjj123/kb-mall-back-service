@@ -6,7 +6,7 @@ const orderSchema = new mongoose.Schema({
     required: [true, '请维护订单创建时间']
   },
   products: {
-    type: Array[mongoose.SchemaTypes.ObjectId],
+    type: [{type: mongoose.SchemaTypes.ObjectId, ref: 'products'}],
     valiate: {
       validator: function(val){
         return val && val.length > 0

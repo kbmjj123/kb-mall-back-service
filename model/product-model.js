@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   cates: {
-    type: Array[mongoose.SchemaTypes.ObjectId],
+    type: [{type: mongoose.SchemaTypes.ObjectId}],
+    default: [],
     required: [true, '请维护分类id']
   },
   brand: {
@@ -16,9 +17,13 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, '请维护商品主图']
   },
-  descPictures: Array[String],
+  descPictures: {
+    type: [String],
+    required: [true, '请维护商品图片']
+  },
   slug: {
     type: String,
+    required: [true, '请维护商品的唯一码'],
     uniqued: true
   },
   price: {
@@ -47,9 +52,15 @@ const productSchema = new mongoose.Schema({
     type: Number,
     min: 0
   },
-  richText: String
+  richText: String,
+  state: {
+    type: String,
+    enum: ['online', 'offline'],
+    default: 'online',
+    required: [true, '请维护上架状态']
+  }
 });
 
-const productModel = mongoose.model('productModel', productModel, 'products');
+const productModel = mongoose.model('productModel', productSchema, 'products');
 
 module.exports = productModel;

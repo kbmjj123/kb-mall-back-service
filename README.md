@@ -8,20 +8,26 @@
 ```
 mongodb-backend-nodejs
 ├─ LICENSE
-├─ README.md
-├─ assets
-│  ├─ watch模式启动服务.png
-│  ├─ 目录结构.png
-│  └─ 访问不存在的链接异常结果.png
+├─ README.md 项目介绍文档
+├─ assets 本地说明文档所需图片资源
 ├─ config
+│  ├─ db-connection.js 统一的数据库连接器
+│  ├─ token-generator.js 统一的token生成器，包括访问token以及刷新token
+│  ├─ uploader-generator.js 统一的文件上传配置生成器，用于统一配置文件上传
 ├─ control
 ├─ index.js
 ├─ middleware
-│  ├─ not-found-middleware.js
-│  ├─ response-wrapper-middleware.js
-│  └─ service-error-middleware.js
+│  ├─ auth-middleware.js 授权认证中间件，作为需要授权登录或者需要高级权限的判断拦截器
+│  ├─ common-result-validate-middleware.js 统一的请求参数校验结果中间，用以告知客户端关于参数的结果如何进行回复提示的拦截器
+│  ├─ not-found-middleware.js 处理未找到时的统一处理拦截器
+│  ├─ response-wrapper-middleware.js 对响应结果进行一自定义包装，确保响应结果的数据结构一致性，方便客户端进行统一管理
+│  └─ service-error-middleware.js 服务异常处理器
 ├─ model
 │  └─ userModel.js
+├─ resources 所有客户端上传过来的最终存储位置
+├─ router 将系统的接口进行模块化管理，也就是模块化接口定义的位置
+├─ uploads 文件上传的临时存储位置，用于提升文件上传的体验以及空间的合理应用
+├─ utils 项目所需的工具类
 └─ package.json
 ```
 
@@ -52,8 +58,10 @@ mongodb-backend-nodejs
 1. `express-async-handler`: 简单的中间件，用于处理`express`路由内的异常，并将它们传递给EXPRESS错误处理程序
    🤔 用于自动将中间中产生的异常，自动`next`到下一个中间件，省去了在每一个中间件中显示地调用`next()`方法来将任务转移到下一个中间件，详见[官网对比描述](https://www.npmjs.com/package/express-async-handler#usage)
 2. `morgan`: 请求日志输出中间件，用于将客户端请求的路径、方式、响应时长等信息给输出来，便于调试；
-
-
+3. `multer`: 处理文件上传的中间件，获取客户端提交的文件资源，并进行远程服务器存储，然后返回远程路径给回客户端，详见[官网描述](https://github.com/expressjs/multer)；
+4. `serve-static`: 在线静态资源的直接访问，通过配置的方式，对上传上来的文件资源提供在线访问的目的，[详见官网](https://github.com/expressjs/serve-static#readme)
+5. `cors`: `Cross-Origin Resource Sharing`，一种安全机制，它允许Web页面跨域进行资源共享，默认情况下，来自不同源的Web页面不能够共享资源，源是由协议、域名和端口三者组合定义的，只有当所有三者都匹配时，两个URL才属于同一个源，[详见官网](https://github.com/expressjs/cors#readme);
+6. `express-validator`: 数据校验中间件，用于处理客户端所传递过来的数据校验动作，基于路由中间件，通常用于校验进入应用程序的请求数据，并在数据进入控制器逻辑之前拦截无效请求。这有助于防止不合理的输入数据导致的潜在错误，减轻后端控制器的负担，[详见官网](https://express-validator.github.io/docs/);
 
 ### 本地自定义中间件
 > 因实际业务开发需要，针对业务进行相应的本地化中间件开发，以便于满足项目的变动发展诉求， 👇 是对应的自定义本地中间件说明清单：
@@ -117,6 +125,21 @@ app.get('/login', (req, res, next) => {
 > 借助于`mongoose`三方库，通过MONGODB_URL来连接到远程数据库中！
 > 将db连接相关的统一到一外部方法`db-connection`中！
 > ✨ 同时在连接成功后，打印相关的日志信息，在`mongoose.connection.on()`相关的回调方法中添加对应的日志代码！
+
+### 资源上传中间件
+> :confused: 也许有人会说，已经有这个`multer`中间件啦，直接用就可以啦！是的，的确如此，可以直接使用这个中间件来处理文件上传，并存储到对应的位置， :point_right: 但是在实际的项目过程中，我们会发现，随着时间的推移，项目中的资源会跟随着使用者的使用越来越多，需要对资源进行一个统一管理，假如前提没有很好的提供一个管理机制的话，是当项目起来后，是很难保持项目边运行，边实现改造迁移工作的。
+> 因此，很有必要在前期进行一个设计，并赋予实施！
+> :alien: 我们的目的，就是提供 :one: 个单文件上传以及 :one: 个多文件上传的接口API， :point_right: 借助于`multer`中间件，并结合`fs`、`临时文件存储`的机制，来实现文件资源管理器！
+> :point_down: 是对应的一个流程图：
+
+![文件上传服务流程图](./assets/文件上传服务流程图.png)
+
+:star2: 通过直接将`multer`的上传目录当作一临时中间目录，对比本地磁盘文件与刚上传的文件的内容的hash值，从而判断是否是完全一样的文件，减少重复文件上传的可能性。
+:dizzy_face: 还有其他的场景，是目前还没有提供的：
+1. 比如不同的人上传的同一个文件名的文件，有可能因为没有目录控制，导致两者的文件数据可能会发生错乱；
+2. 这里是先上传文件再对比的流程，实际上，还可以是在上传文件之前，在客户端采用与服务端一致的文件hash值获取逻辑，通过上传文件的hash值，与后台存储(redis、db)中所存储的hash值进行一个对比，如果存在，则直接跳过，当然，这里意味着需要对文件的hash值进行其生命周期的管理，比如上传成功后，存储/更新对应的hash值等等；
+3. 实际上，文件的存储，应该是按照类型然后按照对应的日期来进行存储可能会比较好一点，这样子可能能够更好地管理磁盘文件；
+4. 这边采用的在query中传递一个path字段，用于控制将在后台哪个文件夹中来存放当前上传文件，这里有一个漏洞问题，就是如果被疯狂掉用的，有可能在后台疯狂创建不同的文件夹目录，撑爆后台磁盘空间了，需要做进一步的目录上传控制！
 
 ### 开始编写业务处理中间件
 > 在开始编写具体的中间件时，先引入一个请求解析中间件，否则就会出现 👇 这样子的一个结果：
@@ -215,6 +238,114 @@ app.get('/login', (req, res, next) => {
 ![请求日志输出中间件](./assets/请求日志输出中间件.png)
 ✨ 在调试的时候，我们可以通过`morgan`中间件，来查看当前请求的接口都有哪些，以及请求这些接口的基本信息。
 
+### mongoose自动追加的默认属性
+> 当我们使用`mongoose`的`new model().save()`方法来创建一条记录的时候，在`model`所捆绑的`schema`中的属性，将会自动创建出来，并赋予默认的属性值，方便后续的插入校验验证问题！！
+
+### 关于请求参数的校验
+> 在进行商品的发布/编辑接口逻辑编写的时候，发现如果手动一个个来编写这个参数的校验的话，将会导致接口方法逻辑比较长，而且好像也没办法复用，因此，这边在使用原本`mongoose`
+> 所提供的校验服务的基础上，另外新增了`express-validator`这个基于路由层面的数据校验中间件，通过对请求中的`body`、`query`、`header`等不同位置的数据进行获取与校验，
+> 在进入到`model`层之前进行数据的校验，减少数据库的自我校验压力。
+```javascript
+  const express = require('express');
+  const app = new express();
+  // 在还未使用校验中间件之前的处理方式
+  app.get('/hello', (req, res) => {
+    let { field1 } = req.body;
+    if(field1){
+      throw new Error('必须传递数值类型的field1')
+    }
+    res.send(`Hello, ${req.body.person}!`);
+  })
+  // 在使用了`express-validate`之后
+  const { body, validationResult } = require('express-validator');
+  app.get('/hello', body('field1').notEmpty(), (req, res) => {
+    const result = validationResult(req);
+    if (result.isEmpty()) {
+      return res.send(`Hello, ${req.body.person}!`);
+    }
+    res.send({ errors: result.array() });
+  })
+```
+:stars: 当需要校验的属性并没有那么多且复杂的时候，单纯的直接将其逻辑维护到方法中并没有什么，但是一旦需要校验的字段属性较多，而且校验规则较为复杂的时候，就需要庞大的校验规则，而且也无法复用已经维护好的校验规则，因此，针对这种场景，采用**express-validator**来对数据进行中间件层面的校验，通过在中间件层面，对客户端请求进行数据拦截处理，并在校验通过后，进入到下一个中间件，提前将错误进行拦截，减少数据库代码逻辑的执行压力！！
+
+:trollface: 实际上在使用的时候，为了更好的维护项目代码，这边采用将校验与逻辑完全的分开，校验中间件单独处理校验动作以及校验结果判断，而逻辑中间件则保留原本的逻辑代码不变化，如下代码所示：
+
+```javascript
+  // ...这里省略一系列相关的代码
+  // 发布一个商品，路由路径以及请求方式保留原本的定义不变
+  productRouter.put('/publish', productCtrl.createProduct);
+  // 同样正常引入express-async-handler
+  const asyncHandler = require('express-async-handler');
+  const { body, validationResult } = require('express-validator');
+  const validateProduct = [
+    body('productName').notEmpty().trim().isLength({ max: 60 }),
+    body('cates').notEmpty().isArray(),
+    // 这里根据实际情况进行各个字段的一系列判断
+    // 这里是结果校验判断中间件，这里可根据实际情况判断是否需要使用异步操作
+    asyncHandler(async (req, res, next) => {
+      const errorResult = validationResult(req);
+      if(!errorResult){
+        // 如果校验通过，则进入到下一个中间件
+        next()
+      }
+      // 校验失败，则提示失败原因，这里走统一的自定义格式输出动作
+      res.failed(-1, { errors: result.array() })
+    })
+  ]
+  export createProduct = [validateProduct, asyncHandler(async (req, res) => {
+    // 这里依旧是正常的逻辑处理动作
+  })]
+```
+:star: 通过上述的方式，将校验动作与原本的逻辑完全的分离开来，最终对外提供一数组方式的中间件成员即可！！
+![express-validator基本使用结果](./assets/express-validator基本使用结果.png)
+:confused: 如果我这个校验动作是异步的话，比如需要从db中查询是否为正确的字段时，需要使用到其自定义校验，如下代码所示：
+```javascript
+  const validateProduct = [
+    body('cates').custom(async value => {
+      // 这里的value字段为实际的字段值
+      const findCates = await productModel.findOne()
+      if(!findCates){
+        throw new Error('请填写正确的分类id')
+      }
+    })
+  ]
+```
+![express-validator自定义校验结果](./assets/express-validator自定义校验结果.png)
+
+:point_right: 如果校验动作都是一致的话，还可以直接将内置的校验结果判断中间件给抽离出来，单独进行统一的维护！！
+
+:confused: 上述的输出结果中，都是英文的输出，是否可以实现针对字段级别进行自定义message的配置输出呢？
+```javascript
+  //... 这里隐藏一系列代码
+  body('productName', '请维护商品名称')
+```
+![express-validator自定义字段校验提示语](./express-validator自定义字段校验提示语.png)
+
+### 自定义mongoose全局插件
+> 在实际的项目过程中，我们不能够完全相信客户端提交过来的数据，比如有些字段可能没有去除字段两端的空格，那么这个时候，可以使用`mongoose`的注册全局插件的方式，对项目中的所有的`schema`中的字符串字段在保存的时候，
+> 提供一个自我转换的功能，来实现这个目的，如下所示： 
+```javascript
+  // 在数据库连接之前，进行全局插件的注册
+  const globalPlugin = (schema, options) => {
+    // 这里的options则代表插件的参数，可实现参数化掉用的目的
+    // schema为mongoose中的所有的schema对象，通过对这个schema中的属性进行遍历处理
+    schema.pre('save', function(next) {
+      Object.keys(schema.paths).forEach(field => {
+        if(this[field]){
+          // 所有插入到db中的字段，都必须进行trim操作，避免存储了左右为空的字符串
+          if(schema.pathType(field) === 'String'){
+            // 如果文档中的field属性存在且为字符串类型的
+            this[field] = this[field].trim();// 统一去除字符串两端的空白字符串
+          }
+        }
+        next();
+      })
+    })
+  }
+  // 在connect到数据库之前
+  mongoose.plugin(globalPlugin);
+```
+
 ## 项目过程中的坑
 > 本章节主要在实际的项目编码过程中，所遇到的坑，以免后续再踩！！！
 
@@ -245,6 +376,48 @@ app.get('/login', (req, res, next) => {
 ### 关于jwt异常使用的方式
 > `jwt.verify()`方法在执行的时候，如果这个时候因为过期原因导致的异常，将直接通过`throw error`的方式来将异常抛出，因此，我们在使用这个方法进行token有效性校验的时候，就需要使用`try...catch`的方式，来将可能的异常进行自行捕获，并在异常发生的时候，将异常给丢出来！
 
+### 关于mongoose中ObjectId数组类型的定义
+> 在使用`mongoose`来定义`schema`中的属性类型的时候，假如需要将某个属性定义为`*ObjectId数组外键*`的话，则可以按照 :point_down: 的方式来声明：
+```js
+// 单纯的定义为ObjectId数组
+  const schema = new mongoose.Schema({
+    products: {
+      type: [mongoose.SchemaTypes.ObjectId]
+    }
+  })
+// 定义为对象，并将其设置为后续可通过populate关联查询为对应的商品对象
+  const schema = new mongoose.Schema({
+    products: {
+      type: [{
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'products'
+      }]
+    }
+  })
+```
+
+### 关于mongoose中嵌套查询的使用
+> 在使用`mongoose`来对数据进行查询时候，假如需要将一个列表转为树状，比如这个分类列表树状结构输出，需要应用层自定义逻辑代码，
+> 通过过滤筛选动作，查询出对应的数据，但是由于在查询的过程中又进行了嵌套查询操作，这边采用了`Array.map()`方法对查询结果进行
+> 转换输出，针对每个元素又再次进行的查询筛选动作，:point_right: 因此，需要将每一次的查询筛选动作转换为一个promise，
+> 然后借由`Promise.all()`方法，来将所有的查询结果给then出来
+```javascript
+  const childCateListPromise = cateList2.map(async (cate2) => {
+    const cateList3 = await cateModel.find({parentId: cate2._id});
+    return {
+      ...cate2.toObject(),
+      children: cateList3
+    }
+  });
+  const children = await Promise.all(childCateListPromise);
+```
+:stars: 这里通过将cateList2转换为promise数组，然后最后再一口气执行全部的promise，实现将结果输出至children属性中！！！
+
+### 关于model.findByIdAndUpdate()方法没有触发属性的校验规则
+> 当我们通过`mongoose`的`model.findByIdAndUpdate()`方法来更新一个属性的时候，如果没有在其第三个参数中声明`runValidators:true`的时候，
+> 虽然我们已经给属性定义的时候，将其`validate`也进行了相应的配置，但是在某些情况下，`mongoose`在更新时，可能允许绕过验证，这是因为`mongoose`默认情况下只会验证传递给
+> `save()`方法的数据，为了确保属性的自我校验规则能够被自动的触发，因此需要往相应的方法(model.findByIdAndUpdate)中传递`runValidators: true`的属性，告知该API
+> 当执行相关的操作的时候，自动进行对应的校验操作！！
 
 ## 项目调试
 > 作为后端API服务开发，一般都需要进行接口API的调试与验证，因此，这边采用`postman`来进行调试，通过配置其中的公共逻辑部分以及对应的参数获取逻辑，使得整个项目能够共用同一个接口调试逻辑！

@@ -13,7 +13,8 @@ const cateSchema = new mongoose.Schema({
     }
   },
   parentId: {
-    type: mongoose.SchemaTypes.ObjectId
+    type: mongoose.SchemaTypes.ObjectId,
+    default: ''
   }
 });
 
