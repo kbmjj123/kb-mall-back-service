@@ -1,5 +1,5 @@
 {
-    "name": "mongodb-backend-nodejs",
+    "name": "kb-mall-back-service",
     "version": "1.0.0",
     "description": "the project for studying mongodb and backend coding~",
     "main": "index.js",
@@ -9,7 +9,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/kbmjj123/mongodb-backend-nodejs.git"
+        "url": "git+https://github.com/kbmjj123/kb-mall-back-service.git"
     },
     "keywords": [
         "mongodb",
@@ -19,9 +19,9 @@
     "author": "kbmjj123",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/kbmjj123/mongodb-backend-nodejs/issues"
+        "url": "https://github.com/kbmjj123/kb-mall-back-service/issues"
     },
-    "homepage": "https://github.com/kbmjj123/mongodb-backend-nodejs#readme",
+    "homepage": "https://github.com/kbmjj123/kb-mall-back-service#readme",
     "dependencies": {
         "bcrypt": "^5.1.1",
         "body-parser": "^1.20.2",
