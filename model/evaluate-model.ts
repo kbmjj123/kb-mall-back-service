@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const evaluateSchema = new mongoose.Schema({
   userId: {
@@ -42,4 +42,4 @@ evaluateSchema.post('save', (doc) => {
 
 const evaluateModel = mongoose.model('evaluateModel', evaluateSchema, 'evaluates');
 
-module.exports = evaluateModel;
+export default evaluateModel;

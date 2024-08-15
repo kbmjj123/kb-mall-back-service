@@ -1,9 +1,9 @@
-const asyncHandler = require('express-async-handler');
-const productModel = require('../model/product-model');
-const brandModel = require('../model/brand-model');
-const cateModel = require('../model/cate-model');
-const { body } = require('express-validator');
-const { ObjectId } = require('mongodb');
+import asyncHandler from 'express-async-handler'
+import productModel from '../model/product-model'
+import brandModel from '../model/brand-model';
+import cateModel from '../model/cate-model';
+import { body } from 'express-validator'
+import { ObjectId } from 'mongodb'
 // 统一的校验处理动作
 const commonResultValidateMW = require('../middleware/common-result-validate-middleware');
 
@@ -31,7 +31,7 @@ const validateProduct = [
   commonResultValidateMW
 ]
 
-module.exports = {
+export default {
   // 发布一个商品
   createProduct: [validateProduct, asyncHandler(async (req, res) => {
     const params = req.body;

@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express'
 const productRouter = express.Router();
-const authWM = require('../middleware/auth-middleware');
-const productCtrl = require('../control/product-controller');
-const cateCtrl = require('../control/cate-controller');
-const brandCtrl = require('../control/brand-controller');
+import authWM from '../middleware/auth-middleware'
+import productCtrl from '../control/product-controller'
+import cateCtrl from '../control/cate-controller'
+import brandCtrl from '../control/brand-controller'
 
 productRouter.use(authWM.checkRole);
 

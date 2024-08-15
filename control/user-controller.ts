@@ -1,9 +1,9 @@
-const asyncHandler = require('express-async-handler');
-const userModel = require('../model/user-model');
-const tokenGenerator = require('../config/token-generator.js')
-const jwt = require('jsonwebtoken');
+import asyncHandler from 'express-async-handler'
+import userModel from '../model/user-model'
+import tokenGenerator from '../config/token-generator'
+import jwt from 'jsonwebtoken'
 
-module.exports = {
+export default {
   // 创建用户，主要走自主注册
   createUser: asyncHandler(async (req, res) => {
     const { email, account, password } = req.body;

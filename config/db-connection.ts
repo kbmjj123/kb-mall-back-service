@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
 //! 自定义并注册全局插件
 const globalPlugin = (schema, options) => {
   // 这里的options则代表插件的参数，可实现参数化掉用的目的
@@ -21,7 +21,7 @@ mongoose.set({
   debug: true
 })
 
-module.exports = () => {
+export default () => {
   try{
     // 在mongoose连接之前注册全局插件
     mongoose.plugin(globalPlugin);

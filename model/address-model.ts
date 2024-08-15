@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-
+import mongoose from "mongoose";
 const addressSchema = new mongoose.Schema({
   isDefault: {
     type: Boolean,
@@ -54,4 +53,4 @@ addressSchema.post('save', (doc) => {
 
 const addressModel = mongoose.model('addressModel', addressSchema, 'addresses');
 
-module.exports = addressModel;
+export default addressModel;

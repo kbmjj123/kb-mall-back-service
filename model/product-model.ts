@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-
+import mongoose from "mongoose";
 const productSchema = new mongoose.Schema({
   cates: {
     type: [{type: mongoose.SchemaTypes.ObjectId}],
@@ -63,4 +62,4 @@ const productSchema = new mongoose.Schema({
 
 const productModel = mongoose.model('productModel', productSchema, 'products');
 
-module.exports = productModel;
+export default productModel;

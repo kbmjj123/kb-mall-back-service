@@ -1,7 +1,7 @@
-const asyncHandler = require('express-async-handler');
-const cateModel = require('../model/cate-model');
+import asyncHandler from 'express-async-handler'
+import cateModel from '../model/cate-model'
 
-module.exports = {
+export default {
   // 获取分类列表数据-->以树状列表来返回
   getCateList: asyncHandler(async (req, res) => {
     //? 获取一级列表-->由于有异步嵌套，采用将一个异步查询转换为等待执行的promise

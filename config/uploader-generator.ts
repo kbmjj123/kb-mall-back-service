@@ -1,8 +1,10 @@
-const multer = require('multer');
-const BASE_FILE_DIR = 'uploads'; // 上传文件基础目录
-const RESOURCES_DIR = 'resources'; // 最终文件存储目录
-const fs = require('fs');
-const getFilePathFromReq = req => {
+export const BASE_FILE_DIR = 'uploads'; // 上传文件基础目录
+export const RESOURCES_DIR = 'resources'; // 最终文件存储目录
+
+import multer from "multer";
+import fs from 'fs'
+
+export const getFilePathFromReq = req => {
   return `${BASE_FILE_DIR}/${req.query.path}/`
 }
 // 生成的统一的文件存储位置以及文件命名规则
@@ -21,8 +23,8 @@ const storage = multer.diskStorage({
   }
 })
 
-const upload = multer({ storage: storage })
+export const upload = multer({ storage: storage })
 
-module.exports = {
+export default {
   upload, BASE_FILE_DIR, RESOURCES_DIR, getFilePathFromReq
 }

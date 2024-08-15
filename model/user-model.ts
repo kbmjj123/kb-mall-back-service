@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt'); // 加密加盐用途
+import mongoose from "mongoose";
+import bcrypt from 'bcrypt'
 
 // 映射collection
 const userSchema = new mongoose.Schema({
@@ -50,4 +50,4 @@ userSchema.methods.isPasswordMatched = async function(newPwd){
 // 即将对外暴露的相关模型
 const userModel = mongoose.model('userModel', userSchema, "users");
 
-module.exports = userModel;
+export default userModel;

@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express'
 const orderRouter = express.Router();
-const authWM = require('../middleware/auth-middleware');
-const orderCtrl = require('../control/order-controller');
+import authWM from '../middleware/auth-middleware'
+import orderCtrl from '../control/order-controller'
 
 orderRouter.use(authWM.checkRole);
 

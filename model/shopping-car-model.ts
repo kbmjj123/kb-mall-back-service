@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const shopCarSchema = new mongoose.Schema({
   userId: {
@@ -18,4 +18,4 @@ const shopCarSchema = new mongoose.Schema({
 
 const shopCarModel = mongoose.model('', shopCarSchema, 'shopCars');
 
-module.exports = shopCarModel;
+export default shopCarModel;

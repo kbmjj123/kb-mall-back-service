@@ -1,5 +1,5 @@
-const asyncHandler = require('express-async-handler');
-const brandModel = require('../model/brand-model');
+import asyncHandler from 'express-async-handler'
+import brandModel from '../model/brand-model'
 
 module.exports = {
   // 获取品牌列表

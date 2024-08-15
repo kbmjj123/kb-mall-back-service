@@ -1,7 +1,7 @@
-const asyncHandler = require('express-async-handler');
-const orderModel = require('../model/order-model');
+import asyncHandler from 'express-async-handler'
+import orderModel from '../model/order-model'
 
-module.exports = {
+export default {
   // 获取订单列表
   getOrderList: asyncHandler(async (req, res) => {}),
   // 订单发货

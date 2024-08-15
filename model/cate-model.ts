@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const cateSchema = new mongoose.Schema({
   title: {
@@ -20,4 +20,4 @@ const cateSchema = new mongoose.Schema({
 
 const cateModel = mongoose.model('cateModel', cateSchema, 'cates')
 
-module.exports = cateModel
+export default cateModel

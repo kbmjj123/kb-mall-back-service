@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
   createTime: {
@@ -34,3 +34,5 @@ const orderSchema = new mongoose.Schema({
 });
 
 const orderModel = mongoose.model('orderModel', orderSchema, 'orders')
+
+export default orderModel

@@ -1,9 +1,8 @@
-const express = require('express');
-
+import express from 'express'
 const fileUploadRouter = express.Router();
-const authWM = require('../middleware/auth-middleware');
-const fileCtrl = require('../control/file-controller');
-const { upload } = require('../config/uploader-generator');
+import authWM from '../middleware/auth-middleware'
+import fileCtrl from '../control/file-controller'
+import { upload } from '../config/uploader-generator'
 
 fileUploadRouter.use(authWM.isLogin);
 

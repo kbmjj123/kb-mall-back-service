@@ -1,9 +1,10 @@
-const jwt = require('jsonwebtoken');
-const userModel = require('../model/user-model');
+import jwt from 'jsonwebtoken'
+import userModel from '../model/user-model';
+import { Request, Response, NextFunction } from 'express'
 
-module.exports = {
+export default {
   // 只是单纯判断是否已登录
-  isLogin: async (req, res, next) => {
+  isLogin: async (req: Request, res: Response, next: NextFunction) => {
     // 获取客户端携带的token信息
     let token = req?.headers?.authorization;
     if (token) {
@@ -28,7 +29,7 @@ module.exports = {
     }
   },
   // 默认的全局拦截判断逻辑
-  checkRole: async (req, res, next) => {
+  checkRole: async (req: Request, res: Response, next: NextFunction) => {
     // 获取客户端携带的token信息
     let token = req?.headers?.authorization;
     token = token.split(' ')[1];

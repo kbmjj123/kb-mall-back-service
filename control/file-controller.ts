@@ -1,8 +1,8 @@
-const asyncHandler = require('express-async-handler');
-const fs = require('fs');
-const crypto = require('crypto');
-const path = require('path');
-const { getFilePathFromReq, RESOURCES_DIR } = require('../config/uploader-generator');  // 获取文件上传的基础目录 
+import asyncHandler from 'express-async-handler'
+import fs from 'fs'
+import crypto from 'crypto'
+import path from 'path'
+import { getFilePathFromReq, RESOURCES_DIR } from '../config/uploader-generator';  // 获取文件上传的基础目录 
 
 // 计算文件hash的函数
 function calculateFileHash(filePath) {
@@ -15,7 +15,7 @@ function calculateFileHash(filePath) {
   });
 }
 
-module.exports = {
+export default {
   // 拿到文件后，对响应结果进行包装后返回
   wrapFile: asyncHandler(async (req, res) => {
     const uploadedFilePath = path.join(getFilePathFromReq(req), req.file.filename);  // 获取已上传的文件路径
