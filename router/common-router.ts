@@ -6,4 +6,4 @@ import userController from '../control/user-controller'
 commonRouter.post('/register', userController.createUser);
 commonRouter.post('/login', userController.checkUser);
 
-module.exports = commonRouter;
+export default commonRouter;

@@ -41,4 +41,4 @@ productRouter.post('/brand/:id', brandCtrl.editABrand);
 productRouter.delete('/brand/:id', brandCtrl.removeABrand);
 
 
-module.exports = productRouter;
+export default productRouter;

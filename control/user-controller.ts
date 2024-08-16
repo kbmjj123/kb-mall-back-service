@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import userModel from '../model/user-model'
 import tokenGenerator from '../config/token-generator'
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
 export default {
   // 创建用户，主要走自主注册
@@ -59,7 +59,7 @@ export default {
     let { refreshToken } = req.body;
     if(refreshToken){
       // 如果用户传递了token，则去db中查询是否有对应的
-      const decodeInfo = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+      const decodeInfo = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as JwtPayload;
       if(decodeInfo && decodeInfo.id){
         // 有效的token-->更新为新的token
         refreshToken = tokenGenerator.generateRefreshToken(decodeInfo.id);

@@ -14,4 +14,4 @@ orderRouter.post('/:id', orderCtrl.deliveryAOrder);
 // 取消订单
 orderRouter.post('/:id', orderCtrl.cancelAOrder);
 
-module.exports = orderRouter;
+export default orderRouter;

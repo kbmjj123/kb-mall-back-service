@@ -10,4 +10,4 @@ fileUploadRouter.post('/uploadFile', upload.single('file'), fileCtrl.wrapFile);
 
 fileUploadRouter.post('/uploadFiles', upload.array('photoes', 12), fileCtrl.wrapFiles);
 
-module.exports = fileUploadRouter;
+export default fileUploadRouter;

@@ -1,14 +1,13 @@
-import 'express'
+import express from "express";
 
-declare module 'express' {
-	export interface Response {
-		success: (payload: any, msg: string) => void,
-		failed: (status: number, payload: any, msg: string) => {}
+declare global {
+	namespace Express {
+		export interface Response {
+			success: (payload: any, msg?: string) => void,
+			failed: (status: number, payload: any, msg: string) => {}
+		}
+		export interface Request {
+			user?: any
+		}
 	}
-}
-declare module 'express-serve-static-core' {
-  interface Response {
-    success: (payload: any, msg: string) => void,
-		failed: (status: number, payload: any, msg: string) => {}
-  }
 }

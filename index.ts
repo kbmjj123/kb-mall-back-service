@@ -15,7 +15,10 @@ import morgan from 'morgan';//友好输出请求日志信息
 import serveStatic from 'serve-static';  // 对于静态资源的直接访问
 
 app.use(cors());
-
+app.use((req, res, next) => {
+	console.info('我是中间件')
+	next()
+})
 //! 追加响应体的中间件，统一格式化响应结果
 app.use(responseWrapperMiddleware);
 

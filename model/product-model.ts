@@ -28,19 +28,19 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     validate: {
-      validator: function(val){
+      validator: function(val: number){
         return val > 0
       },
-      message: props => `${props.value}不符合规范，商品价格必须大于0`
+      message: (props: { value: any; }) => `${props.value}不符合规范，商品价格必须大于0`
     }
   },
   activityPrice: {
     type: Number,
     validate: {
-      validator: function(val){
+      validator: function(val: number){
         return val > 0
       },
-      message: props => `${props.value}不符合规范，活动价格必须大于0`
+      message: (props: { value: any; }) => `${props.value}不符合规范，活动价格必须大于0`
     }
   },
   sales: {

@@ -5,7 +5,7 @@ import path from 'path'
 import { getFilePathFromReq, RESOURCES_DIR } from '../config/uploader-generator';  // 获取文件上传的基础目录 
 
 // 计算文件hash的函数
-function calculateFileHash(filePath) {
+function calculateFileHash(filePath: string) {
   return new Promise((resolve, reject) => {
       const hash = crypto.createHash('sha256');
       const stream = fs.createReadStream(filePath);
@@ -18,12 +18,12 @@ function calculateFileHash(filePath) {
 export default {
   // 拿到文件后，对响应结果进行包装后返回
   wrapFile: asyncHandler(async (req, res) => {
-    const uploadedFilePath = path.join(getFilePathFromReq(req), req.file.filename);  // 获取已上传的文件路径
+    const uploadedFilePath = path.join(getFilePathFromReq(req), req.file?.filename as string);  // 获取已上传的文件路径
     console.info('刚上传的本地文件路径：' + uploadedFilePath)
-    if(!fs.existsSync(path.join(RESOURCES_DIR, req.query.path))){
-      fs.mkdirSync(path.join(RESOURCES_DIR, req.query.path))
+    if(!fs.existsSync(path.join(RESOURCES_DIR, req.query.path as string))){
+      fs.mkdirSync(path.join(RESOURCES_DIR, req.query.path as string))
     }
-    const targetFilePath = path.join(RESOURCES_DIR, req.query.path, req.file.originalname); // 本地最终文件存储路径
+    const targetFilePath = path.join(RESOURCES_DIR, req.query.path as string, req.file?.originalname as string); // 本地最终文件存储路径
 
     if (fs.existsSync(targetFilePath)) {
       // 文件同名，则计算现有文件和上传文件的hash值

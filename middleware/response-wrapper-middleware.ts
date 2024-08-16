@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 
 const SUCCESS_FLAG = 0;
 const SUCCESS_MSG = '操作成功'
 const FAILED_FLAG = -1;
 const FAILED_MSG = '操作失败'
 
-export default function (req: Request, res: Response, next: NextFunction) {
+export default (req: Request, res: Response, next: NextFunction) => {
 	// 追加自定义统一的成功响应方法
-	res.success = function (payload, msg = '') {
+	res.success = function (payload = null, msg = '') {
 		return res.json({
 			status: SUCCESS_FLAG,
 			data: payload,

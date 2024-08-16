@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 import bcrypt from 'bcrypt'
 
 // 映射collection
@@ -33,6 +33,9 @@ const userSchema = new mongoose.Schema({
     loginTime: Date,
     logoutTime: Date
 })
+type IUser = InferSchemaType<typeof userSchema> & {
+	isPasswordMatched(newPwd: string): Promise<Boolean>;
+}
 userSchema.pre('save', async function(next){
   //? 在密码存储之前，对密码进行加盐加密
   this.password = await bcrypt.hash(this.password, Number(process.env.BCRYPT_SALT));
@@ -42,12 +45,15 @@ userSchema.pre('save', async function(next){
   // next(new Error('自定义校验'))
   next()
 })
+userSchema.method('isPasswordMatched', async function (newPwd: string) {
+	return await bcrypt.compare(newPwd, this.password)
+})
 // 这里我们采用了向userModel实例对象中添加了实例方法，用于比对查询到的密码与传递的密码是否一致
-userSchema.methods.isPasswordMatched = async function(newPwd){
+// userSchema.methods.isPasswordMatched = async function(newPwd: string){
   // 这里newPwd为客户端传递的密码，this.password代表通过匹配账号得来的用户信息中的密码属性
-  return await bcrypt.compare(newPwd, this.password)
-}
+  // return await bcrypt.compare(newPwd, this.password)
+// }
 // 即将对外暴露的相关模型
-const userModel = mongoose.model('userModel', userSchema, "users");
+const userModel = mongoose.model<IUser>('userModel', userSchema, "users");
 
 export default userModel;
