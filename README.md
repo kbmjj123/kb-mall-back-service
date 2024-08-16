@@ -7,28 +7,62 @@
 ## 目录结构说明
 ```
 mongodb-backend-nodejs
-├─ LICENSE
-├─ README.md 项目介绍文档
-├─ assets 本地说明文档所需图片资源
-├─ config
-│  ├─ db-connection.js 统一的数据库连接器
-│  ├─ token-generator.js 统一的token生成器，包括访问token以及刷新token
-│  ├─ uploader-generator.js 统一的文件上传配置生成器，用于统一配置文件上传
-├─ control
-├─ index.js
-├─ middleware
-│  ├─ auth-middleware.js 授权认证中间件，作为需要授权登录或者需要高级权限的判断拦截器
-│  ├─ common-result-validate-middleware.js 统一的请求参数校验结果中间，用以告知客户端关于参数的结果如何进行回复提示的拦截器
-│  ├─ not-found-middleware.js 处理未找到时的统一处理拦截器
-│  ├─ response-wrapper-middleware.js 对响应结果进行一自定义包装，确保响应结果的数据结构一致性，方便客户端进行统一管理
-│  └─ service-error-middleware.js 服务异常处理器
-├─ model
-│  └─ userModel.js
-├─ resources 所有客户端上传过来的最终存储位置
-├─ router 将系统的接口进行模块化管理，也就是模块化接口定义的位置
-├─ uploads 文件上传的临时存储位置，用于提升文件上传的体验以及空间的合理应用
-├─ utils 项目所需的工具类
-└─ package.json
+├── .env
+├── .eslintignore
+├── .eslintrc.json
+├── .gitignore
+├── .nvmrc
+├── .prettierignore
+├── .prettierrc
+├── assets 本地说明文档所需图片资源
+├── commitlint.config.cjs
+├── config
+│  ├── db-connection.ts 统一的数据库连接器
+│  ├── token-generator.ts 统一的token生成器，包括访问token以及刷新token
+│  └── uploader-generator.ts 统一的文件上传配置生成器，用于统一配置文件上传
+├── control  业务逻辑的控制器
+│  ├── brand-controller.ts	品牌控制器
+│  ├── cate-controller.ts	分类控制器
+│  ├── file-controller.ts	文件资源控制器
+│  ├── order-controller.ts	订单控制器
+│  ├── product-controller.ts	产品控制器
+│  └── user-controller.ts	用户控制器
+├── doc	 项目的说明文档子目录
+│  └── 升级至ts.md
+├── index.ts	应用程序入口文件
+├── lint-staged.config.cjs	差分提交代码的自动检查执行配置文件
+├── middleware	项目中中间件目录
+│  ├── auth-middleware.ts	授权认证中间件，作为需要授权登录或者需要高级权限的判断拦截器
+│  ├── common-result-validate-middleware.ts	统一的请求参数校验结果中间，用以告知客户端关于参数的结果如何进行回复提示的拦截器
+│  ├── not-found-middleware.ts	统一的拦截未找到的中间件
+│  ├── response-wrapper-middleware.ts	统一的响应包装器中间件，用以返回统一的格式给客户端
+│  └── service-error-middleware.ts	统一的异常响应处理中间件
+├── model	项目中的model数据库访问的映射器
+│  ├── address-model.ts
+│  ├── brand-model.ts
+│  ├── cate-model.ts
+│  ├── evaluate-model.ts
+│  ├── order-model.ts
+│  ├── product-model.ts
+│  ├── shopping-car-model.ts
+│  └── user-model.ts
+├── package.json
+├── README.md 项目介绍文档
+├── resources 
+├── router	将系统的接口进行模块化管理，也就是模块化接口定义的位置
+│  ├── common-router.ts
+│  ├── file-upload-router.ts
+│  ├── index.ts
+│  ├── order-router.ts
+│  ├── product-router.ts
+│  └── user-router.ts
+├── tsconfig.json
+├── types
+│  ├── env.d.ts
+│  ├── express
+│  │  └── index.d.ts
+│  └── jwt.d.ts
+└── uploads 所有客户端上传过来的最终存储位置
 ```
 
 ## 启动命令
