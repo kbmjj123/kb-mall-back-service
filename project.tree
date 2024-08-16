@@ -1,0 +1,58 @@
+├── .env
+├── .eslintignore
+├── .eslintrc.json
+├── .gitignore
+├── .nvmrc
+├── .prettierignore
+├── .prettierrc
+├── .vscode
+│  └── launch.json
+├── assets
+├── commitlint.config.cjs
+├── config
+│  ├── db-connection.ts
+│  ├── token-generator.ts
+│  └── uploader-generator.ts
+├── control
+│  ├── brand-controller.ts
+│  ├── cate-controller.ts
+│  ├── file-controller.ts
+│  ├── order-controller.ts
+│  ├── product-controller.ts
+│  └── user-controller.ts
+├── doc
+│  └── 升级至ts.md
+├── index.ts
+├── lint-staged.config.cjs
+├── middleware
+│  ├── auth-middleware.ts
+│  ├── common-result-validate-middleware.ts
+│  ├── not-found-middleware.ts
+│  ├── response-wrapper-middleware.ts
+│  └── service-error-middleware.ts
+├── model
+│  ├── address-model.ts
+│  ├── brand-model.ts
+│  ├── cate-model.ts
+│  ├── evaluate-model.ts
+│  ├── order-model.ts
+│  ├── product-model.ts
+│  ├── shopping-car-model.ts
+│  └── user-model.ts
+├── package.json
+├── README.md
+├── resources
+├── router
+│  ├── common-router.ts
+│  ├── file-upload-router.ts
+│  ├── index.ts
+│  ├── order-router.ts
+│  ├── product-router.ts
+│  └── user-router.ts
+├── tsconfig.json
+├── types
+│  ├── env.d.ts
+│  ├── express
+│  │  └── index.d.ts
+│  └── jwt.d.ts
+└── uploads
