@@ -7,18 +7,14 @@ import routes from './router'
 import path from 'path'
 const app = express();
 import dbConnection from './config/db-connection'// 引入数据库连接器
-import 'dotenv'
-// require('dotenv').config(); // 加载.env环境变量，使得整个程序可以通过process.env访问到.env文件中定义的变量
+import dotenv from 'dotenv'
+dotenv.config()	// 加载.env环境变量，使得整个程序可以通过process.env访问到.env文件中定义的变量
 
 import bodyParser from 'body-parser';// 解析客户端请求体到req.body
 import morgan from 'morgan';//友好输出请求日志信息
 import serveStatic from 'serve-static';  // 对于静态资源的直接访问
 
 app.use(cors());
-app.use((req, res, next) => {
-	console.info('我是中间件')
-	next()
-})
 //! 追加响应体的中间件，统一格式化响应结果
 app.use(responseWrapperMiddleware);
 

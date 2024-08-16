@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"typeRoots": ["./types", "./types/env.d.ts", "./types/jwt.d.ts", "./node_modules/@types"],
+		"typeRoots": ["./types/", "./types/*.d.ts", "./node_modules/@types"],
 		"target": "es2016",
 		"module": "commonjs",
 		"esModuleInterop": true,
