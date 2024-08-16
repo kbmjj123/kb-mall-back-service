@@ -17,7 +17,7 @@ export default {
 			total = await brandModel.estimatedDocumentCount();
 			searchList = await brandModel.find().skip(pageIndex * pageSize).limit(pageSize);
 		}
-		let pages = Math.ceil(total / pageSize);
+		const pages = Math.ceil(total / pageSize);
 		res.success({
 			list: searchList,
 			total: total,

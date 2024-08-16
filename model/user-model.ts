@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
     logoutTime: Date
 })
 type IUser = InferSchemaType<typeof userSchema> & {
-	isPasswordMatched(newPwd: string): Promise<Boolean>;
+	isPasswordMatched(newPwd: string): Promise<boolean>;
 }
 userSchema.pre('save', async function(next){
   //? 在密码存储之前，对密码进行加盐加密

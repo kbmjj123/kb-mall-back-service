@@ -6,7 +6,7 @@ import { body } from 'express-validator'
 import { ObjectId } from 'mongodb'
 import { RequestHandler } from 'express';
 // 统一的校验处理动作
-const commonResultValidateMW = require('../middleware/common-result-validate-middleware');
+import commonResultValidateMW from '../middleware/common-result-validate-middleware'
 
 // 商品参数校验器
 const validateProduct = () => [
@@ -140,7 +140,7 @@ export default {
       searchList = await productModel.find().skip(pageIndex * pageSize).limit(pageSize);
       total = await productModel.estimatedDocumentCount();
     }
-    let pages = Math.ceil(total / pageSize);
+    const pages = Math.ceil(total / pageSize);
     res.success({
       list: searchList,
       total,
