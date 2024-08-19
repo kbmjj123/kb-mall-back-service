@@ -7,7 +7,9 @@ declare global {
 			failed: (status: number, payload: any, msg: string) => {}
 		}
 		export interface Request {
-			user?: any
+			user?: any,
+			language?: string,
+			languages?: string[]
 		}
 	}
 }
