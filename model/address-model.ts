@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 const addressSchema = new mongoose.Schema({
   isDefault: {
     type: Boolean,
@@ -16,6 +16,10 @@ const addressSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+	cityName: {
+		type: String,
+		required: true
+	},
   areaName: {
     type: String,
     required: true
@@ -47,10 +51,12 @@ const addressSchema = new mongoose.Schema({
   }
 });
 
+type IAddress = InferSchemaType<typeof addressSchema>
+
 addressSchema.post('save', (doc) => {
   //TODO 当用户新增/编辑收货地址时，需判断是否为默认地址，从而触发用户信息中的默认收货地址
 })
 
-const addressModel = mongoose.model('addressModel', addressSchema, 'addresses');
+const addressModel = mongoose.model<IAddress>('addressModel', addressSchema, 'addresses');
 
 export default addressModel;

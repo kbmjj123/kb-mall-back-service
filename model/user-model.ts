@@ -25,10 +25,6 @@ const userSchema = new mongoose.Schema({
     },
     nickName: String,
     avatar: String,
-    // wish: {
-    //   type: Array[mongoose.SchemaTypes.ObjectId],
-    //   default: []
-    // },
     address: mongoose.SchemaTypes.ObjectId,
     loginTime: Date,
     logoutTime: Date

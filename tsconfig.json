@@ -3,6 +3,7 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./*"],
+      "@/enum": ["./enum"],
       "@/config": ["./config"],
       "@/control": ["./control"],
       "@/middleware": ["./middleware"],
