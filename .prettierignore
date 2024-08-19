@@ -1,0 +1,6 @@
+.github/
+.husky/
+.vscode/
+node_modules/
+.nvmrc
+pnpm-lock.yaml
