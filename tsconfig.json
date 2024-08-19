@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./*"],
+      "@/config": ["./config"],
+      "@/control": ["./control"],
+      "@/middleware": ["./middleware"],
+      "@/model": ["./model"]
+    },
     "typeRoots": ["./types/", "./types/*.d.ts", "./node_modules/@types"],
     "target": "ES2021",
     "module": "commonjs",
