@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
     loginTime: Date,
     logoutTime: Date
 })
-type IUser = InferSchemaType<typeof userSchema> & {
+export type IUser = InferSchemaType<typeof userSchema> & {
 	isPasswordMatched(newPwd: string): Promise<boolean>;
 }
 userSchema.pre('save', async function(next){

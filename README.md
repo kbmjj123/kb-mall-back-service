@@ -89,6 +89,7 @@ mongodb-backend-nodejs
 ## express官方的中间件以及自定义中间件
 > 使用`express`来开发的话，一般会配套使用官方所提供的中间件， 👇 是对应的官方中间件说明清单：
 
+### express官方中间件
 1. `express-async-handler`: 简单的中间件，用于处理`express`路由内的异常，并将它们传递给EXPRESS错误处理程序
    🤔 用于自动将中间中产生的异常，自动`next`到下一个中间件，省去了在每一个中间件中显示地调用`next()`方法来将任务转移到下一个中间件，详见[官网对比描述](https://www.npmjs.com/package/express-async-handler#usage)
 2. `morgan`: 请求日志输出中间件，用于将客户端请求的路径、方式、响应时长等信息给输出来，便于调试；
@@ -105,8 +106,25 @@ mongodb-backend-nodejs
 | not-found-middleware | 找不到服务，也就是404 |
 | service-error-middleware | 统一的异常处理中间件 |
 | response-wrapper-middleware | 统一的网络响应自定义格式化中间件，提供自定义的`success`以及`failed`方法来向业务提供一键调用的方法 |
+| language-middleware | 统一的语言处理中间件，用于自动从req中监测出客户端所使用的语言，然后可根据这个语言对应返回其使用的翻译方法api |
 |  |  |
-|  |  |
+
+
+### 追加到req中的属性
+> 因业务开发需要，需要从客户端中获取一些信息来辅助开发，并在各中间件中提供一些属性供后续调用，
+> 以下是对应的属性说明：
+```typescript
+	export interface Request {
+			user?: IUser,	// 追加在req中的用户信息，便于后续中间件直接获取
+			//! 以下是i18next-http-middleware中间件追加的属性
+			i18n: i18n,				// i18next实例
+			t: i18n['t'],			// 公共的语言翻译函数
+			language: string,	// 当前请求的语言code 
+			languages: string[],	// 可回单支持的语言code数组
+			lng: string,					// 当前请求的语言code，等价于language
+			locale: string,		// 当前请求的语言code，等价于language
+		}
+```
 
 ### .env配置文件变量声明
 1. MONGODB_URL: mongodb数据库连接地址，这里使用的是官方所提供的免费共享的数据库；

@@ -7,7 +7,8 @@
       "@/config": ["./config"],
       "@/control": ["./control"],
       "@/middleware": ["./middleware"],
-      "@/model": ["./model"]
+      "@/model": ["./model"],
+      "@/utils": ["./utils"]
     },
     "typeRoots": ["./types/", "./types/*.d.ts", "./node_modules/@types"],
     "target": "ES2021",

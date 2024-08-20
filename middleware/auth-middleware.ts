@@ -20,13 +20,13 @@ export default {
           // 直接在中间件这里做一个拦截
           next();
         } else {
-          res.failed(LogicResult.LOGIN_TIMEOUT, null, '登录超时！')
+          res.failed(LogicResult.LOGIN_TIMEOUT, null, req.t('tip.failed'))
         }
       } catch (error) {
-        res.failed(LogicResult.FORBIT, '', '当前用户无权限')
+        res.failed(LogicResult.FORBIT, '', req.t('user.permissionLimitTip'))
       }
     }else{
-      res.failed(LogicResult.LOGIN_TIMEOUT, null, '登录超时！')
+      res.failed(LogicResult.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
     }
   },
   // 默认的全局拦截判断逻辑
@@ -43,15 +43,15 @@ export default {
         req.user = findUser
         // 直接在中间件这里做一个拦截
         if ('user' === findUser.role) {
-          res.failed(LogicResult.FORBIT, '', '当前用户无权限')
+          res.failed(LogicResult.FORBIT, '', req.t('user.permissionLimitTip'))
         } else {
           next();
         }
       } else {
-        res.failed(LogicResult.LOGIN_TIMEOUT, null, '登录超时！')
+        res.failed(LogicResult.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
       }
     } catch (error) {
-      res.failed(LogicResult.FORBIT, '', '当前用户无权限')
+      res.failed(LogicResult.FORBIT, '', req.t('user.permissionLimitTip'))
     }
   }
 }

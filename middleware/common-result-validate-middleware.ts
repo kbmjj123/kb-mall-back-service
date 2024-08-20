@@ -8,7 +8,7 @@ export default function (req: Request, res: Response, next: NextFunction) {
 		//? 有存在校验不通过的情况，将不通过的情况进行统一的格式化输出
 		res.failed(LogicResult.PARAMS_ERROR, {
 			errors: errorResult.array()
-		}, '请求参数有误，请检查后重新提交')
+		}, req.t('tip.paramsError'))
 	} else {
 		next()
 	}
