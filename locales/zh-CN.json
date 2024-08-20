@@ -1,7 +1,8 @@
 {
   "tip": {
     "success": "操作成功",
-    "failed": "操作失败"
+    "failed": "操作失败",
+    "paramsError": "请求参数有误，请检查后重新提交"
   },
   "brand": {},
   "cate": {},
@@ -9,6 +10,7 @@
   "order": {},
   "product": {},
   "user": {
+    "permissionLimitTip": "当前用户无权限",
     "inputEmailTip": "请维护邮箱账号",
     "inputPasswordTip": "请维护用户密码",
     "inputUserRole": "请维护用户角色",

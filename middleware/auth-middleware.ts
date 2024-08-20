@@ -1,6 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import userModel from '../model/user-model';
 import { Request, Response, NextFunction } from 'express'
+import { LogicResult } from '@/enum/http'
 
 export default {
   // 只是单纯判断是否已登录
@@ -19,13 +20,13 @@ export default {
           // 直接在中间件这里做一个拦截
           next();
         } else {
-          res.failed(-1, null, '登录超时！')
+          res.failed(LogicResult.LOGIN_TIMEOUT, null, '登录超时！')
         }
       } catch (error) {
-        res.failed(403, '', '当前用户无权限')
+        res.failed(LogicResult.FORBIT, '', '当前用户无权限')
       }
     }else{
-      res.failed(-1, null, '登录超时！')
+      res.failed(LogicResult.LOGIN_TIMEOUT, null, '登录超时！')
     }
   },
   // 默认的全局拦截判断逻辑
@@ -42,15 +43,15 @@ export default {
         req.user = findUser
         // 直接在中间件这里做一个拦截
         if ('user' === findUser.role) {
-          res.failed(403, '', '当前用户无权限')
+          res.failed(LogicResult.FORBIT, '', '当前用户无权限')
         } else {
           next();
         }
       } else {
-        res.failed(-1, null, '登录超时！')
+        res.failed(LogicResult.LOGIN_TIMEOUT, null, '登录超时！')
       }
     } catch (error) {
-      res.failed(403, '', '当前用户无权限')
+      res.failed(LogicResult.FORBIT, '', '当前用户无权限')
     }
   }
 }
