@@ -9,7 +9,31 @@ userRouter.use(authWM.checkRole);
 userRouter.get('/', (req, res, next) => {
 	res.json('我是来自于userRouter的json内容响应')
 })
-// 查询一个用户信息
+/**
+ * @swagger
+ * /user/{id}:
+ *   get:
+ *     summary: 获取用户信息
+ *     description: 根据用户id获取用户信息
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: 用户信息对象
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 key:
+ *                   type: string
+ */
 userRouter.get('/:id', userController.getAUser);
 // 刷新登录用户的token，即延长用户的在线有效性
 userRouter.patch('/refreshToken', userController.refreshToken);

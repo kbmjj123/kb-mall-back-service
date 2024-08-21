@@ -2,6 +2,7 @@ import express from 'express'
 import notFoundMiddleware from './middleware/not-found-middleware';
 import serviceErrorMiddleware from './middleware/service-error-middleware';
 import responseWrapperMiddleware from './middleware/response-wrapper-middleware';
+import { setupSwagger } from './middleware/swagger-config'
 import cors from 'cors'
 import routes from './router'
 import languageMiddleware from './middleware/language-middleware';
@@ -16,6 +17,7 @@ import morgan from 'morgan';//友好输出请求日志信息
 import serveStatic from 'serve-static';  // 对于静态资源的直接访问
 
 languageMiddleware(app)	// 语言安装包中间件
+setupSwagger(app)	// swagger接口文档服务
 
 app.use(cors());
 //! 追加响应体的中间件，统一格式化响应结果
