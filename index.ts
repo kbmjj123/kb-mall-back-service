@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 	res.send('<p>服务成功访问了～～</p>')
 })
 RegisterRoutes(app);
-setupSwagger(app)
+setupSwagger(app);
 // routes(app);  // 借鉴于模块化管理，将路由对外暴露统一的一个接口
 
 // 处理请求404
