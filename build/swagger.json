@@ -1,0 +1,141 @@
+{
+  "openapi": "3.0.0",
+  "components": {
+    "examples": {},
+    "headers": {},
+    "parameters": {},
+    "requestBodies": {},
+    "responses": {},
+    "schemas": {
+      "mongoose.Types.ObjectId": {
+        "type": "string"
+      },
+      "UserDTO": {
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "description": "用户邮箱",
+            "example": "kbmjj123@gmail.com"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["user", "admin"]
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "nickName": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+              }
+            ],
+            "nullable": true
+          },
+          "loginTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "logoutTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "account": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["password", "email", "role"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_UserDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UserDTO"
+          }
+        },
+        "required": ["data"],
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {}
+  },
+  "info": {
+    "title": "KBMall",
+    "version": "1.0.0",
+    "description": "KB商城的买家端、卖家端的接口服务",
+    "license": {
+      "name": "ISC"
+    },
+    "contact": {
+      "email": "kbmjj123@gmail.com",
+      "name": "郑耿林"
+    }
+  },
+  "paths": {
+    "/users/{id}": {
+      "get": {
+        "operationId": "GetAUser",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "根据id获取用户信息",
+        "security": [],
+        "parameters": [
+          {
+            "description": "用户id",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ]
+}

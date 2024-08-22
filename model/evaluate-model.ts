@@ -31,7 +31,7 @@ const evaluateSchema = new mongoose.Schema({
     required: [true, '请维护评分内容']
   },
   pictures: {
-    type: Array[String]
+    type: Array<String>
   },
   evaluateTime: Date
 });

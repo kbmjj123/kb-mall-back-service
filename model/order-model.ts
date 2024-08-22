@@ -8,10 +8,10 @@ const orderSchema = new mongoose.Schema({
   products: {
     type: [{type: mongoose.SchemaTypes.ObjectId, ref: 'products'}],
     valiate: {
-      validator: function(val){
+      validator: function(val: string){
         return val && val.length > 0
       },
-      message: props => `${props.value}必须至少包含一个`
+      message: (props: { value: any; }) => `${props.value}必须至少包含一个`
     }
   },
   amount: {

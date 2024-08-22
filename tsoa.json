@@ -1,0 +1,31 @@
+{
+  "entryFile": "index.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["controller/*Controller.ts"],
+  "routes": {
+    "routesDir": "build"
+  },
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@/enum": ["./enum"],
+      "@/entity": ["./entity"],
+      "@/config": ["./config"],
+      "@/control": ["./control"],
+      "@/middleware": ["./middleware"],
+      "@/model": ["./model"],
+      "@/utils": ["./utils"]
+    }
+  },
+  "spec": {
+    "outputDirectory": "build",
+    "specVersion": 3,
+    "contact": {
+      "email": "kbmjj123@gmail.com",
+      "name": "郑耿林"
+    },
+    "description": "KB商城的买家端、卖家端的接口服务",
+    "name": "KBMall"
+  }
+}
