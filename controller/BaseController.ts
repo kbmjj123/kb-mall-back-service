@@ -8,15 +8,19 @@ import { Controller } from "tsoa";
 */
 export class BaseController extends Controller{
 
-	protected successResponse<T>(req: ExpressRequest, data: T, message?: string) {
-		return new BaseObjectEntity<T>(data, LogicResult.SUCCESS, message)
+	protected successResponse<T>(req: ExpressRequest, data: T, message: string = ''): BaseObjectEntity<T> {
+		return {
+			status: LogicResult.SUCCESS,
+			message,
+			data
+		}
 	}
 
-	protected failedResponse<T>(req: ExpressRequest, data: T, message?: string) {
+	protected failedResponse<T>(req: ExpressRequest, message: string = '', data?: T): BaseObjectEntity<T> {
 		return {
 			status: LogicResult.FAILED,
-			data,
-			message: message || req.t('tip.failed')
+			message,
+			data
 		}
 	}
 

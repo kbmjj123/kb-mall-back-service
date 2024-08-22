@@ -1,7 +1,8 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import bcrypt from 'bcrypt'
+import { IUser } from "@/dto/IUser";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema<IUser>({
 	account: {
 		type: String,
 		unique: true
@@ -29,11 +30,8 @@ const userSchema = new mongoose.Schema({
 	logoutTime: Date
 })
 
-export type IUser = InferSchemaType<typeof userSchema>
+type UserScheType = InferSchemaType<typeof userSchema>
 
-type UserSchemaType = IUser & {
-	isPasswordMatched(newPwd: string): Promise<boolean>;
-}
 
 userSchema.pre('save', async function(next){
   //? 在密码存储之前，对密码进行加盐加密
@@ -48,4 +46,4 @@ userSchema.method('isPasswordMatched', async function (newPwd: string) {
 	return await bcrypt.compare(newPwd, this.password)
 })
 
-export const User = mongoose.model<UserSchemaType>('userModal', userSchema, "users");
+export const User = mongoose.model<UserScheType>('userModal', userSchema, "users");
