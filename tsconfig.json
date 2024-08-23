@@ -8,7 +8,7 @@
       "@/config": ["./config"],
       "@/control": ["./control"],
       "@/middleware": ["./middleware"],
-      "@/model": ["./model"],
+      "@/models": ["./models"],
       "@/utils": ["./utils"],
       "tsoa": ["node_modules/tsoa"]
     },

@@ -1,7 +1,7 @@
 {
   "entryFile": "index.ts",
   "noImplicitAdditionalProperties": "throw-on-extras",
-  "controllerPathGlobs": ["controller/*Controller.ts"],
+  "controllerPathGlobs": ["controllers/*Controller.ts"],
   "routes": {
     "routesDir": "build"
   },
@@ -14,7 +14,7 @@
       "@/config": ["./config"],
       "@/control": ["./control"],
       "@/middleware": ["./middleware"],
-      "@/model": ["./model"],
+      "@/models": ["./models"],
       "@/utils": ["./utils"]
     }
   },

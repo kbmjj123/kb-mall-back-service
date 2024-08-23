@@ -1,8 +1,8 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import bcrypt from 'bcrypt'
-import { IUser } from "@/dto/IUser";
+import { UserDTO } from "@/dto/UserDTO";
 
-const userSchema = new mongoose.Schema<IUser>({
+const userSchema = new mongoose.Schema<UserDTO>({
 	account: {
 		type: String,
 		unique: true
@@ -46,4 +46,4 @@ userSchema.method('isPasswordMatched', async function (newPwd: string) {
 	return await bcrypt.compare(newPwd, this.password)
 })
 
-export const User = mongoose.model<UserScheType>('userModal', userSchema, "users");
+export const UserModel = mongoose.model<UserScheType>('userModal', userSchema, "users");

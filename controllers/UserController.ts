@@ -1,15 +1,15 @@
-import { IUser } from "@/dto/IUser";
+import { UserDTO } from "@/dto/UserDTO";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
 import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch } from 'tsoa'
 import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import { User } from "@/model/User";
+import { UserModel } from "@/models/UserModel";
 import tokenGenerator from "@/config/token-generator";
 import jwt, { JwtPayload } from 'jsonwebtoken'
 
-type EditUserParams = Pick<IUser, 'email' | 'account' | 'avatar' | 'nickName'>
-type UserWithoutToken = Omit<IUser, 'password' | 'refreshToken' | 'accessToken' | 'logoutTime'>
-type UserLoginParams = Pick<IUser, 'account' | 'password' | 'email'>
+type EditUserParams = Pick<UserDTO, 'email' | 'account' | 'avatar' | 'nickName'>
+type UserWithoutToken = Omit<UserDTO, 'password' | 'refreshToken' | 'accessToken' | 'logoutTime'>
+type UserLoginParams = Pick<UserDTO, 'account' | 'password' | 'email'>
 
 @Route('user')
 @Tags('用户模块')
@@ -18,12 +18,12 @@ export class UserController extends BaseController {
 	 * 创建用户，主要提供为用户自主注册
 	*/
 	@Post('/register')
-	public async createUser(@Request() req: ExpressRequest, @Body() requestBody: UserLoginParams): Promise<BaseObjectEntity<IUser>> {
+	public async createUser(@Request() req: ExpressRequest, @Body() requestBody: UserLoginParams): Promise<BaseObjectEntity<UserDTO>> {
 		const { email, account, password } = requestBody;
-		const findUser = await User.findOne({ email })
+		const findUser = await UserModel.findOne({ email })
 		if (!findUser) {
 			// db中不存在这个邮箱的用户，则允许创建一新的用户
-			const createUser = await User.create(requestBody);
+			const createUser = await UserModel.create(requestBody);
 			return this.successResponse(req, createUser)
 		} else {
 			// db中已存在，则拒绝创建
@@ -43,7 +43,7 @@ export class UserController extends BaseController {
 	@Get('{id}')
 	public async getAUser(@Path() id: string, @Request() req: ExpressRequest): Promise<BaseObjectEntity<UserWithoutToken>> {
 		if (id) {
-			const findUser = await User.findOne({ _id: id })
+			const findUser = await UserModel.findOne({ _id: id })
 			if (!findUser) {
 				return this.failedResponse(req, '用户不存在，请传递正确的id')
 			} else {
@@ -58,10 +58,10 @@ export class UserController extends BaseController {
 	 * 用户登录接口
 	*/
 	@Post('/login')
-	public async checkUser(@Request() req: ExpressRequest, @Body() requestBody: UserLoginParams): Promise<BaseObjectEntity<IUser>> {
+	public async checkUser(@Request() req: ExpressRequest, @Body() requestBody: UserLoginParams): Promise<BaseObjectEntity<UserDTO>> {
 		const res = req.res
 		const { email, password } = requestBody;
-		const findUser = await User.findOne({ email });
+		const findUser = await UserModel.findOne({ email });
 		if (findUser) {
 			//? 用户存在，则校验对应的密码
 			if (await findUser.isPasswordMatched(password)) {
@@ -69,7 +69,7 @@ export class UserController extends BaseController {
 				const accessToken = tokenGenerator.generateAccessToken(findUser._id);
 				const refreshToken = tokenGenerator.generateRefreshToken(findUser._id);
 				// 针对找到的用户信息追加token
-				const updateUser = await User.updateOne({ _id: findUser._id }, { $set: { accessToken, refreshToken } })
+				const updateUser = await UserModel.updateOne({ _id: findUser._id }, { $set: { accessToken, refreshToken } })
 				if (updateUser.acknowledged && 1 === updateUser.modifiedCount) {
 					res!.cookie("accessToken", accessToken, {
 						httpOnly: true,
@@ -101,7 +101,7 @@ export class UserController extends BaseController {
         // 有效的token-->更新为新的token
         refreshToken = tokenGenerator.generateRefreshToken(decodeInfo.id);
         const accessToken = tokenGenerator.generateAccessToken(decodeInfo.id);
-        const updateUser = await User.findOneAndUpdate({_id: decodeInfo.id}, { $set: { accessToken, refreshToken } });
+        const updateUser = await UserModel.findOneAndUpdate({_id: decodeInfo.id}, { $set: { accessToken, refreshToken } });
         if(updateUser){
           // 更新成功后，需要客户端对应的替换本地的accessToken与refreshToken来保持客户端延活
 					return this.successResponse(req, {

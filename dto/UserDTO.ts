@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-export interface IUser{
+export interface UserDTO{
 	
 	/**
 	 * 用户id
