@@ -7,6 +7,8 @@ import { User } from "@/model/User";
 import tokenGenerator from "@/config/token-generator";
 
 type EditUserParams = Pick<IUser, 'email' | 'account' | 'avatar' | 'nickName'>
+type UserWithoutToken = Omit<IUser, 'password' | 'refreshToken' | 'accessToken' | 'logoutTime'>
+type UserLoginParams = Pick<IUser, 'account' | 'password' | 'email'>
 
 @Route('user')
 @Tags('用户模块')
@@ -15,7 +17,7 @@ export class UserController extends BaseController {
 	 * 创建用户，主要提供为用户自主注册
 	*/
 	@Post('/register')
-	public async createUser(@Request() req: ExpressRequest, @Body() requestBody: Record<string, any>): Promise<BaseObjectEntity<IUser>> {
+	public async createUser(@Request() req: ExpressRequest, @Body() requestBody: UserLoginParams): Promise<BaseObjectEntity<IUser>> {
 		const { email, account, password } = requestBody;
 		const findUser = await User.findOne({ email })
 		if (!findUser) {
@@ -39,7 +41,7 @@ export class UserController extends BaseController {
 	 * @param id 用户id
 	*/
 	@Get('{id}')
-	public async getAUser(@Path() id: string, @Request() req: ExpressRequest): Promise<BaseObjectEntity<IUser>> {
+	public async getAUser(@Path() id: string, @Request() req: ExpressRequest): Promise<BaseObjectEntity<UserWithoutToken>> {
 		if (id) {
 			const findUser = await User.findOne({ _id: id })
 			if (!findUser) {
@@ -53,7 +55,7 @@ export class UserController extends BaseController {
 	}
 
 	@Post('/login')
-	public async checkUser(@Request() req: ExpressRequest, @Body() requestBody: Record<string, any>): Promise<BaseObjectEntity<IUser>> {
+	public async checkUser(@Request() req: ExpressRequest, @Body() requestBody: UserLoginParams): Promise<BaseObjectEntity<IUser>> {
 		const res = req.res
 		const { email, password } = requestBody;
 		const findUser = await User.findOne({ email });

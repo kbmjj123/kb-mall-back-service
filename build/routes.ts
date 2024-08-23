@@ -55,9 +55,39 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Record_string.any_": {
+    "Pick_IUser.account-or-password-or-email_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"any"},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"account":{"dataType":"string"},"password":{"dataType":"string","required":true},"email":{"dataType":"string","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserLoginParams": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_IUser.account-or-password-or-email_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_IUser.Exclude_keyofIUser.password-or-refreshToken-or-accessToken-or-logoutTime__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"account":{"dataType":"string"},"email":{"dataType":"string","required":true},"id":{"dataType":"string"},"role":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["admin"]}],"required":true},"nickName":{"dataType":"string"},"avatar":{"dataType":"string"},"address":{"ref":"mongoose.Types.ObjectId"},"loginTime":{"dataType":"datetime"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Omit_IUser.password-or-refreshToken-or-accessToken-or-logoutTime_": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_IUser.Exclude_keyofIUser.password-or-refreshToken-or-accessToken-or-logoutTime__","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserWithoutToken": {
+        "dataType": "refAlias",
+        "type": {"ref":"Omit_IUser.password-or-refreshToken-or-accessToken-or-logoutTime_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BaseObjectEntity_UserWithoutToken_": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"dataType":"double","default":0},
+            "message": {"dataType":"string","default":"操作成功"},
+            "data": {"ref":"UserWithoutToken"},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -84,7 +114,7 @@ export function RegisterRoutes(app: Router) {
             async function UserController_createUser(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"Record_string.any_"},
+                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"UserLoginParams"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -146,7 +176,7 @@ export function RegisterRoutes(app: Router) {
             async function UserController_checkUser(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"Record_string.any_"},
+                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"UserLoginParams"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

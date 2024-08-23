@@ -1,221 +1,326 @@
 {
-  "openapi": "3.0.0",
-  "components": {
-    "examples": {},
-    "headers": {},
-    "parameters": {},
-    "requestBodies": {},
-    "responses": {},
-    "schemas": {
-      "mongoose.Types.ObjectId": {
-        "type": "string"
-      },
-      "IUser": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "用户id"
-          },
-          "password": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string",
-            "description": "用户邮箱",
-            "example": "kbmjj123@gmail.com"
-          },
-          "role": {
-            "type": "string",
-            "enum": ["user", "admin"],
-            "description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
-          },
-          "refreshToken": {
-            "type": "string",
-            "nullable": true,
-            "description": "刷新的token"
-          },
-          "accessToken": {
-            "type": "string",
-            "nullable": true,
-            "description": "资源访问的token"
-          },
-          "nickName": {
-            "type": "string",
-            "nullable": true,
-            "description": "用户昵称"
-          },
-          "avatar": {
-            "type": "string",
-            "nullable": true,
-            "description": "用户头像"
-          },
-          "address": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/mongoose.Types.ObjectId"
-              }
-            ],
-            "nullable": true,
-            "description": "用户地址id"
-          },
-          "loginTime": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true,
-            "description": "登录时间"
-          },
-          "logoutTime": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true,
-            "description": "退出时间"
-          },
-          "account": {
-            "type": "string",
-            "nullable": true,
-            "description": "用户账号"
-          }
-        },
-        "required": ["password", "email", "role"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "BaseObjectEntity_IUser_": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {
-            "$ref": "#/components/schemas/IUser"
-          }
-        },
-        "type": "object",
-        "additionalProperties": false
-      },
-      "Record_string.any_": {
-        "properties": {},
-        "additionalProperties": {},
-        "type": "object",
-        "description": "Construct a type with a set of properties K of type T"
-      }
-    },
-    "securitySchemes": {}
-  },
-  "info": {
-    "title": "KBMall",
-    "version": "1.0.0",
-    "description": "KB商城的买家端、卖家端的接口服务",
-    "license": {
-      "name": "ISC"
-    },
-    "contact": {
-      "email": "kbmjj123@gmail.com",
-      "name": "郑耿林"
-    }
-  },
-  "paths": {
-    "/user/register": {
-      "post": {
-        "operationId": "CreateUser",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_IUser_"
-                }
-              }
-            }
-          }
-        },
-        "description": "创建用户，主要提供为用户自主注册",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Record_string.any_"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/{id}": {
-      "get": {
-        "operationId": "GetAUser",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_IUser_"
-                }
-              }
-            }
-          }
-        },
-        "description": "修改用户信息，主要为用户自主修改",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [
-          {
-            "description": "用户id",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/user/login": {
-      "post": {
-        "operationId": "CheckUser",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_IUser_"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Record_string.any_"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "servers": [
-    {
-      "url": "/"
-    }
-  ]
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"mongoose.Types.ObjectId": {
+				"type": "string"
+			},
+			"IUser": {
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "用户id"
+					},
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string",
+						"description": "用户邮箱",
+						"example": "kbmjj123@gmail.com"
+					},
+					"role": {
+						"type": "string",
+						"enum": [
+							"user",
+							"admin"
+						],
+						"description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
+					},
+					"refreshToken": {
+						"type": "string",
+						"nullable": true,
+						"description": "刷新的token"
+					},
+					"accessToken": {
+						"type": "string",
+						"nullable": true,
+						"description": "资源访问的token"
+					},
+					"nickName": {
+						"type": "string",
+						"nullable": true,
+						"description": "用户昵称"
+					},
+					"avatar": {
+						"type": "string",
+						"nullable": true,
+						"description": "用户头像"
+					},
+					"address": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/mongoose.Types.ObjectId"
+							}
+						],
+						"nullable": true,
+						"description": "用户地址id"
+					},
+					"loginTime": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true,
+						"description": "登录时间"
+					},
+					"logoutTime": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true,
+						"description": "退出时间"
+					},
+					"account": {
+						"type": "string",
+						"nullable": true,
+						"description": "用户账号"
+					}
+				},
+				"required": [
+					"password",
+					"email",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BaseObjectEntity_IUser_": {
+				"properties": {
+					"status": {
+						"type": "number",
+						"format": "double",
+						"default": 0
+					},
+					"message": {
+						"type": "string",
+						"default": "操作成功"
+					},
+					"data": {
+						"$ref": "#/components/schemas/IUser"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_IUser.account-or-password-or-email_": {
+				"properties": {
+					"account": {
+						"type": "string",
+						"description": "用户账号"
+					},
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string",
+						"description": "用户邮箱",
+						"example": "kbmjj123@gmail.com"
+					}
+				},
+				"required": [
+					"password",
+					"email"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"UserLoginParams": {
+				"$ref": "#/components/schemas/Pick_IUser.account-or-password-or-email_"
+			},
+			"Pick_IUser.Exclude_keyofIUser.password-or-refreshToken-or-accessToken-or-logoutTime__": {
+				"properties": {
+					"account": {
+						"type": "string",
+						"description": "用户账号"
+					},
+					"email": {
+						"type": "string",
+						"description": "用户邮箱",
+						"example": "kbmjj123@gmail.com"
+					},
+					"id": {
+						"type": "string",
+						"description": "用户id"
+					},
+					"role": {
+						"type": "string",
+						"enum": [
+							"user",
+							"admin"
+						],
+						"description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
+					},
+					"nickName": {
+						"type": "string",
+						"description": "用户昵称"
+					},
+					"avatar": {
+						"type": "string",
+						"description": "用户头像"
+					},
+					"address": {
+						"$ref": "#/components/schemas/mongoose.Types.ObjectId",
+						"description": "用户地址id"
+					},
+					"loginTime": {
+						"type": "string",
+						"format": "date-time",
+						"description": "登录时间"
+					}
+				},
+				"required": [
+					"email",
+					"role"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_IUser.password-or-refreshToken-or-accessToken-or-logoutTime_": {
+				"$ref": "#/components/schemas/Pick_IUser.Exclude_keyofIUser.password-or-refreshToken-or-accessToken-or-logoutTime__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"UserWithoutToken": {
+				"$ref": "#/components/schemas/Omit_IUser.password-or-refreshToken-or-accessToken-or-logoutTime_"
+			},
+			"BaseObjectEntity_UserWithoutToken_": {
+				"properties": {
+					"status": {
+						"type": "number",
+						"format": "double",
+						"default": 0
+					},
+					"message": {
+						"type": "string",
+						"default": "操作成功"
+					},
+					"data": {
+						"$ref": "#/components/schemas/UserWithoutToken"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "KBMall",
+		"version": "1.0.0",
+		"description": "KB商城的买家端、卖家端的接口服务",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"email": "kbmjj123@gmail.com",
+			"name": "郑耿林"
+		}
+	},
+	"paths": {
+		"/user/register": {
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseObjectEntity_IUser_"
+								}
+							}
+						}
+					}
+				},
+				"description": "创建用户，主要提供为用户自主注册",
+				"tags": [
+					"用户模块"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserLoginParams"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/{id}": {
+			"get": {
+				"operationId": "GetAUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseObjectEntity_UserWithoutToken_"
+								}
+							}
+						}
+					}
+				},
+				"description": "修改用户信息，主要为用户自主修改",
+				"tags": [
+					"用户模块"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "用户id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/user/login": {
+			"post": {
+				"operationId": "CheckUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseObjectEntity_IUser_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"用户模块"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserLoginParams"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
 }
