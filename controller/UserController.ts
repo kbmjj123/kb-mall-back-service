@@ -1,10 +1,11 @@
 import { IUser } from "@/dto/IUser";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
-import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete } from 'tsoa'
+import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch } from 'tsoa'
 import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
 import { User } from "@/model/User";
 import tokenGenerator from "@/config/token-generator";
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
 type EditUserParams = Pick<IUser, 'email' | 'account' | 'avatar' | 'nickName'>
 type UserWithoutToken = Omit<IUser, 'password' | 'refreshToken' | 'accessToken' | 'logoutTime'>
@@ -34,7 +35,6 @@ export class UserController extends BaseController {
 	*/
 	// @Post('{id}')
 	// public async modifyAUser(@Path() id: string, @Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
-	// 	return this.successResponse(req, new IUser())
 	// }
 	/**
 	 * 根据id获取用户信息
@@ -54,6 +54,9 @@ export class UserController extends BaseController {
 		}
 	}
 
+	/**
+	 * 用户登录接口
+	*/
 	@Post('/login')
 	public async checkUser(@Request() req: ExpressRequest, @Body() requestBody: UserLoginParams): Promise<BaseObjectEntity<IUser>> {
 		const res = req.res
@@ -76,7 +79,7 @@ export class UserController extends BaseController {
 				} else {
 					return this.failedResponse(req, '系统异常，请稍后重试！')
 				}
-			}else{
+			} else {
 				return this.failedResponse(req, '用户名或密码错误！')
 			}
 		} else {
@@ -85,4 +88,38 @@ export class UserController extends BaseController {
 		}
 	}
 
+	/**
+	 * 刷新用户的accessToken以及refreshToken，即延长用户的在线有效性
+	*/
+	@Patch('/refreshToken')
+	public async refreshToken(@Request() req: ExpressRequest, @Body() requestBody: { refreshToken: string }): Promise<BaseObjectEntity<{accessToken: string, refreshToken: string}>> {
+		let { refreshToken } = requestBody
+		if(refreshToken){
+			// 如果用户传递了token，则从db中查询是否有对应的用户信息
+			const decodeInfo = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as JwtPayload;
+      if(decodeInfo && decodeInfo.id){
+        // 有效的token-->更新为新的token
+        refreshToken = tokenGenerator.generateRefreshToken(decodeInfo.id);
+        const accessToken = tokenGenerator.generateAccessToken(decodeInfo.id);
+        const updateUser = await User.findOneAndUpdate({_id: decodeInfo.id}, { $set: { accessToken, refreshToken } });
+        if(updateUser){
+          // 更新成功后，需要客户端对应的替换本地的accessToken与refreshToken来保持客户端延活
+					return this.successResponse(req, {
+            accessToken,
+            refreshToken
+          })
+        }else{
+          return this.failedResponse(req, req.t('user.needValidateToken'));
+        }
+      }else{
+				return this.failedResponse(req, req.t('user.permissionLimitTip'))
+      }
+		}else{
+			return this.failedResponse(req, req.t('user.needValidateToken'))
+		}
+	}
+
+	/**
+	 * 删除一个用户
+	*/
 }
