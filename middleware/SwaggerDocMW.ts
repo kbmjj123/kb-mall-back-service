@@ -7,7 +7,7 @@ export function setupSwagger(app: Express){
 	// })
 	//https://chatgpt.com/c/de947758-a376-43f7-90d0-fb2a8b6f4dbe
 	app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(undefined, {
-		swaggerUrl: 'http://localhost:3000/swagger.json',
+		swaggerUrl: '../swagger.json',
 		swaggerOptions: {
 			requestInterceptor: (req: Request) => {
 				req.headers['authorization'] = 'Bearer xxx'

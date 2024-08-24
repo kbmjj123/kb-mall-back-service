@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import userModel from '../model/user-model';
+import { UserModel } from '@/models/UserModel'
 import { Request, Response, NextFunction } from 'express'
 import { LogicResult } from '@/enum/http'
 
@@ -13,7 +13,7 @@ export default {
       try {
         const decode = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
         // decode.id 存在，则是一个有效的用户id，说明是一个正常的登录状态
-        const findUser = await userModel.findById(decode.id);
+        const findUser = await UserModel.findById(decode.id);
         if (findUser?.account) {
           // 将已经验证通过的账号信息追加到req.user中，并传递给下一个中间件
           req.user = findUser
@@ -37,7 +37,7 @@ export default {
     try {
       const decode = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
       // decode.id 存在，则是一个有效的用户id，说明是一个正常的登录状态
-      const findUser = await userModel.findById(decode.id);
+      const findUser = await UserModel.findById(decode.id);
       if (findUser?.account) {
         // 将已经验证通过的账号信息追加到req.user中，并传递给下一个中间件
         req.user = findUser
