@@ -1,3 +1,3 @@
-export class BrandDTO {
-	
+export interface BrandDTO {
+	name: string
 }

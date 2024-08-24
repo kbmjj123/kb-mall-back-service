@@ -52,3 +52,7 @@ export interface UserDTO{
 	isPasswordMatched(newPwd: string): Promise<boolean>;
 	
 }
+
+export type UserWithoutToken = Omit<UserDTO, 'password' | 'refreshToken' | 'accessToken' | 'logoutTime'>
+
+export type EditUserParams = Pick<UserDTO, 'email' | 'account' | 'avatar' | 'nickName'>

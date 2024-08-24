@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-const productSchema = new mongoose.Schema({
+import { ProductDTO } from "@/dto/ProductDTO";
+const productSchema = new mongoose.Schema<ProductDTO>({
   cates: {
     type: [{type: mongoose.SchemaTypes.ObjectId}],
     default: [],
@@ -60,6 +61,4 @@ const productSchema = new mongoose.Schema({
   }
 });
 
-const productModel = mongoose.model('productModel', productSchema, 'products');
-
-export default productModel;
+export const ProductModel = mongoose.model('productModel', productSchema, 'products');

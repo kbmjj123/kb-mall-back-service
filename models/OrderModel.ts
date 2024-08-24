@@ -33,6 +33,4 @@ const orderSchema = new mongoose.Schema({
   remark: String
 });
 
-const orderModel = mongoose.model('orderModel', orderSchema, 'orders')
-
-export default orderModel
+export const OrderModel = mongoose.model('orderModel', orderSchema, 'orders')

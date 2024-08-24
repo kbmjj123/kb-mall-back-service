@@ -120,6 +120,468 @@
       "UserLoginParams": {
         "$ref": "#/components/schemas/Pick_UserDTO.account-or-password-or-email_"
       },
+      "BaseObjectEntity__accessToken-string--refreshToken-string__": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "properties": {
+              "refreshToken": {
+                "type": "string"
+              },
+              "accessToken": {
+                "type": "string"
+              }
+            },
+            "required": ["refreshToken", "accessToken"],
+            "type": "object"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "CountryDTO": {
+        "properties": {
+          "en": {
+            "type": "string"
+          },
+          "cn": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        },
+        "required": ["en", "cn", "code"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_Array_CountryDTO__": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/CountryDTO"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "ProductDTO": {
+        "properties": {
+          "cates": {
+            "items": {
+              "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+            },
+            "type": "array"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "masterPicture": {
+            "type": "string"
+          },
+          "descPictures": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": ["online", "offline"]
+          },
+          "richText": {
+            "type": "string",
+            "nullable": true
+          },
+          "brand": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+              }
+            ],
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "activityPrice": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "sales": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "score": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "required": ["cates", "productName", "masterPicture", "descPictures", "slug", "state"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PageListType_ProductDTO_": {
+        "properties": {
+          "pages": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageIndex": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "list": {
+            "items": {
+              "$ref": "#/components/schemas/ProductDTO"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["pages", "pageIndex", "pageSize", "total", "list"],
+        "type": "object"
+      },
+      "BasePageListEntity_ProductDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageListType_ProductDTO_"
+          }
+        },
+        "required": ["data"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PageDTO": {
+        "properties": {
+          "pageIndex": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "keyword": {
+            "type": "string"
+          }
+        },
+        "required": ["pageIndex", "pageSize"],
+        "type": "object",
+        "additionalProperties": {}
+      },
+      "BaseObjectEntity_ProductDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ProductDTO"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_string_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_unknown_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {}
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_ProductDTO-or-null_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductDTO"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_any_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {}
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "CateDTO": {
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "parentId": {
+            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+          },
+          "level": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "required": ["title", "parentId"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_Array_CateDTO__": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/CateDTO"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_CateDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CateDTO"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_CateDTO-or-null_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CateDTO"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BrandDTO": {
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": ["name"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PageListType_BrandDTO_": {
+        "properties": {
+          "pages": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageIndex": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "list": {
+            "items": {
+              "$ref": "#/components/schemas/BrandDTO"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["pages", "pageIndex", "pageSize", "total", "list"],
+        "type": "object"
+      },
+      "BasePageListEntity_BrandDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageListType_BrandDTO_"
+          }
+        },
+        "required": ["data"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_BrandDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/BrandDTO"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_BrandDTO-or-null_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BrandDTO"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
       "Pick_UserDTO.Exclude_keyofUserDTO.password-or-refreshToken-or-accessToken-or-logoutTime__": {
         "properties": {
           "account": {
@@ -186,33 +648,6 @@
         },
         "type": "object",
         "additionalProperties": false
-      },
-      "BaseObjectEntity__accessToken-string--refreshToken-string__": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {
-            "properties": {
-              "refreshToken": {
-                "type": "string"
-              },
-              "accessToken": {
-                "type": "string"
-              }
-            },
-            "required": ["refreshToken", "accessToken"],
-            "type": "object"
-          }
-        },
-        "type": "object",
-        "additionalProperties": false
       }
     },
     "securitySchemes": {}
@@ -245,7 +680,7 @@
             }
           }
         },
-        "description": "创建用户，主要提供为用户自主注册",
+        "description": "新用户注册",
         "tags": ["用户模块"],
         "security": [],
         "parameters": [],
@@ -259,37 +694,6 @@
             }
           }
         }
-      }
-    },
-    "/user/{id}": {
-      "get": {
-        "operationId": "GetAUser",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_UserWithoutToken_"
-                }
-              }
-            }
-          }
-        },
-        "description": "修改用户信息，主要为用户自主修改",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [
-          {
-            "description": "用户id",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
       }
     },
     "/user/login": {
@@ -307,7 +711,7 @@
             }
           }
         },
-        "description": "用户登录接口",
+        "description": "修改用户信息，主要为用户自主修改",
         "tags": ["用户模块"],
         "security": [],
         "parameters": [],
@@ -358,6 +762,556 @@
             }
           }
         }
+      }
+    },
+    "/resource/countries": {
+      "get": {
+        "operationId": "GetCountries",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_Array_CountryDTO__"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取全球国家的数据",
+        "tags": ["资源模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/product/list": {
+      "get": {
+        "operationId": "GetProductList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasePageListEntity_ProductDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取商品列表",
+        "tags": ["产品模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageIndex",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/product/{id}": {
+      "get": {
+        "operationId": "GetAProduct",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_ProductDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取一个商品明细信息",
+        "tags": ["产品模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "RemoveAProduct",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
+          }
+        },
+        "description": "删除一个商品",
+        "tags": ["产品模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "EditProduct",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_ProductDTO-or-null_"
+                }
+              }
+            }
+          }
+        },
+        "description": "编辑商品",
+        "tags": ["产品模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          }
+        }
+      }
+    },
+    "/product/{id}/onOrOff": {
+      "post": {
+        "operationId": "UpOrDownAProduct",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
+                }
+              }
+            }
+          }
+        },
+        "description": "上/下架一款商品",
+        "tags": ["产品模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/product/publish": {
+      "put": {
+        "operationId": "CreateProduct",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
+          }
+        },
+        "description": "发布一个商品",
+        "tags": ["产品模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          }
+        }
+      }
+    },
+    "/file/uploadFile": {
+      "post": {
+        "operationId": "WrapFile",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_any_"
+                }
+              }
+            }
+          }
+        },
+        "description": "上传单个文件",
+        "tags": ["文件模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/file/uploadFiles": {
+      "post": {
+        "operationId": "WrapFiles",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "description": "上传多个文件",
+        "tags": ["文件模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/cate/list": {
+      "get": {
+        "operationId": "GetCateList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_Array_CateDTO__"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["分类模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/cate": {
+      "put": {
+        "operationId": "AddACate",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_CateDTO_"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["分类模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CateDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cate/{id}": {
+      "post": {
+        "operationId": "EditACate",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_CateDTO-or-null_"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["分类模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CateDTO"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "RemoveACate",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_any_"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["分类模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/brand/list": {
+      "get": {
+        "operationId": "GetBrandList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasePageListEntity_BrandDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取品牌列表",
+        "tags": ["品牌模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageIndex",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/brand": {
+      "put": {
+        "operationId": "AddABrand",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_BrandDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "新增一品牌",
+        "tags": ["品牌模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BrandDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/brand/{id}": {
+      "post": {
+        "operationId": "EditABrand",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_BrandDTO-or-null_"
+                }
+              }
+            }
+          }
+        },
+        "description": "编辑一品牌",
+        "tags": ["品牌模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BrandDTO"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "RemoveABrand",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["品牌模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/account/{id}": {
+      "get": {
+        "operationId": "GetAUser",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserWithoutToken_"
+                }
+              }
+            }
+          }
+        },
+        "description": "根据id获取用户信息",
+        "tags": ["账号模块"],
+        "security": [],
+        "parameters": [
+          {
+            "description": "用户id",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     }
   },

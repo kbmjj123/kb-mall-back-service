@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
+import { CateDTO } from "@/dto/CateDTO";
 
-const cateSchema = new mongoose.Schema({
+const cateSchema = new mongoose.Schema<CateDTO>({
   title: {
     type: String,
     required: [true, '请维护分类名称']
@@ -18,6 +19,4 @@ const cateSchema = new mongoose.Schema({
   }
 });
 
-const cateModel = mongoose.model('cateModel', cateSchema, 'cates')
-
-export default cateModel
+export const CateModel = mongoose.model('cateModel', cateSchema, 'cates')

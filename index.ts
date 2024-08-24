@@ -6,7 +6,7 @@ import cors from 'cors'
 import languageMiddleware from './middleware/language-middleware';
 import path from 'path'
 const app = express();
-import dbConnection from './config/db-connection'// 引入数据库连接器
+import DbConnection from './config/DbConnection';// 引入数据库连接器
 import dotenv from 'dotenv'
 dotenv.config()	// 加载.env环境变量，使得整个程序可以通过process.env访问到.env文件中定义的变量
 import { RegisterRoutes } from './build/routes';
@@ -47,5 +47,5 @@ app.use(serviceErrorMiddleware);
 app.listen(process.env.SERVICE_PORT, () => {
   console.info('服务启动了～～')
   //? 服务启动成功的时候，连接数据库
-  dbConnection();
+  DbConnection();
 })
