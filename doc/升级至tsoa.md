@@ -88,8 +88,17 @@ setupSwagger(app);
 将`tsoa spec`生成的`/build/swagger.json`配置文件采用`swagger-ui-express`进行加载并渲染对应的内容(也就是使用swaggerUI来生成静态站点资源)，并挂载到路径`api-docs`上，于是，我们可以通过访问`http://localhost:3000/api-docs`来访问到对应的接口站点文档信息，如下图所示：
 ![swagger接口文档站点.png](../assets/tsoa/swagger接口文档站点.png)
 
-##### 7. 补充说明关于`*Controller.ts`中的接口定义与对应的schema声明
-
+##### 7. 反向使用mongoost与tsoa，实现两者的关联
+> 创建一`DTO`接口，在该接口中定义了所有`mongoose.model`所需要的参数，然后将其被`mongoose.model`所依赖导入，然后作为这个`mongoose.model`的类型参数来直接使用，如下所示：
+```typescript
+	import { UserDTO } from '/dto/UserDTO.ts'
+	import mongoose from 'mongoose'
+	const UserSchema = new mongoose.schema<UserDTO>({
+		// ... 这里是mongoose数据库层面的字段校验
+	})
+	export const UserModel = mongoose.model('userModal', userSchema, "users")
+```
+:trollface: 这样子之后，这个`UserDTO`便与`UserModel`之间建立了一个联系！ :point_right: 我们就可以在对应的`*Controller.ts`中来指明这个响应的返回值，明确告知`tsoa`这个方法将返回的怎样的一个类型，让其能够自动生成对应的openAPI接口文档！
 
 ### 实践过程中的踩坑
 > 本章节将记录在集成`tsoa`库的过程的坑，防止后续犯同样的错误！
@@ -181,3 +190,70 @@ export class UserDTO {
 	account?: string | null | undefined;
 }
 ```
+
+### `tsoa`最佳实践
+
+#### 1. 同一个`*DTO`多子类型的响应/参数控制
+> 在实际的coding过程中，针对统一个业务模块，不同的接口所需的参数一般是不一样的，比如我们用户登录，一般需要账号以及密码来进行登录，但是获取去用户信息的时候，则需要用户的id或获取对应的用户详细信息，如果一个个的类型去复制粘贴的话，一旦调整某个字段，则都要去批量修改一系列文件中同名的字段，这样子不够友好，维护成本较大，因此这边采用了另外一种机制类进行同一模块下的参数/响应数据的类型管理机制！
+> :point_right: 借助于`typescript`的`Pick`以及`Omit`(当然还有其他)等类型工具，实现从一个基础类中进行“新类”的创建与合成。
+> 一般的，我们可定义这样子的一个基础类型：
+```typescript
+export interface UserDTO {
+	/**
+	 * 用户id
+	*/
+	id: string;
+	/**
+	 * 用户昵称
+	*/
+	name: string;
+	/**
+	 * 用户密码
+	*/
+	password: string;
+	/**
+	 * 用户头像
+	*/
+	avatar: string;
+	/**
+	 * 用户邮箱
+	*/
+	email: string;
+	/**
+	 * 用户账号
+	*/
+	account: string
+}
+```
+:+1: 然后根据实际业务应用场景，从这个`UserDTO`中“衍生”出新的类型，就算是后续新增的属性字段，也是将该字段维护到基础的类型中，然后在此基础上，借助于`Pick`或者`Omit`以及其他的类型来辅助输出新的类型
+```typescript
+	export type UserWithoutIdDTO = Omit<UserDTO, 'id'>
+	export type UserAccountDTO = Pick<UserDTO, 'account' | 'email' | 'password'>
+```
+然后将导出的类型直接在对应的`*Controller.ts`中使用，来实现注释的同一套引用的目的！
+
+#### 2. 生成的`swagger`接口文档支持在线调用，且配置上对应的请求头等基础配置
+> 我们在调试接口的时候，一般情况下，都会使用这个自定义的请求头来满足实际业务的开发需要，既然我们生成了自己服务的接口文档，那么 :thinking: 是否可以在这个运行的接口文档中来直接调试接口文档呢？如果业务有需要追加的公共的请求头，比如在header中追加`platform=web`的请求头，但又不想在这个`swagger`中去一个接口手动追加，而且这个文档每次都是动态生成的！
+> :thinking: 这里我们可以借助于`express-swagger-ui`在根据生成的`swagger.json`文档来渲染对应的站点信息的时候，追加多一个自定义的请求拦截器，如下代码所示(下述代码将对比两种不一样的渲染方式)：
+```typescript
+import { Express, Request, Response } from 'express'
+import swaggerUI from 'swagger-ui-express'
+export function setupSwagger(app: Express)
+// 方式一： 直接从`swagger.json`中加载然后直接渲染
+	app.use('/api-docs', swaggerUI.serve, async (req: Request, res: Response) => {
+		return res.send(swaggerUI.generateHTML(await import('../build/swagger.json')))
+	})
+// 方式二: 采用函数式的方式来从文件中加载，提供更多的控制
+	app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(undefined, {
+		swaggerUrl: '../swagger.json',
+		swaggerOptions: {
+			requestInterceptor: (req: Request) => {
+				req.headers['platform'] = 'web'
+				return req
+			}
+		}
+	}))
+	// 这里需要制定使用的静态文件目录，使得程序能够访问到生成的静态资源swagger.json
+	app.use(express.static('build'))
+```
+:stars: 通过上述的方式，我们可以实现在生成的`swagger`文档中调试自动追加自己所需的逻辑
