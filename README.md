@@ -89,6 +89,7 @@ mongodb-backend-nodejs
 ## express官方的中间件以及自定义中间件
 > 使用`express`来开发的话，一般会配套使用官方所提供的中间件， 👇 是对应的官方中间件说明清单：
 
+### express官方中间件
 1. `express-async-handler`: 简单的中间件，用于处理`express`路由内的异常，并将它们传递给EXPRESS错误处理程序
    🤔 用于自动将中间中产生的异常，自动`next`到下一个中间件，省去了在每一个中间件中显示地调用`next()`方法来将任务转移到下一个中间件，详见[官网对比描述](https://www.npmjs.com/package/express-async-handler#usage)
 2. `morgan`: 请求日志输出中间件，用于将客户端请求的路径、方式、响应时长等信息给输出来，便于调试；
@@ -105,8 +106,25 @@ mongodb-backend-nodejs
 | not-found-middleware | 找不到服务，也就是404 |
 | service-error-middleware | 统一的异常处理中间件 |
 | response-wrapper-middleware | 统一的网络响应自定义格式化中间件，提供自定义的`success`以及`failed`方法来向业务提供一键调用的方法 |
+| language-middleware | 统一的语言处理中间件，用于自动从req中监测出客户端所使用的语言，然后可根据这个语言对应返回其使用的翻译方法api |
 |  |  |
-|  |  |
+
+
+### 追加到req中的属性
+> 因业务开发需要，需要从客户端中获取一些信息来辅助开发，并在各中间件中提供一些属性供后续调用，
+> 以下是对应的属性说明：
+```typescript
+	export interface Request {
+			user?: IUser,	// 追加在req中的用户信息，便于后续中间件直接获取
+			//! 以下是i18next-http-middleware中间件追加的属性
+			i18n: i18n,				// i18next实例
+			t: i18n['t'],			// 公共的语言翻译函数
+			language: string,	// 当前请求的语言code 
+			languages: string[],	// 可回单支持的语言code数组
+			lng: string,					// 当前请求的语言code，等价于language
+			locale: string,		// 当前请求的语言code，等价于language
+		}
+```
 
 ### .env配置文件变量声明
 1. MONGODB_URL: mongodb数据库连接地址，这里使用的是官方所提供的免费共享的数据库；
@@ -164,13 +182,14 @@ app.get('/login', (req, res, next) => {
 > :confused: 也许有人会说，已经有这个`multer`中间件啦，直接用就可以啦！是的，的确如此，可以直接使用这个中间件来处理文件上传，并存储到对应的位置， :point_right: 但是在实际的项目过程中，我们会发现，随着时间的推移，项目中的资源会跟随着使用者的使用越来越多，需要对资源进行一个统一管理，假如前提没有很好的提供一个管理机制的话，是当项目起来后，是很难保持项目边运行，边实现改造迁移工作的。
 > 因此，很有必要在前期进行一个设计，并赋予实施！
 > :alien: 我们的目的，就是提供 :one: 个单文件上传以及 :one: 个多文件上传的接口API， :point_right: 借助于`multer`中间件，并结合`fs`、`临时文件存储`的机制，来实现文件资源管理器！
+> 
 > :point_down: 是对应的一个流程图：
 
 ![文件上传服务流程图](./assets/文件上传服务流程图.png)
 
 :star2: 通过直接将`multer`的上传目录当作一临时中间目录，对比本地磁盘文件与刚上传的文件的内容的hash值，从而判断是否是完全一样的文件，减少重复文件上传的可能性。
-![文件存在](文件存在.png)
-![文件替换](文件替换.png)
+![文件存在](./assets/文件存在.png)
+![文件替换](./assets/文件替换.png)
 
 :dizzy_face: 还有其他的场景，是目前还没有提供的：
 1. 比如不同的人上传的同一个文件名的文件，有可能因为没有目录控制，导致两者的文件数据可能会发生错乱；

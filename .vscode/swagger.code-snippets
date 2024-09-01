@@ -1,0 +1,35 @@
+{
+  "Swagger API Documentation": {
+    "prefix": "swaggerdoc",
+    "body": [
+      "/**",
+      " * @swagger",
+      " * /${1:path}:",
+      " *   ${2:method}:",
+      " *     summary: ${3:Summary of the API}",
+      " *     description: ${4:Description of the API}",
+      " *     tags:",
+      " *       - ${5:TagName}",
+      " *     parameters:",
+      " *       - name: ${6:parameterName}",
+      " *         in: ${7:path/query/body}",
+      " *         required: ${8:true/false}",
+      " *         schema:",
+      " *           type: ${9:string/integer/boolean}",
+      " *     responses:",
+      " *       200:",
+      " *         description: ${10:Success Response}",
+      " *         content:",
+      " *           application/json:",
+      " *             schema:",
+      " *               type: ${11:object}",
+      " *               properties:",
+      " *                 ${12:key}:",
+      " *                   type: ${13:string}",
+      " *       400:",
+      " *         description: ${14:Error Response}",
+      " */"
+    ],
+    "description": "A Swagger API documentation template"
+  }
+}
