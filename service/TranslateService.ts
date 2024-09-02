@@ -13,6 +13,7 @@ export class TranslateService<T> {
 	*/
 	getTranslate(id: Types.ObjectId, language: string) {
 		//TODO 执行相关的db查询操作
+		// this.translateModel.find()
 	}
 
 	/**

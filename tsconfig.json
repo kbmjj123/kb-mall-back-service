@@ -9,6 +9,8 @@
       "@/control": ["./control"],
       "@/middleware": ["./middleware"],
       "@/models": ["./models"],
+      "@/plugins": ["./plugins"],
+      "@/service": ["./service"],
       "@/utils": ["./utils"],
       "tsoa": ["node_modules/tsoa"]
     },
