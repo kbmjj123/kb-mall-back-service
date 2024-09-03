@@ -191,6 +191,35 @@ export class UserDTO {
 }
 ```
 
+#### 6. `tsoa`结合`express-validator`进行字段精细化校验
+> 在进行请求参数的校验的时候，原本`tsoa`本身已经提供基于数据类型的校验了，但是，我们可以借助于`express-validator`进行颗粒度更细的校验规则，我们所需要的仅仅是通过这个库，来创建对应的一个数组即可，然后在数组的最后一个阶段进行参数的校验结果输出即可！
+```typescript
+import { Request, Response, NextFunction } from 'express'
+import { body, validationResult } from 'express-validator'
+// 创建一个参数校验数组
+const validateProductMW = [
+	body('cates').notEmpty().isArray(),
+  body('productName', '请维护商品名称').notEmpty().trim().isLength({ max: 60 }),
+	(req: Request, res: Response, next: NextFunction) => {
+		const errorResult = validationResult(req);  // 统一从req中获取校验执行结果
+		if (errorResult && errorResult.array().length > 0) {
+			//? 有存在校验不通过的情况，将不通过的情况进行统一的格式化输出
+			res.failed(LogicResult.PARAMS_ERROR, {
+				errors: errorResult.array()
+			}, req.t('tip.paramsError'))
+		} else {
+			next()
+		}
+	}
+]
+export class ProductController extends Controller {
+	@Put('publish')
+	@Middlewares(validateProductMW)
+	public async createProduct(@Request() req: ExpressRequest, @Body() params: any): Promise<BaseObjectEntity<string>> {}
+}
+```
+:trollface: 这里通过对某个请求进行中间件拦截，而无需在每一个路由中去进行配置，可大大地减少手动更改路由的情况，而且，本来这个`tsoa`每次都会根据当前的代码来生成新的路由的，因此更加将代码与文档自动化紧密结合到了一起了！
+
 ### `tsoa`最佳实践
 
 #### 1. 同一个`*DTO`多子类型的响应/参数控制
