@@ -1,6 +1,6 @@
-import { IBaseDTO } from "./IBaseDTO";
+import { TBaseDTO } from "./TBaseDTO";
 
-export interface TProductDTO extends IBaseDTO{
+export interface TProductDTO extends TBaseDTO{
 	productName: string,
 	richText: string
 }

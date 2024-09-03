@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-export interface IBaseDTO {
+export interface TBaseDTO {
 	id: Types.ObjectId,
 	businessId: Types.ObjectId,
 	language: string,

@@ -13,4 +13,4 @@ const tProductSchema = new mongoose.Schema<TProductDTO>({
 	}
 });
 
-export const TProductModel = mongoose.model('productModel', tProductSchema, 'products');
+export const TProductModel = mongoose.model('tProductModel', tProductSchema, 'tProducts');

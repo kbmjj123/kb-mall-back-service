@@ -1,4 +1,5 @@
 import { TranslateService } from '@/service/TranslateService'
+import Logger from '@/utils/Logger'
 import { Schema, Model } from 'mongoose'
 
 export type TranslatePluginOptions = {
@@ -20,9 +21,12 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 	const tService: TranslateService<ServiceType> = new TranslateService(options.model)
 	cachedModelKeys[options.modelName] = options.keysInCollection
 	schema.pre('save', function(docs) {
+		//TODO 这里需要将相关的翻译数据通过service来缓存到对应的collection中
 		// tService.getTranslate()
+		Logger.debug(docs)
 	})
 	schema.post('find', function(doc, next) {
+		//TODO 这里将通过service自动从对应的collection中获取到对应的翻译数据
 		// tService.updateTranslates()
 		next()
 	})
