@@ -404,6 +404,48 @@
         "type": "object",
         "additionalProperties": false
       },
+      "EvaluateDto": {
+        "properties": {
+          "userId": {
+            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+          },
+          "userNick": {
+            "type": "string"
+          },
+          "productId": {
+            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "evaluateTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "userAvatar": {
+            "type": "string",
+            "nullable": true
+          },
+          "pictures": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "nullable": true
+          }
+        },
+        "required": ["userId", "userNick", "productId", "score", "title", "content"],
+        "type": "object",
+        "additionalProperties": false
+      },
       "CateDTO": {
         "properties": {
           "title": {
@@ -1106,6 +1148,71 @@
         "tags": ["文件模块"],
         "security": [],
         "parameters": []
+      }
+    },
+    "/evaluate/list": {
+      "get": {
+        "operationId": "GetEvaluateByProductId",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "description": "获取商品评价列表",
+        "tags": ["商品评价模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageIndex",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/evaluate": {
+      "put": {
+        "operationId": "CreateAEvaluate",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "description": "新增一商品评价",
+        "tags": ["商品评价模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluateDto"
+              }
+            }
+          }
+        }
       }
     },
     "/cate/list": {

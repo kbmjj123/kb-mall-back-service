@@ -13,6 +13,8 @@ import { OrderController } from './../controllers/OrderController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { FileController } from './../controllers/FileController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { EvaluateController } from './../controllers/EvaluateController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CateController } from './../controllers/CateController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { BrandController } from './../controllers/BrandController';
@@ -191,6 +193,22 @@ const models: TsoaRoute.Models = {
             "status": {"dataType":"double","default":0},
             "message": {"dataType":"string","default":"操作成功"},
             "data": {"dataType":"any"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EvaluateDto": {
+        "dataType": "refObject",
+        "properties": {
+            "userId": {"ref":"mongoose.Types.ObjectId","required":true},
+            "userNick": {"dataType":"string","required":true},
+            "productId": {"ref":"mongoose.Types.ObjectId","required":true},
+            "score": {"dataType":"double","required":true},
+            "title": {"dataType":"string","required":true},
+            "content": {"dataType":"string","required":true},
+            "evaluateTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
+            "userAvatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
+            "pictures": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"string"}},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
         },
         "additionalProperties": false,
     },
@@ -709,6 +727,68 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'wrapFiles',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/evaluate/list',
+            ...(fetchMiddlewares<RequestHandler>(EvaluateController)),
+            ...(fetchMiddlewares<RequestHandler>(EvaluateController.prototype.getEvaluateByProductId)),
+
+            async function EvaluateController_getEvaluateByProductId(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"queries","name":"params","required":true,"ref":"PageDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new EvaluateController();
+
+              await templateService.apiHandler({
+                methodName: 'getEvaluateByProductId',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/evaluate',
+            ...(fetchMiddlewares<RequestHandler>(EvaluateController)),
+            ...(fetchMiddlewares<RequestHandler>(EvaluateController.prototype.createAEvaluate)),
+
+            async function EvaluateController_createAEvaluate(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"body","name":"params","required":true,"ref":"EvaluateDto"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new EvaluateController();
+
+              await templateService.apiHandler({
+                methodName: 'createAEvaluate',
                 controller,
                 response,
                 next,

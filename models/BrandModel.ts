@@ -12,10 +12,9 @@ const brandSchema = new mongoose.Schema<BrandDTO>({
   }
 });
 
-export const BrandModel = mongoose.model(MODEL_NAME, brandSchema, 'brands');
-
 brandSchema.plugin(TranslatePlugin, {
 	modelName: MODEL_NAME,
 	model: TBrandModel,
 	keysInCollection: T_BRAND_KEYS
 })
+export const BrandModel = mongoose.model(MODEL_NAME, brandSchema, 'brands');

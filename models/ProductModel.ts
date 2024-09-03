@@ -64,11 +64,11 @@ const productSchema = new mongoose.Schema<ProductDTO>({
 	}
 });
 
-export const ProductModel = mongoose.model(MODEL_NAME, productSchema, 'products');
-
 // 注册需要使用翻译服务的插件
 productSchema.plugin(TranslatePlugin, {
 	modelName: MODEL_NAME,
 	model: TProductModel,
 	keysInCollection: T_PRODUCT_KEYS
 })
+
+export const ProductModel = mongoose.model(MODEL_NAME, productSchema, 'products');

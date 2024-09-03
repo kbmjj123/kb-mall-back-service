@@ -23,11 +23,12 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 	schema.pre('save', function(docs) {
 		//TODO 这里需要将相关的翻译数据通过service来缓存到对应的collection中
 		// tService.getTranslate()
-		Logger.debug(docs)
+		Logger.debug(docs, '这里将在保存动作自动追加翻译数据到翻译表中')
 	})
-	schema.post('find', function(doc, next) {
+	schema.post(['find', 'findOne'], function(doc, next) {
 		//TODO 这里将通过service自动从对应的collection中获取到对应的翻译数据
 		// tService.updateTranslates()
+		Logger.debug('这里将自动追加上翻译信息')
 		next()
 	})
 }

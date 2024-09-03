@@ -12,7 +12,7 @@ import ParamsValidateMW from "@/middleware/ParamsValidateMW";
 import { CateModel } from "@/models/CateModel";
 import { BrandModel } from "@/models/BrandModel";
 
-const validateProductMW = () => [
+const validateProductMW = () => ([
 	body('cates').notEmpty().isArray(),
   body('productName', '请维护商品名称').notEmpty().trim().isLength({ max: 60 }),
   body('masterPicture').notEmpty(),
@@ -33,7 +33,7 @@ const validateProductMW = () => [
     }
   }),
 	ParamsValidateMW
-]
+])
 
 @Route('product')
 @Tags('产品模块')
