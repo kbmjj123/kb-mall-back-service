@@ -257,3 +257,12 @@ export function setupSwagger(app: Express)
 	app.use(express.static('build'))
 ```
 :stars: 通过上述的方式，我们可以实现在生成的`swagger`文档中调试自动追加自己所需的逻辑
+
+## tsoa的相关知识补充
+> TSOA 是一个用于在 TypeScript 中自动生成 `Swagger` 文档和 `API` 路由的开源库。它简化了构建 `RESTful API` 的过程，并确保 `API` 的类型安全。`TSOA` 的全称是 `TypeScript OpenAPI`，它是基于 `TypeScript` 和 `Express`（或 `Koa` 等其他框架）构建的。
+> 它一般有如下几个方面的功能：
+1. 自动生成 `Swagger` 文档: `TSOA` 会根据在 `TypeScript` 中定义的控制器和路由，自动生成符合 `OpenAPI（Swagger）`规范的文档，使得我们的 `API` 文档总是与实际代码同步，并且可以直接在`Swagger UI` 中展示和测试；
+2. 类型安全：`TSOA` 利用 `TypeScript` 的类型系统来确保路由、请求参数、响应数据等都符合预期的类型，这减少了运行时错误并提高了开发效率；
+3. 自动生成路由：`TSOA` 可以自动生成与控制器方法对应的 `Express` 或 `Koa` 路由，这减少了手动配置路由的工作量，并避免了潜在的配置错误；
+4. 中间件支持：`TSOA` 支持使用自定义的中间件，如*认证、验证*等，确保 `API` 的安全性和数据的正确性
+
