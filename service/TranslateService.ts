@@ -3,6 +3,7 @@ import { Model, Types } from 'mongoose'
 
 export class TranslateService<T> {
 
+	// 与业务collection关联的语言collection的model，用于语言doc的存取
 	private translateModel: Model<T>;
 
 	constructor(model: Model<T>){
@@ -12,16 +13,17 @@ export class TranslateService<T> {
 	/**
 	 * 根据业务id以及对应的目标语言来获取语言数据
 	*/
-	getTranslate(id: Types.ObjectId, language: string) {
+	getTranslate(id: Types.ObjectId | string, language: string) {
 		//TODO 执行相关的db查询操作
+		console.info('获取对应语言model中对应语言的数据', language)
+		Logger.debug('获取对应语言model中对应语言的数据', language)
 		// this.translateModel.find()
-		Logger.debug('获取统一的翻译的数据')
 	}
 
 	/**
 	 * 根据业务id来更新对应的语言数据
 	*/
-	updateTranslates(id: Types.ObjectId, language: string, updates: any) {
+	updateTranslates(id: Types.ObjectId | string, language: string, updates: any) {
 		//TODO 执行相关的更新操作
 		Logger.debug('缓存翻译数据')
 	}

@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
+import { LanguageDTO } from './LanguageDTO'
 
-export interface ProductDTO{
+export interface ProductDTO extends LanguageDTO{
 	cates: Types.ObjectId[];
 	productName: string;
 	masterPicture: string;
@@ -13,5 +14,4 @@ export interface ProductDTO{
 	activityPrice?: number | null | undefined;
 	sales?: number | null | undefined;
 	score?: number | null | undefined;
-	setLanguage(language: string): void;
 }

@@ -21,9 +21,9 @@ const cateSchema = new mongoose.Schema<CateDTO>({
     default: ''
   }
 });
-cateSchema.plugin(TranslatePlugin, {
-	modelName: MODEL_NAME,
-	model: TCateModel,
-	keysInCollection: T_CATE_KEYS
-})
+// cateSchema.plugin(TranslatePlugin, {
+// 	modelName: MODEL_NAME,
+// 	model: TCateModel,
+// 	keysInCollection: T_CATE_KEYS
+// })
 export const CateModel = mongoose.model(MODEL_NAME, cateSchema, 'cates')

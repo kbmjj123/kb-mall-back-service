@@ -21,13 +21,13 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 	const tService: TranslateService<ServiceType> = new TranslateService(options.model)
 	cachedModelKeys[options.modelName] = options.keysInCollection
 	schema.method('setLanguage', function(language: string) {
-		let options = this as any
-		options.language = language;
+		let doc = this as any
+		doc.language = language;
 	})
 	schema.pre('save', function(next) {
-		//TODO 这里需要将相关的翻译数据通过service来缓存到对应的collection中
 		console.info(this)
 		const doc = this as any
+		//? 拿到req中的language
 		const language = doc.language
 		Logger.debug('--->' + language + '<---')
 		// tService.updateTranslates()
@@ -38,10 +38,11 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 		console.info(doc)
 		const query = this as any
 		console.info(query.options)
+		//? 拿到req中的language
 		const language = query.language
 		Logger.debug('--->' + language)
 		//TODO 这里将通过service自动从对应的collection中获取到对应的翻译数据
-		// tService.getTranslate()
+		// tService.getTranslate(doc.id, language)
 		Logger.debug('这里将自动追加上翻译信息')
 		next()
 	})
