@@ -74,7 +74,7 @@ export class ProductController extends BaseController {
 	@Get('{id}')
 	public async getAProduct(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<ProductDTO>> {
 		if (id) {
-			const findAProduct = await ProductModel.findOne({ _id: new ObjectId(id) });
+			const findAProduct = await ProductModel.findOne({ _id: new ObjectId(id) }).setOptions({language: req.language});
 			if (findAProduct) {
 				return this.successResponse(req, findAProduct)
 			} else {
@@ -114,7 +114,7 @@ export class ProductController extends BaseController {
 				try {
 					const updateAProduct = await ProductModel.findByIdAndUpdate(id, {
 						$set: { state }
-					}, { runValidators: true })
+					}, { runValidators: true, lauguage: req.language })
 					return this.successResponse(req, updateAProduct)
 				} catch (err) {
 					return this.failedResponse(req, '操作失败')
@@ -137,6 +137,7 @@ export class ProductController extends BaseController {
 			params['score'] = 0;
 			params['state'] = 'online';
 			const createAProductModel = new ProductModel(params);
+			createAProductModel.setLanguage(req.language)
 			const err = createAProductModel.validateSync();
 			if (err) {
 				//? 参数异常，将异常信息返回给客户端

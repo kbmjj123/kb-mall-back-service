@@ -13,5 +13,5 @@ export interface ProductDTO{
 	activityPrice?: number | null | undefined;
 	sales?: number | null | undefined;
 	score?: number | null | undefined;
-	
+	setLanguage(language: string): void;
 }
