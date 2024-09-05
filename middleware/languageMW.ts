@@ -2,13 +2,22 @@ import Logger from '@/utils/Logger'
 import { Express } from 'express'
 import i18next from 'i18next'
 import languageMW from 'i18next-http-middleware'
+import Backend from 'i18next-fs-backend'
+import path from 'path'
 
 export default function(app: Express) {
 	// languageMW.LanguageDetector是一个语言检测器，主要用于从req中监测到对应的语言
-	i18next.use(languageMW.LanguageDetector).init({
+	i18next.use(Backend).use(languageMW.LanguageDetector).init({
 		debug: true,
 		preload: ['en', 'zh-CN', 'zh-TW'],
-		fallbackLng: 'en'
+		backend: {
+			loadPath: path.join(__dirname, `../locales/{{lng}}.json`),
+			addPath: path.join(__dirname, `../locales/{{lng}}.missing.json`)
+		},
+		fallbackLng: 'en',
+		interpolation: {
+			escapeValue: false  // 关闭HTML转义
+		}
 	}, () => {
 		//! 加载成功
 		Logger.debug('语言加载成功')

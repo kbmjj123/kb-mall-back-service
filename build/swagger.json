@@ -184,8 +184,33 @@
         "type": "object",
         "additionalProperties": false
       },
+      "Record_string.any_": {
+        "properties": {},
+        "additionalProperties": {},
+        "type": "object",
+        "description": "Construct a type with a set of properties K of type T"
+      },
+      "LanguageItemType": {
+        "properties": {
+          "keyLanguageMap": {
+            "$ref": "#/components/schemas/Record_string.any_"
+          },
+          "language": {
+            "type": "string"
+          }
+        },
+        "required": ["keyLanguageMap", "language"],
+        "type": "object",
+        "description": "所有需要携带语言文档都必须继承于该接口，用于在Controller中进行直接调用"
+      },
       "ProductDTO": {
         "properties": {
+          "languageList": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageItemType"
+            },
+            "type": "array"
+          },
           "cates": {
             "items": {
               "$ref": "#/components/schemas/mongoose.Types.ObjectId"

@@ -1,6 +1,17 @@
 {
   "tip": {
     "failed": "操作失敗",
-    "success": "操作成功"
+    "success": "操作成功",
+    "noFoundError": "您要求的位址無效，要求位址為{{originalUrl}}",
+    "paramsError": "請求參數有誤，請檢查後重新提交"
+  },
+  "user": {
+    "accountOrPasswordError": "帳號或密碼錯誤！",
+    "inputEmailTip": "請維護郵箱帳號",
+    "inputPasswordTip": "請維護用戶密碼",
+    "inputUserRole": "請維護使用者角色",
+    "loginTimeOut": "登入超時，請重新登入",
+    "needValidateToken": "請傳遞有效的refreshToken",
+    "permissionLimitTip": "目前使用者無權限"
   }
 }

@@ -1,6 +1,17 @@
 {
   "tip": {
     "failed": "Operation failed",
-    "success": "Operation successful"
+    "success": "Operation successful",
+    "noFoundError": "The address you requested is invalid, the requested address is {{originalUrl}}",
+    "paramsError": "The request parameters are incorrect, please check and resubmit."
+  },
+  "user": {
+    "accountOrPasswordError": "The account or password is wrong!",
+    "inputEmailTip": "Please maintain your email account",
+    "inputPasswordTip": "Please maintain user password",
+    "inputUserRole": "Please maintain user roles",
+    "loginTimeOut": "Login timeout, please log in again",
+    "needValidateToken": "Please pass a valid refreshToken",
+    "permissionLimitTip": "The current user has no permissions"
   }
 }

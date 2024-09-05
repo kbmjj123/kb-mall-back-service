@@ -2,7 +2,8 @@
   "tip": {
     "success": "操作成功",
     "failed": "操作失败",
-    "paramsError": "请求参数有误，请检查后重新提交"
+    "paramsError": "请求参数有误，请检查后重新提交",
+    "noFoundError": "您请求的地址无效，请求地址为{{originalUrl}}"
   },
   "brand": {},
   "cate": {},
