@@ -2,9 +2,18 @@ import { TranslateService } from '@/service/TranslateService'
 import Logger from '@/utils/Logger'
 import { Schema, Model } from 'mongoose'
 
+/**
+ * 翻译插件的自定义参数
+*/
 export type TranslatePluginOptions = {
+	/**
+	 * 当前的模型名称，用于获取当前业务模型所需要翻译的keys
+	*/
 	modelName: string,
 	model: any,
+	/**
+	 * modalName模型对应需要翻译的字段key名称集合
+	*/
 	keysInCollection: string[],
 	translateModel?: string
 }
