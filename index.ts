@@ -13,8 +13,9 @@ import { RegisterRoutes } from './build/routes';
 import { setupSwagger } from './middleware/SwaggerDocMW';
 
 import bodyParser from 'body-parser';// 解析客户端请求体到req.body
-import morgan from 'morgan';//友好输出请求日志信息
 import serveStatic from 'serve-static';  // 对于静态资源的直接访问
+import { loggerWrap } from './middleware/LogMiddleware';
+import requestIp from 'request-ip'
 
 languageMW(app)	// 语言安装包中间件
 
@@ -22,8 +23,11 @@ app.use(cors());
 //! 追加响应体的中间件，统一格式化响应结果
 app.use(ResWrapperWM);
 
+//? 配置获取客户端请求的ip地址中间件
+app.use(requestIp.mw())
+
 //? 配置请求输出日志展示的中间件
-app.use(morgan('combined'));
+loggerWrap(app)
 
 //? 配置解析请求体的中间件
 app.use(bodyParser.urlencoded({ extended: false }));

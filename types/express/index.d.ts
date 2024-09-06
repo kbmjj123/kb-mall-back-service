@@ -10,6 +10,8 @@ declare global {
 		}
 		export interface Request {
 			user?: IUser,			// 追加在req中的用户信息，便于后续中间件直接获取
+			//! 以下是request-ip中间件追加的属性
+			clientIp: string,
 			//! 以下是i18next-http-middleware中间件追加的属性
 			i18n: i18n,				// i18next实例
 			t: i18n['t'],			// 公共的语言翻译函数

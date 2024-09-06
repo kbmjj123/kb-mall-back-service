@@ -1,9 +1,24 @@
 import mongoose from 'mongoose'
 import { TrimValuePlugin } from '../plugins/global/TrimValuePlugin'
+import Logger from '@/utils/Logger'
 
 //! 开启数据库日志调试
-mongoose.set({
-  debug: true
+mongoose.set('debug', function(collectionName, methodName, query: any, doc: any, options: any) {
+	const messageList = [
+		`[DB Operation]:`,
+		`Collection: ${collectionName}`,
+		`Db Method: ${methodName}`,
+	]
+	if(query){
+		messageList.push(`Query: ${JSON.stringify(query)}`)
+	}
+	if(doc){
+		messageList.push(`Doc: ${JSON.stringify(doc)}`)
+	}
+	if(options){
+		messageList.push(`Options: ${JSON.stringify(options)}`)
+	}
+	Logger.info(messageList.join('\n'))
 })
 
 export default async () => {
