@@ -3,7 +3,7 @@ import noFoundWM from './middleware/NoFoundMW';
 import serviceErrorMW from './middleware/ServiceErrorMW';
 import ResWrapperWM from './middleware/ResWrapperWM';
 import cors from 'cors'
-import languageMW from './middleware/languageMW';
+import LanguageMW from './middleware/LanguageMW';
 import path from 'path'
 const app = express();
 import DbConnection from './config/DbConnection';// 引入数据库连接器
@@ -17,7 +17,7 @@ import serveStatic from 'serve-static';  // 对于静态资源的直接访问
 import { loggerWrap } from './middleware/LogMiddleware';
 import requestIp from 'request-ip'
 
-languageMW(app)	// 语言安装包中间件
+LanguageMW(app)	// 语言安装包中间件
 
 app.use(cors());
 //! 追加响应体的中间件，统一格式化响应结果
