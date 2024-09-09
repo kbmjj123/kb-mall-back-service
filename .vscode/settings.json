@@ -2,5 +2,7 @@
 	"i18n-ally.localesPaths": [
 		"locales"
 	],
-	"i18n-ally.keystyle": "nested"
+	"i18n-ally.keystyle": "nested",
+	"jsdoc.Author": "郑耿林",
+	"jsdoc.EnabledDate": true
 }

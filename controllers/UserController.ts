@@ -1,7 +1,7 @@
 import { UserDTO } from "@/dto/UserDTO";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
-import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch } from 'tsoa'
+import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch, Queries } from 'tsoa'
 import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
 import { UserModel } from "@/models/UserModel";
 import TokenGenerator from "@/config/TokenGenerator";
@@ -13,6 +13,15 @@ type UserLoginParams = Pick<UserDTO, 'account' | 'password' | 'email'>
 @Route('user')
 @Tags('用户模块')
 export class UserController extends BaseController {
+
+	/**
+	 * 账号验证
+	*/
+	@Get('validate')
+	public async validateAccount(@Request() req: ExpressRequest) {
+		
+	}
+
 	/**
 	 * 新用户注册
 	*/
@@ -36,7 +45,6 @@ export class UserController extends BaseController {
 	// public async modifyAUser(@Path() id: string, @Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
 	// }
 	
-
 	/**
 	 * 用户登录接口
 	*/

@@ -15,6 +15,7 @@ import { setupSwagger } from './middleware/SwaggerDocMW';
 import bodyParser from 'body-parser';// 解析客户端请求体到req.body
 import serveStatic from 'serve-static';  // 对于静态资源的直接访问
 import { loggerWrap } from './middleware/LogMiddleware';
+import { setUpEmailTemplateDebugger } from './middleware/EmailTemplateDebugger'
 import requestIp from 'request-ip'
 
 LanguageMW(app)	// 语言安装包中间件
@@ -35,6 +36,9 @@ app.use(bodyParser.json());
 
 //? 配置静态资源直接访问
 app.use(serveStatic(path.join(__dirname, 'resources')))
+
+//? 配置邮件模版调试中间件
+setUpEmailTemplateDebugger(app)
 
 app.get('/', (req, res) => {
 	res.send('<p>服务成功访问了～～</p>')

@@ -5,6 +5,11 @@
     "paramsError": "请求参数有误，请检查后重新提交",
     "noFoundError": "您请求的地址无效，请求地址为{{originalUrl}}"
   },
+  "template": {
+    "registerSuccess": "注册成功，{{account}}，欢迎您成为KB商城的新用户",
+    "resetPwd": "尊敬的{{account}}用户，您正在申请重置您的账号密码，请点击以下链接进行前往重置",
+    "validateAccount": "尊敬的{{account}}用户，您正在申请确认您当前的账号，您的验证码是：{{code}}"
+  },
   "brand": {},
   "cate": {},
   "file": {},

@@ -819,6 +819,20 @@
     }
   },
   "paths": {
+    "/user/validate": {
+      "get": {
+        "operationId": "ValidateAccount",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "description": "账号验证",
+        "tags": ["用户模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
     "/user/register": {
       "post": {
         "operationId": "CreateUser",

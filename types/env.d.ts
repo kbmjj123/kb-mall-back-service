@@ -6,6 +6,9 @@ declare namespace NodeJS {
 		JWT_ACCESS_SECRET: string,	// JWT的密钥
 		JWT_ACCESS_EXPIRES_IN_TIME: number,	// 过期时长
 		JWT_REFRESH_SECRET: string,	// 刷新token的相关配置
-		JWT_REFRESH_EXPIRES_IN_TIME: number
+		JWT_REFRESH_EXPIRES_IN_TIME: number,
+		PREVIEW_EMAIL_TEMPLATE: boolean,	// 是否开启预览邮件模版的标识
+		GMAIL_ACCOUNT: string,
+		GMAIL_PASSWORD: string
 	}
 }
