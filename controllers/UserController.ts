@@ -18,9 +18,15 @@ export class UserController extends BaseController {
 	 * 账号验证
 	*/
 	@Get('validate')
-	public async validateAccount(@Request() req: ExpressRequest) {
+	public async validateAccount(@Request() req: ExpressRequest,  @Queries() query: {}) {
 		
 	}
+
+	/**
+	 * 快速注册获取验证码
+	*/
+	@Get('quickRegisterCode')
+	public async getQuickRegisterCode() {}
 
 	/**
 	 * 新用户注册
