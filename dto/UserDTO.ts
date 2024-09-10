@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
-export interface UserDTO{
-	
+export interface UserDTO {
+
 	/**
 	 * 用户id
 	*/
@@ -50,9 +50,23 @@ export interface UserDTO{
 	account?: string | null | undefined;
 
 	isPasswordMatched(newPwd: string): Promise<boolean>;
-	
+
 }
-
+/**
+ * 不带token的用户信息
+*/
 export type UserWithoutToken = Omit<UserDTO, 'password' | 'refreshToken' | 'accessToken' | 'logoutTime'>
-
+/**
+ * 编辑用户信息需需要参数
+ */
 export type EditUserParams = Pick<UserDTO, 'email' | 'account' | 'avatar' | 'nickName'>
+
+/**
+ * 用户登录所需参数
+ */
+export type UserLoginParams = Pick<UserDTO, 'account' | 'password' | 'email'> & { 
+	/**
+	 * 用户注册所使用的jwt token
+	 */
+	token: string 
+}

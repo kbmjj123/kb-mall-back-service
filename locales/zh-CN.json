@@ -6,6 +6,7 @@
     "noFoundError": "您请求的地址无效，请求地址为{{originalUrl}}"
   },
   "template": {
+    "registerValidate": "尊敬的{{account}}用户，您正在申请注册KB商城的账号，请点击下述链接完成注册！",
     "registerSuccess": "注册成功，{{account}}，欢迎您成为KB商城的新用户",
     "resetPwd": "尊敬的{{account}}用户，您正在申请重置您的账号密码，请点击以下链接进行前往重置",
     "validateAccount": "尊敬的{{account}}用户，您正在申请确认您当前的账号，您的验证码是：{{code}}"
@@ -22,6 +23,8 @@
     "inputUserRole": "请维护用户角色",
     "loginTimeOut": "登录超时，请重新登录",
     "accountOrPasswordError": "账号或密码错误！",
-    "needValidateToken": "请传递有效的refreshToken"
+    "needValidateToken": "请传递有效的token",
+    "emailAlreadyExist": "此邮箱已存在，请勿重复创建！",
+    "tokenInValidate": "链接已失效，请重新获取链接"
   }
 }

@@ -2,6 +2,7 @@ import 'jsonwebtoken'
 
 declare module 'jsonwebtoken'{
 	export interface JwtPayload{
-		id: string
+		id: string,
+		email: string
 	}
 }

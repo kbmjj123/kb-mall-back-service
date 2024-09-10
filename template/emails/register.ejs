@@ -1,7 +1,8 @@
 <html>
 	<body>
 		<%- include('./include/header') %>
-		<div><%= t('template.registerSuccess', { account: account }) %></div>
+		<div><%= t('template.registerValidate', { account: account }) %></div>
+		<p><a href="<%- registerLink %>" target="_blank"></a></p>
 		<%- include('./include/footer') %>
 	</body>
 </html>

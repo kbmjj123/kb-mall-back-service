@@ -1,4 +1,4 @@
-import { UserDTO } from "@/dto/UserDTO";
+import { UserDTO, UserLoginParams } from "@/dto/UserDTO";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
 import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch, Queries } from 'tsoa'
@@ -6,42 +6,72 @@ import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
 import { UserModel } from "@/models/UserModel";
 import TokenGenerator from "@/config/TokenGenerator";
 import jwt, { JwtPayload } from 'jsonwebtoken'
+import { sendRegister } from '@/service/EmailSenderService'
 
-
-type UserLoginParams = Pick<UserDTO, 'account' | 'password' | 'email'>
 
 @Route('user')
 @Tags('用户模块')
 export class UserController extends BaseController {
 
 	/**
-	 * 账号验证
+	 * 根据邮箱获取注册的链接
 	*/
-	@Get('validate')
-	public async validateAccount(@Request() req: ExpressRequest,  @Queries() query: {}) {
-		
+	@Get('getRegisterLink')
+	public async getRegisterLink(@Request() req: ExpressRequest, @Queries() query: { email: string }) {
+		const { email } = query
+		const findUser = await UserModel.findOne({ email })
+		if (!findUser) {
+			// 邮箱账号不存在，允许下一步操作
+			const result = await sendRegister(email, req.t)
+			if (result) {
+				return this.successResponse(req, {})
+			} else {
+				return this.failedResponse(req, '')
+			}
+		} else {
+			return this.failedResponse(req, req.t('user.emailAlreadyExist'))
+		}
+	}
+
+	/**
+	 * 根据邮箱获取重置密码的链接
+	*/
+	@Get('getResetPwdLink')
+	public async getResetPwdLink(@Request() req: ExpressRequest, @Queries() query: { email: string }) {
+
 	}
 
 	/**
 	 * 快速注册获取验证码
 	*/
 	@Get('quickRegisterCode')
-	public async getQuickRegisterCode() {}
+	public async getQuickRegisterCode() { }
 
 	/**
 	 * 新用户注册
 	*/
 	@Post('/register')
 	public async createUser(@Request() req: ExpressRequest, @Body() requestBody: UserLoginParams): Promise<BaseObjectEntity<UserDTO>> {
-		const { email, account, password } = requestBody;
-		const findUser = await UserModel.findOne({ email })
-		if (!findUser) {
-			// db中不存在这个邮箱的用户，则允许创建一新的用户
-			const createUser = await UserModel.create(requestBody);
-			return this.successResponse(req, createUser)
-		} else {
-			// db中已存在，则拒绝创建
-			return this.failedResponse(req, '此邮箱已存在，请勿重复创建！')
+		const { password, token } = requestBody;
+		if (token) {
+			const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload
+			if (decodeInfo && decodeInfo.email) {
+				const email = decodeInfo.email
+				const account = email.substring(0, email.indexOf('@'))
+				const findUser = await UserModel.findOne({ email })
+				if (!findUser) {
+					// db中不存在这个邮箱的用户，则允许创建一新的用户
+					const createUser = await UserModel.create({ email, password, account });
+					return this.successResponse(req, createUser)
+				} else {
+					// db中已存在，则拒绝创建
+					return this.failedResponse(req, req.t('user.emailAlreadyExist'))
+				}
+			}else{
+				return this.failedResponse(req, req.t('user.tokenInValidate'))
+			}
+		}else{
+			return this.failedResponse(req, req.t('user.needValidateToken'))
 		}
 	}
 	/**
@@ -50,7 +80,7 @@ export class UserController extends BaseController {
 	// @Post('{id}')
 	// public async modifyAUser(@Path() id: string, @Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
 	// }
-	
+
 	/**
 	 * 用户登录接口
 	*/
@@ -89,29 +119,29 @@ export class UserController extends BaseController {
 	 * 刷新用户的accessToken以及refreshToken，即延长用户的在线有效性
 	*/
 	@Patch('/refreshToken')
-	public async refreshToken(@Request() req: ExpressRequest, @Body() requestBody: { refreshToken: string }): Promise<BaseObjectEntity<{accessToken: string, refreshToken: string}>> {
+	public async refreshToken(@Request() req: ExpressRequest, @Body() requestBody: { refreshToken: string }): Promise<BaseObjectEntity<{ accessToken: string, refreshToken: string }>> {
 		let { refreshToken } = requestBody
-		if(refreshToken){
+		if (refreshToken) {
 			// 如果用户传递了token，则从db中查询是否有对应的用户信息
 			const decodeInfo = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as JwtPayload;
-      if(decodeInfo && decodeInfo.id){
-        // 有效的token-->更新为新的token
-        refreshToken = TokenGenerator.generateRefreshToken(decodeInfo.id);
-        const accessToken = TokenGenerator.generateAccessToken(decodeInfo.id);
-        const updateUser = await UserModel.findOneAndUpdate({_id: decodeInfo.id}, { $set: { accessToken, refreshToken } });
-        if(updateUser){
-          // 更新成功后，需要客户端对应的替换本地的accessToken与refreshToken来保持客户端延活
+			if (decodeInfo && decodeInfo.id) {
+				// 有效的token-->更新为新的token
+				refreshToken = TokenGenerator.generateRefreshToken(decodeInfo.id);
+				const accessToken = TokenGenerator.generateAccessToken(decodeInfo.id);
+				const updateUser = await UserModel.findOneAndUpdate({ _id: decodeInfo.id }, { $set: { accessToken, refreshToken } });
+				if (updateUser) {
+					// 更新成功后，需要客户端对应的替换本地的accessToken与refreshToken来保持客户端延活
 					return this.successResponse(req, {
-            accessToken,
-            refreshToken
-          })
-        }else{
-          return this.failedResponse(req, req.t('user.needValidateToken'));
-        }
-      }else{
+						accessToken,
+						refreshToken
+					})
+				} else {
+					return this.failedResponse(req, req.t('user.needValidateToken'));
+				}
+			} else {
 				return this.failedResponse(req, req.t('user.permissionLimitTip'))
-      }
-		}else{
+			}
+		} else {
 			return this.failedResponse(req, req.t('user.needValidateToken'))
 		}
 	}
