@@ -84,7 +84,7 @@ export const sendRegister = async (emailAccount: string, t: TFunction) => {
 	Logger.info('即将生成的html内容为：' + html)
 	const options: SendMailOptions = {
 		to: emailAccount,
-		subject: '新用户注册',
+		subject: t('template.newRegisterSubject'),
 		html,
 	}
 	return send(options)
@@ -92,10 +92,12 @@ export const sendRegister = async (emailAccount: string, t: TFunction) => {
 /**
  * 发送欢迎邮件
 */
-export const sendWelcomeEmail = async (emailAccount: string) => {
-	const html = await loadTemplateByType(TemplateType.WELCOME, { account: emailAccount })
+export const sendWelcomeEmail = async (emailAccount: string, t: TFunction) => {
+	const mallLink = `${process.env.MALL_LINK}`
+	const html = await loadTemplateByType(TemplateType.WELCOME, { account: emailAccount, mallLink })
 	const options: SendMailOptions = {
 		to: emailAccount,
+		subject: t('template.registerSuccessSubject'),
 		html,
 	}
 	return send(options)
@@ -104,10 +106,13 @@ export const sendWelcomeEmail = async (emailAccount: string) => {
 /**
  * 发送忘记密码-重置密码邮件
 */
-export const sendResetPwdEmail = async (emailAccount: string) => {
-	const html = await loadTemplateByType(TemplateType.RESET_PWD, { account: emailAccount })
+export const sendResetPwdEmail = async (emailAccount: string, t: TFunction) => {
+	const token = TokenGenerator.generateValidateToken(emailAccount)
+	const resetLink = `${process.env.RESET_PWD_LINK}?token=${token}&type=${TemplateType.RESET_PWD}`
+	const html = await loadTemplateByType(TemplateType.RESET_PWD, { account: emailAccount, resetLink, t })
 	const options: SendMailOptions = {
 		to: emailAccount,
+		subject: t('template.resetPwdSubject'),
 		html,
 	}
 	return send(options)
@@ -116,7 +121,7 @@ export const sendResetPwdEmail = async (emailAccount: string) => {
 /**
  * 发送验证账号有效性的邮件
 */
-export const sendRandomCodeEmail = async (emailAccount: string, code: string) => {
+export const sendRandomCodeEmail = async (emailAccount: string, code: string, t: TFunction) => {
 	const html = await loadTemplateByType(TemplateType.VALIDATE_ACCOUNT, { code })
 	const options: SendMailOptions = {
 		to: emailAccount,

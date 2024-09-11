@@ -2,7 +2,9 @@
 	<body>
 		<%- include('./include/header') %>
 		<div><%= t('template.registerValidate', { account: account }) %></div>
-		<p><a href="<%- registerLink %>" target="_blank"></a></p>
+		<p><a href="<%- registerLink %>" target="_blank">
+			<%- t('template.register') %>
+		</a></p>
 		<%- include('./include/footer') %>
 	</body>
 </html>

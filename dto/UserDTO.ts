@@ -70,3 +70,12 @@ export type UserLoginParams = Pick<UserDTO, 'account' | 'password' | 'email'> & 
 	 */
 	token: string 
 }
+/**
+ * 携带验证码进行注册的实体
+*/
+export type UserRegisterParams = Omit<UserLoginParams, 'token'> & {
+	/**
+	 * 验证码
+	*/
+	code: string
+}

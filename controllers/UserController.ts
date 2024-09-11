@@ -1,12 +1,15 @@
-import { UserDTO, UserLoginParams } from "@/dto/UserDTO";
+import { UserDTO, UserLoginParams, UserRegisterParams } from "@/dto/UserDTO";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
 import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch, Queries } from 'tsoa'
 import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
 import { UserModel } from "@/models/UserModel";
+import { CodeModel } from '@/models/CodeModel'
 import TokenGenerator from "@/config/TokenGenerator";
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import { sendRegister } from '@/service/EmailSenderService'
+import { sendRandomCodeEmail, sendRegister, sendResetPwdEmail } from '@/service/EmailSenderService'
+import { generateRandomCode } from "@/service/RandomCodeService";
+import { CodeType } from "@/enum/user";
 
 
 @Route('user')
@@ -17,14 +20,14 @@ export class UserController extends BaseController {
 	 * 根据邮箱获取注册的链接
 	*/
 	@Get('getRegisterLink')
-	public async getRegisterLink(@Request() req: ExpressRequest, @Queries() query: { email: string }) {
+	public async getRegisterLink(@Request() req: ExpressRequest, @Queries() query: { email: string }): Promise<BaseObjectEntity<string>> {
 		const { email } = query
 		const findUser = await UserModel.findOne({ email })
 		if (!findUser) {
 			// 邮箱账号不存在，允许下一步操作
 			const result = await sendRegister(email, req.t)
 			if (result) {
-				return this.successResponse(req, {})
+				return this.successResponse(req, '')
 			} else {
 				return this.failedResponse(req, '')
 			}
@@ -34,18 +37,98 @@ export class UserController extends BaseController {
 	}
 
 	/**
-	 * 根据邮箱获取重置密码的链接
+	 * 重置密码
 	*/
-	@Get('getResetPwdLink')
-	public async getResetPwdLink(@Request() req: ExpressRequest, @Queries() query: { email: string }) {
-
+	@Post('resetPwd')
+	public async resetPwd(@Request() req: ExpressRequest, @Body() params: { token: string, password: string }): Promise<BaseObjectEntity<string>> {
+		const { token, password } = params
+		if (token) {
+			const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload
+			if (decodeInfo && decodeInfo.email) {
+				const email = decodeInfo.email
+				const updateUser = await UserModel.findOneAndUpdate({ email }, { password })
+				if (updateUser) {
+					return this.successResponse(req, '')
+				} else {
+					return this.failedResponse(req, '')
+				}
+			}
+		}
+		return this.failedResponse(req, '')
 	}
 
 	/**
-	 * 快速注册获取验证码
+	 * 根据邮箱获取重置密码的链接
+	*/
+	@Get('getResetPwdLink')
+	public async getResetPwdLink(@Request() req: ExpressRequest, @Queries() query: { email: string }): Promise<BaseObjectEntity<string>> {
+		const { email } = query
+		const findUser = await UserModel.findOne({ email })
+		if (findUser) {
+			const result = await sendResetPwdEmail(email, req.t)
+			if (result) {
+				return this.successResponse(req, '')
+			} else {
+				return this.failedResponse(req, '')
+			}
+		} else {
+			return this.failedResponse(req, req.t('user.emailNoExist'))
+		}
+	}
+
+	/**
+	 * 快速注册获取验证码邮件
 	*/
 	@Get('quickRegisterCode')
-	public async getQuickRegisterCode() { }
+	public async getQuickRegisterCode(@Request() req: ExpressRequest, @Queries() query: { email: string }) {
+		const { email } = query
+		const findUser = await UserModel.findOne({ email })
+		if (!findUser) {
+			//? 生成6位数的随机验证码，然后记录到db中
+			const code = generateRandomCode()
+			const aCode = await CodeModel.create({
+				content: code,
+				codeType: CodeType.REGISTER,
+				isUsed: false
+			})
+			if (aCode) {
+				const result = await sendRandomCodeEmail(email, code, req.t)
+				if (result) {
+					return this.successResponse(req, '')
+				} else {
+					return this.failedResponse(req, '')
+				}
+			}else{
+				return this.failedResponse(req, req.t('code.generateError'))
+			}
+		} else {
+			return this.failedResponse(req, req.t(''))
+		}
+	}
+
+	/**
+	 * 通过邮件验证码进行快速注册
+	*/
+	@Post('/registerWithCode')
+	public async registerWithCode(@Request() req: ExpressRequest, @Body() params: UserRegisterParams): Promise<BaseObjectEntity<UserDTO>> {
+		const { email, code, password } = params
+		const findUser = await UserModel.findOne({ email })
+		const account = email.substring(0, email.indexOf('@'))
+		if (!findUser) {
+			// db中不存在这个邮箱的用户，则允许创建一新的用户
+			//? 验证这个验证码是否正确
+			const findCode = await CodeModel.findOne({ content: code, isUsed: false })
+			if(findCode){
+				//? 如果找到了对应的验证码，则允许进行新账号的注册
+				const createUser = await UserModel.create({ email, password, account });
+				
+				return this.successResponse(req, createUser)
+			}
+		} else {
+			// db中已存在，则拒绝创建
+			return this.failedResponse(req, req.t('user.emailAlreadyExist'))
+		}
+	}
 
 	/**
 	 * 新用户注册
@@ -67,10 +150,10 @@ export class UserController extends BaseController {
 					// db中已存在，则拒绝创建
 					return this.failedResponse(req, req.t('user.emailAlreadyExist'))
 				}
-			}else{
+			} else {
 				return this.failedResponse(req, req.t('user.tokenInValidate'))
 			}
-		}else{
+		} else {
 			return this.failedResponse(req, req.t('user.needValidateToken'))
 		}
 	}

@@ -6,6 +6,11 @@
     "noFoundError": "您请求的地址无效，请求地址为{{originalUrl}}"
   },
   "template": {
+    "newRegisterSubject": "新用户注册",
+    "registerSuccessSubject": "注册成功",
+    "register": "注册",
+    "resetPwdSubject": "重置密码",
+    "reset": "重置",
     "registerValidate": "尊敬的{{account}}用户，您正在申请注册KB商城的账号，请点击下述链接完成注册！",
     "registerSuccess": "注册成功，{{account}}，欢迎您成为KB商城的新用户",
     "resetPwd": "尊敬的{{account}}用户，您正在申请重置您的账号密码，请点击以下链接进行前往重置",
@@ -16,6 +21,9 @@
   "file": {},
   "order": {},
   "product": {},
+  "code": {
+    "generateError": "生成验证码错误，请稍后重试"
+  },
   "user": {
     "permissionLimitTip": "当前用户无权限",
     "inputEmailTip": "请维护邮箱账号",
@@ -25,6 +33,7 @@
     "accountOrPasswordError": "账号或密码错误！",
     "needValidateToken": "请传递有效的token",
     "emailAlreadyExist": "此邮箱已存在，请勿重复创建！",
+    "emailNoExist": "邮箱不存在，请确认输入是否有误！",
     "tokenInValidate": "链接已失效，请重新获取链接"
   }
 }
