@@ -7,7 +7,7 @@
     "requestBodies": {},
     "responses": {},
     "schemas": {
-      "BaseObjectEntity____": {
+      "BaseObjectEntity_string_": {
         "properties": {
           "status": {
             "type": "number",
@@ -19,9 +19,24 @@
             "default": "操作成功"
           },
           "data": {
-            "properties": {},
-            "type": "object"
+            "type": "string"
           }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_unknown_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {}
         },
         "type": "object",
         "additionalProperties": false
@@ -31,7 +46,7 @@
       },
       "UserDTO": {
         "properties": {
-          "id": {
+          "_id": {
             "type": "string",
             "description": "用户id"
           },
@@ -95,7 +110,7 @@
             "description": "用户账号"
           }
         },
-        "required": ["password", "email", "role"],
+        "required": ["_id", "password", "email", "role"],
         "type": "object",
         "additionalProperties": false
       },
@@ -117,27 +132,83 @@
         "type": "object",
         "additionalProperties": false
       },
-      "Pick_UserDTO.account-or-password-or-email_": {
+      "Pick_UserDTO.email-or-password_": {
         "properties": {
-          "account": {
-            "type": "string",
-            "description": "用户账号"
-          },
-          "password": {
-            "type": "string"
-          },
           "email": {
             "type": "string",
             "description": "用户邮箱",
             "example": "kbmjj123@gmail.com"
+          },
+          "password": {
+            "type": "string"
           }
         },
-        "required": ["password", "email"],
+        "required": ["email", "password"],
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "UserQuickRegisterParams": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pick_UserDTO.email-or-password_"
+          },
+          {
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "邮箱验证码"
+              }
+            },
+            "required": ["code"],
+            "type": "object"
+          }
+        ],
+        "description": "携带验证码进行快速注册的实体"
+      },
+      "Pick_UserDTO.password_": {
+        "properties": {
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["password"],
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "UserRegisterParams": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pick_UserDTO.password_"
+          },
+          {
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "用户注册所使用的jwt token"
+              }
+            },
+            "required": ["token"],
+            "type": "object"
+          }
+        ]
+      },
+      "Pick_UserDTO.password-or-email_": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "用户邮箱",
+            "example": "kbmjj123@gmail.com"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["email", "password"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
       "UserLoginParams": {
-        "$ref": "#/components/schemas/Pick_UserDTO.account-or-password-or-email_",
+        "$ref": "#/components/schemas/Pick_UserDTO.password-or-email_",
         "description": "用户登录所需参数"
       },
       "BaseObjectEntity__accessToken-string--refreshToken-string__": {
@@ -372,40 +443,6 @@
           "data": {
             "$ref": "#/components/schemas/ProductDTO"
           }
-        },
-        "type": "object",
-        "additionalProperties": false
-      },
-      "BaseObjectEntity_string_": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {
-            "type": "string"
-          }
-        },
-        "type": "object",
-        "additionalProperties": false
-      },
-      "BaseObjectEntity_unknown_": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {}
         },
         "type": "object",
         "additionalProperties": false
@@ -758,16 +795,12 @@
       },
       "Pick_UserDTO.Exclude_keyofUserDTO.password-or-refreshToken-or-accessToken-or-logoutTime__": {
         "properties": {
-          "account": {
-            "type": "string",
-            "description": "用户账号"
-          },
           "email": {
             "type": "string",
             "description": "用户邮箱",
             "example": "kbmjj123@gmail.com"
           },
-          "id": {
+          "_id": {
             "type": "string",
             "description": "用户id"
           },
@@ -792,9 +825,13 @@
             "type": "string",
             "format": "date-time",
             "description": "登录时间"
+          },
+          "account": {
+            "type": "string",
+            "description": "用户账号"
           }
         },
-        "required": ["email", "role"],
+        "required": ["email", "_id", "role"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
@@ -849,7 +886,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity____"
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
                 }
               }
             }
@@ -870,12 +907,59 @@
         ]
       }
     },
+    "/user/resetPwd": {
+      "post": {
+        "operationId": "ResetPwd",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
+          }
+        },
+        "description": "重置密码",
+        "tags": ["用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  },
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": ["password", "token"],
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
     "/user/getResetPwdLink": {
       "get": {
         "operationId": "GetResetPwdLink",
         "responses": {
-          "204": {
-            "description": "No content"
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
           }
         },
         "description": "根据邮箱获取重置密码的链接",
@@ -897,14 +981,61 @@
       "get": {
         "operationId": "GetQuickRegisterCode",
         "responses": {
-          "204": {
-            "description": "No content"
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
+                }
+              }
+            }
           }
         },
-        "description": "快速注册获取验证码",
+        "description": "快速注册获取验证码邮件",
         "tags": ["用户模块"],
         "security": [],
-        "parameters": []
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/user/registerWithCode": {
+      "post": {
+        "operationId": "RegisterWithCode",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "通过邮件验证码进行快速注册",
+        "tags": ["用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserQuickRegisterParams"
+              }
+            }
+          }
+        }
       }
     },
     "/user/register": {
@@ -931,7 +1062,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserLoginParams"
+                "$ref": "#/components/schemas/UserRegisterParams"
               }
             }
           }

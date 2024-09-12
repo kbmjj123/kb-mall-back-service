@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { TrimValuePlugin } from '../plugins/global/TrimValuePlugin'
-import Logger from '@/utils/Logger'
+import { infoLogger } from '@/utils/Logger'
 
 //! 开启数据库日志调试
 mongoose.set('debug', function(collectionName, methodName, query: any, doc: any, options: any) {
@@ -18,7 +18,7 @@ mongoose.set('debug', function(collectionName, methodName, query: any, doc: any,
 	if(options){
 		messageList.push(`Options: ${JSON.stringify(options)}`)
 	}
-	Logger.info(messageList.join('\n'))
+	infoLogger.info(messageList.join('\n'))
 })
 
 export default async () => {

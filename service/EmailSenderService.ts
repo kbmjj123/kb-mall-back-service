@@ -1,5 +1,5 @@
 import nodemailer, { SendMailOptions } from 'nodemailer'
-import Logger from '@/utils/Logger';
+import { infoLogger, errorLogger } from '@/utils/Logger';
 import path from 'path'
 import ejs from 'ejs'
 import TokenGenerator from '@/config/TokenGenerator';
@@ -16,8 +16,8 @@ const transporter = nodemailer.createTransport({
 	
 });
 transporter.addListener('error', (err: Error) => {
-	Logger.error('[Send Email Error]')
-	Logger.error(err)
+	errorLogger.error('[Send Email Error]')
+	errorLogger.error(err)
 })
 
 enum TemplateType {
@@ -47,7 +47,7 @@ const loadTemplateByType = async (templateType: TemplateType, data: any) => {
 	}
 	const result = await ejs.renderFile(path.join(__dirname, `../template/emails/${fileName}`), data, {})
 	if (!result) {
-		Logger.error('[Render Email Template Error]:')
+		errorLogger.error('[Render Email Template Error]:')
 	}
 	return result
 }
@@ -67,9 +67,9 @@ const send = async (options: SendMailOptions) => {
 	const result = await transporter.sendMail(options)
 	console.info(result)
 	if (result.response) {
-		Logger.debug('[Send Email Success]')
-		Logger.info(result.response)
-		Logger.info(msgContent)
+		infoLogger.info('[Send Email Success]')
+		infoLogger.info(result.response)
+		infoLogger.info(msgContent)
 	}
 	return !!result.response
 }
@@ -81,7 +81,7 @@ export const sendRegister = async (emailAccount: string, t: TFunction) => {
 	const token = TokenGenerator.generateValidateToken(emailAccount)
 	const registerLink = `${process.env.REGISTER_LINK}?token=${token}&type=${TemplateType.REGISTER}`
 	const html = await loadTemplateByType(TemplateType.REGISTER, { account: emailAccount, registerLink, t })
-	Logger.info('即将生成的html内容为：' + html)
+	infoLogger.info('即将生成的html内容为：' + html)
 	const options: SendMailOptions = {
 		to: emailAccount,
 		subject: t('template.newRegisterSubject'),

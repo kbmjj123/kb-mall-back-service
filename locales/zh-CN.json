@@ -22,7 +22,8 @@
   "order": {},
   "product": {},
   "code": {
-    "generateError": "生成验证码错误，请稍后重试"
+    "generateError": "生成验证码错误，请稍后重试！",
+    "codeError": "验证码错误，请检查后重试！"
   },
   "user": {
     "permissionLimitTip": "当前用户无权限",

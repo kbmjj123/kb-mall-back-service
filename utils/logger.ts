@@ -6,11 +6,10 @@ Log4js.configure({
     errorFile: { type: 'dateFile', filename: 'logs/errors.log', pattern: '.yyyy-MM-dd', keepFileExt: true }
   },
   categories: {
-    default: { appenders: ['out', 'app'], level: 'debug' },
+    default: { appenders: ['out', 'app'], level: 'info' },
     error: { appenders: ['out', 'errorFile'], level: 'error' }
   }
 })
-const Logger = Log4js.getLogger()
-Logger.level = 'debug'
+export const infoLogger = Log4js.getLogger('default')
+export const errorLogger = Log4js.getLogger('error')
 
-export default Logger

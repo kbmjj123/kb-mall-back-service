@@ -1,5 +1,5 @@
 import { TranslateService } from '@/service/TranslateService'
-import Logger from '@/utils/Logger'
+import { infoLogger } from '@/utils/Logger'
 import { Schema, Model } from 'mongoose'
 
 /**
@@ -38,9 +38,9 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 		const doc = this as any
 		//? 拿到req中的language
 		const language = doc.language
-		Logger.debug('--->' + language + '<---')
+		infoLogger.info('--->' + language + '<---')
 		// tService.updateTranslates()
-		Logger.debug('这里将在保存动作自动追加翻译数据到翻译表中')
+		infoLogger.info('这里将在保存动作自动追加翻译数据到翻译表中')
 		next()
 	})
 	schema.post(['find', 'findOne', 'findOneAndUpdate'], function(doc, next) {
@@ -49,10 +49,10 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 		console.info(query.options)
 		//? 拿到req中的language
 		const language = query.language
-		Logger.debug('--->' + language)
+		infoLogger.info('--->' + language)
 		//TODO 这里将通过service自动从对应的collection中获取到对应的翻译数据
 		// tService.getTranslate(doc.id, language)
-		Logger.debug('这里将自动追加上翻译信息')
+		infoLogger.info('这里将自动追加上翻译信息')
 		next()
 	})
 }

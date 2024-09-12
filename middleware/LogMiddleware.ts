@@ -1,6 +1,6 @@
 import morgan, { TokenIndexer } from 'morgan';//友好输出请求日志信息
 import { Express, Request, Response } from 'express'
-import Logger from '@/utils/Logger';
+import { infoLogger } from '@/utils/Logger';
 
 export const loggerWrap = (app: Express) => {
 	app.use(morgan((tokens: TokenIndexer<Request, Response>, req: Request, res: Response) => {
@@ -17,7 +17,7 @@ export const loggerWrap = (app: Express) => {
 	}, {
 		stream: {
 			write(message: string) {
-				Logger.info(message)
+				infoLogger.info(message)
 			}
 		}
 	}))

@@ -1,4 +1,4 @@
-import Logger from '@/utils/Logger';
+import { infoLogger } from '@/utils/Logger';
 import { Model, Types } from 'mongoose'
 
 export class TranslateService<T> {
@@ -15,8 +15,7 @@ export class TranslateService<T> {
 	*/
 	getTranslate(id: Types.ObjectId | string, language: string) {
 		//TODO 执行相关的db查询操作
-		console.info('获取对应语言model中对应语言的数据', language)
-		Logger.debug('获取对应语言model中对应语言的数据', language)
+		infoLogger.info('获取对应语言model中对应语言的数据', language)
 		// this.translateModel.find()
 	}
 
@@ -25,7 +24,7 @@ export class TranslateService<T> {
 	*/
 	updateTranslates(id: Types.ObjectId | string, language: string, updates: any) {
 		//TODO 执行相关的更新操作
-		Logger.debug('缓存翻译数据')
+		infoLogger.info('缓存翻译数据')
 	}
 
 }

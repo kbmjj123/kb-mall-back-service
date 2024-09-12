@@ -12,6 +12,24 @@
     "inputUserRole": "請維護使用者角色",
     "loginTimeOut": "登入超時，請重新登入",
     "needValidateToken": "請傳遞有效的refreshToken",
-    "permissionLimitTip": "目前使用者無權限"
+    "permissionLimitTip": "目前使用者無權限",
+    "emailAlreadyExist": "此郵箱已存在，請勿重複建立！",
+    "emailNoExist": "郵箱不存在，請確認輸入是否有誤！",
+    "tokenInValidate": "連結已失效，請重新取得連結"
+  },
+  "code": {
+    "codeError": "驗證碼錯誤，請檢查後重試！",
+    "generateError": "產生驗證碼錯誤，請稍後重試！"
+  },
+  "template": {
+    "newRegisterSubject": "新用戶註冊",
+    "register": "註冊",
+    "registerSuccess": "註冊成功，{{account}}，歡迎您成為KB商城的新用戶",
+    "registerSuccessSubject": "註冊成功",
+    "registerValidate": "親愛的{{account}}用戶，您正在申請註冊KB商城的帳號，請點擊下述連結完成註冊！",
+    "reset": "重置",
+    "resetPwd": "尊敬的{{account}}用戶，您正在申請重設您的帳號密碼，請點擊以下連結進行前往重置",
+    "resetPwdSubject": "重設密碼",
+    "validateAccount": "尊敬的{{account}}用戶，您正在申請確認您目前的帳號，您的驗證碼是：{{code}}"
   }
 }

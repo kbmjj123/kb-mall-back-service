@@ -12,6 +12,24 @@
     "inputUserRole": "Please maintain user roles",
     "loginTimeOut": "Login timeout, please log in again",
     "needValidateToken": "Please pass a valid refreshToken",
-    "permissionLimitTip": "The current user has no permissions"
+    "permissionLimitTip": "The current user has no permissions",
+    "emailAlreadyExist": "This email already exists, please do not create it again!",
+    "emailNoExist": "The email address does not exist, please confirm whether the input is correct!",
+    "tokenInValidate": "The link has expired, please get the link again"
+  },
+  "code": {
+    "codeError": "The verification code is wrong, please check and try again!",
+    "generateError": "There was an error in generating the verification code, please try again later!"
+  },
+  "template": {
+    "newRegisterSubject": "New user registration",
+    "register": "register",
+    "registerSuccess": "Registration successful, {{account}}, welcome to become a new user of KB Mall",
+    "registerSuccessSubject": "Registration successful",
+    "registerValidate": "Dear {{account}} user, you are applying to register an account in KB Mall. Please click the link below to complete the registration!",
+    "reset": "reset",
+    "resetPwd": "Dear {{account}} user, you are applying to reset your account password. Please click the link below to reset it.",
+    "resetPwdSubject": "reset password",
+    "validateAccount": "Dear {{account}} user, you are applying to confirm your current account. Your verification code is: {{code}}"
   }
 }

@@ -1,7 +1,7 @@
 import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
 import { BasePageListEntity, PageListType } from "@/entity/BasePageListEntity";
 import { LogicResult } from "@/enum/http";
-import Logger from "@/utils/Logger";
+import { infoLogger, errorLogger } from "@/utils/Logger";
 import { Request as ExpressRequest } from "express";
 import { Controller } from "tsoa";
 
@@ -13,9 +13,14 @@ export class BaseController extends Controller{
 	/**
 	 * 记录响应信息到日志中
 	*/
-	private logResponse<T>(data: BaseObjectEntity<T>) {
-		Logger.info('[Response Data]')
-		Logger.info(JSON.stringify(data))
+	private logResponse<T>(data: BaseObjectEntity<T>, errorFlag?: boolean) {
+		if(errorFlag){
+			errorLogger.error('[Response Data]')
+			errorLogger.error(JSON.stringify(data))
+		}else{
+			infoLogger.info('[Response Data]')
+			infoLogger.info(JSON.stringify(data))
+		}
 	}
 
 	protected successResponse<T>(req: ExpressRequest, data: T, message: string = ''): BaseObjectEntity<T> {
@@ -44,7 +49,7 @@ export class BaseController extends Controller{
 			message,
 			data
 		}
-		this.logResponse(result)
+		this.logResponse(result, true)
 		return result
 	}
 

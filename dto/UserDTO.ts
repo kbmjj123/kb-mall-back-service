@@ -5,7 +5,11 @@ export interface UserDTO {
 	/**
 	 * 用户id
 	*/
-	id?: string;
+	_id: string;
+	/**
+	 * 用户密码
+	 * @example "abc123!@#$"
+	*/
 	password: string;
 	/**
 	 * 用户邮箱
@@ -64,18 +68,20 @@ export type EditUserParams = Pick<UserDTO, 'email' | 'account' | 'avatar' | 'nic
 /**
  * 用户登录所需参数
  */
-export type UserLoginParams = Pick<UserDTO, 'account' | 'password' | 'email'> & { 
+export type UserLoginParams = Pick<UserDTO, 'password' | 'email'>
+
+export type UserRegisterParams = Pick<UserDTO, 'password'> & {
 	/**
-	 * 用户注册所使用的jwt token
-	 */
-	token: string 
+		 * 用户注册所使用的jwt token
+		 */
+	token: string
 }
 /**
- * 携带验证码进行注册的实体
+ * 携带验证码进行快速注册的实体
 */
-export type UserRegisterParams = Omit<UserLoginParams, 'token'> & {
+export type UserQuickRegisterParams = Pick<UserDTO, 'email' | 'password'> & {
 	/**
-	 * 验证码
+	 * 邮箱验证码
 	*/
 	code: string
 }
