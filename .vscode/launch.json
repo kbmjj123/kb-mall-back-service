@@ -10,15 +10,14 @@
         "--exec",
         "ts-node",
         "-r",
-        "tsconfig-paths/register"
+        "tsconfig-paths/register",
+				"--verbose"
       ],
       "args": ["${workspaceFolder}/index.ts"],
       "restart": true,
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "env": {
-        "NODE_ENV": "development"
-      },
+      
       "skipFiles": ["<node_internals>/**"],
 			"runtimeVersion": "18.7.0"  // 确保使用支持 ??= 的版本
     }

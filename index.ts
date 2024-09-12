@@ -1,5 +1,6 @@
 import express from 'express'
 import noFoundWM from './middleware/NoFoundMW';
+import globalParamsValidate from './middleware/GlobalParamsValidateMW'
 import serviceErrorMW from './middleware/ServiceErrorMW';
 import ResWrapperWM from './middleware/ResWrapperWM';
 import cors from 'cors'
@@ -48,6 +49,8 @@ setupSwagger(app);
 
 // 处理请求404
 app.use(noFoundWM);
+// 全局参数校验
+app.use(globalParamsValidate)
 // 统一的异常处理
 app.use(serviceErrorMW);
 
