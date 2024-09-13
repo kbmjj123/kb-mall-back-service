@@ -187,3 +187,14 @@ export class BrandService extends BaseService<BrandDTO> {
 		return this.successListResponse(req, result)
 	}
 ```
+
+### 最佳实践
+> 本章将记录关于在项目过程中比较实用的相关技巧
+
+#### mongoose中对于collection中的动态key关键词的使用
+> 当我们在使用mongoose的时候，有时需要封装一个统一的api，针对不同的key来执行同等逻辑的操作，需要需要采用js中的[]属性方式来代表动态的属性，然后typescript却不买单，因为它认为这个在FilterQuery中并不存在，因此，程序需要“告知”ts编译器，我所创建出来的query{}它是一个FilterQuery对象，因此有下述的定义：
+```typescript
+const query = {
+	[我是动态的名称变量]: value
+}  as FilterQuery<T>
+```
