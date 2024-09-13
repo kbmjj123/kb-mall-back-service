@@ -47,3 +47,143 @@
 ```
 
 :warning: 关于这个模型中间件与文档中间件的区别，模型中间件挂接到`Model`类上的**静态函数**，文档中间件挂接到`Model`类上的**实例方法**，在模型中间件功能中，`this`指的是`Model`模型
+
+### 自定义抽象封装
+> 为统一管理db的相关操作，并结合当前项目多语言的特性，需要将db的相关操作进行统一管理，因此 :point_right: 引入后端开发中常用的`service`，讲目前在`*Controller`中直接操作`*Model`的相关逻辑，迁移至service层中的相关`*Service`文件中。
+
+#### 统一公共的db操作:`IService.ts`
+> :thinking: 但是，我又不想对不同的表编写相似度超过90%以上的相关的代码， :trollface: 所以，我还想顺便进行进一步的封装
+> 自定义一`IService.ts`接口，将项目中可能遇见到的相关操作给定义出来(主要是一些增删查改操作)，如下代码所示：
+```typescript
+import { PageDTO, PageResultDTO } from '@/dto/PageDTO';
+import { Request as ExpressRequest } from 'express'
+import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
+
+export interface IService<T> {
+	create(data: Partial<T>, req: ExpressRequest): Promise<T>;
+	update(id: string, data: Partial<T>, req: ExpressRequest): Promise<T | null>;
+	findById(id: string, req: ExpressRequest): Promise<T | null>;
+	findOne(filter: FilterQuery<T> | undefined, req: ExpressRequest): Promise<T | null>;
+	findListInPage(nameInCollection: string, pageInfo: PageDTO): Promise<PageResultDTO<T>>
+	findOneAndUpdate(req: ExpressRequest, filter?: FilterQuery<T> | undefined, update?: UpdateQuery<T> | undefined, options?: QueryOptions<T> | null | undefined): Promise<T | null>;
+}
+```
+
+#### 实现公共的数据库操作: `BaseService.ts`
+> 自定义公共的基础数据库服务，实现`IService.ts`接口中的所有方法，可免于在具体的业务`*Service`中去重复编写，如下代码所示(以下是一部分代码)：
+```typescript
+import { IService } from "./IService";
+import { Document, FilterQuery, Model, QueryOptions, UpdateQuery } from "mongoose";
+import { Request as ExpressRequest } from "express";
+import { PageDTO, PageResultDTO } from "@/dto/PageDTO";
+import { PAGE_SIZE } from "@/config/ConstantValues";
+
+/**
+ * 数据库层面的基础服务，根据传递的参数，封装相关的数据库基本操作
+*/
+export class BaseService<T> implements IService<T> {
+	private model: Model<T>;
+	constructor(model: Model<T>) {
+		this.model = model
+	}
+	/**
+	 * 根据每次请求获取对应的语言信息配置
+	 * @param req 发起的请求
+	 * @param options db操作的相关配置
+	 */
+	protected getLanguageOptions(req: ExpressRequest, options: any = {}) {
+		options['language'] = req.language
+		return options
+	}
+
+	/**
+	 * 往文档中追加语言信息
+	 * @param req 客户端发起的请求
+	 * @param doc 待操作的文档
+	 */
+	protected appendLanguageToDoc(req: ExpressRequest, doc: any) {
+		doc['language'] = req.language
+		return doc
+	}
+
+	create(data: Partial<T>, req: ExpressRequest): Promise<T> {
+		this.appendLanguageToDoc(req, data)
+		return this.model.create(data)
+	}
+	update(id: string, data: Partial<T>, req: ExpressRequest): Promise<T | null> {
+		const options = this.getLanguageOptions(req, {})
+		return this.model.findByIdAndUpdate(id, data).setOptions(options)
+	}
+	findById(id: string, req: ExpressRequest): Promise<T | null> {
+		return this.model.findById(id).setOptions(this.getLanguageOptions(req, {}))
+	}
+	findOne(filter: FilterQuery<T> | undefined, req: ExpressRequest): Promise<T | null> {
+		return this.model.findOne(filter).setOptions(this.getLanguageOptions(req))
+	}
+	/**
+	 * 公共的分页查询方法
+	 * @param nameInCollection 在collection中name的名称
+	 * @param pageInfo 分页信息
+	 * @returns 
+	 */
+	async findListInPage(nameInCollection: string, pageInfo: PageDTO): Promise<PageResultDTO<T>> {
+		let { keyword, pageIndex = 1, pageSize = PAGE_SIZE } = pageInfo
+		let resultArrayPromise = []
+		if (keyword) {
+			const regex = new RegExp(keyword as string, 'i')
+			const query = {
+				[nameInCollection]: { $regex: regex }
+			} as FilterQuery<T>
+			resultArrayPromise.push(this.model.countDocuments())
+			resultArrayPromise.push(this.model.find(query).skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
+		}else{
+			resultArrayPromise.push(this.model.estimatedDocumentCount())
+			resultArrayPromise.push(this.model.find().skip(pageIndex * pageSize).limit(pageSize))
+		}
+		let [total = 0, searchList = []] = await Promise.all(resultArrayPromise)
+		const result = {
+			list: searchList,
+			total: total as number,
+			pageSize,
+			pageIndex,
+			pages: Math.ceil(total as number / pageSize)
+		} as PageResultDTO<T>
+		return Promise.resolve(result)
+	}
+	findOneAndUpdate(req: ExpressRequest, filter?: FilterQuery<T> | undefined, update?: UpdateQuery<T> | undefined, options?: QueryOptions<T> | null | undefined): Promise<T | null> {
+		return this.model.findOneAndUpdate(filter, update, options).setOptions(this.getLanguageOptions(req))
+	}
+}
+```
+:star2: 通过上述这种方式我们已经将db的相关操作，都集成到`BaseService.ts`中了，而我们所需要做的仅仅就是简单继承于这个`BaseService`就可以了
+
+#### 具体的业务简单的继承
+> 这里我们已一个`BrandService`为例：
+```typescript
+import { BrandDTO } from "@/dto/BrandDTO";
+import { BaseService } from "./base/BaseService";
+import { Request } from "express";
+import { BrandModel } from "@/models/BrandModel";
+/**
+ * 品牌的db操作服务
+ */
+export class BrandService extends BaseService<BrandDTO> {
+	private req: Request
+	constructor(req: Request) {
+		super(BrandModel)
+		this.req = req
+	}
+}
+```
+:100: 通过上述的继承动作，我们可以在对应的`BrandController`直接初始化这个`BrandService`即可，然后直接就可以调用到在`BaseService`中所定义的所有相关方法，如下代码所示：
+```typescript
+/**
+	 * 获取品牌列表
+	*/
+	@Get('list')
+	public async getBrandList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<BrandDTO>> {
+		const brandService = new BrandService(req)
+		const result = await brandService.findListInPage('name', query)
+		return this.successListResponse(req, result)
+	}
+```

@@ -16,9 +16,16 @@
     "resetPwd": "尊敬的{{account}}用户，您正在申请重置您的账号密码，请点击以下链接进行前往重置",
     "validateAccount": "尊敬的{{account}}用户，您正在申请确认您当前的账号，您的验证码是：{{code}}"
   },
-  "brand": {},
+  "brand": {
+    "exist": "品牌名：({name})已存在，请勿重复创建",
+    "inputTip": "请输入品牌名称"
+  },
   "cate": {},
-  "file": {},
+  "file": {
+    "exist": "文件已存在！",
+    "replace": "文件不一致，已完成替换！",
+    "success": "文件已上传成功"
+  },
   "order": {},
   "product": {},
   "code": {

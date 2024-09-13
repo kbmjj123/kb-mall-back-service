@@ -6,6 +6,7 @@ import { BrandModel } from "@/models/BrandModel";
 import { BasePageListEntity } from "@/entity/BasePageListEntity";
 import { BrandDTO } from "@/dto/BrandDTO";
 import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
+import { BrandService } from "@/service/BrandService";
 
 @Route('brand')
 @Tags('品牌模块')
@@ -16,27 +17,9 @@ export class BrandController extends BaseController {
 	*/
 	@Get('list')
 	public async getBrandList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<BrandDTO>> {
-		let { keyword, pageIndex = 1, pageSize = 20 } = query;
-		pageIndex = pageIndex as number - 1;
-		pageSize = Number(pageSize)
-		let searchList = [];
-		let total = 0;
-		if (keyword) {
-			const regex = new RegExp(keyword as string, 'i');
-			total = await BrandModel.countDocuments({ name: { $regex: regex } });
-			searchList = await BrandModel.find({ name: { $regex: regex } }).skip(pageIndex * Number(pageSize)).limit(Number(pageSize));
-		} else {
-			total = await BrandModel.estimatedDocumentCount();
-			searchList = await BrandModel.find().skip(pageIndex * pageSize).limit(pageSize);
-		}
-		const pages = Math.ceil(total / pageSize);
-		return this.successListResponse(req, {
-			list: searchList,
-			total: total,
-			pageSize: Number(pageSize),
-			pageIndex: pageIndex + 1,
-			pages: pages
-		})
+		const brandService = new BrandService(req)
+		const result = await brandService.findListInPage('name', query)
+		return this.successListResponse(req, result)
 	}
 
 	/**
@@ -48,13 +31,13 @@ export class BrandController extends BaseController {
 		if (name) {
 			const findABrand = await BrandModel.findOne({ name });
 			if (findABrand) {
-				return this.failedResponse(req, `品牌名：(${name})已存在，请勿重复创建`)
+				return this.failedResponse(req, req.t('brand.exist', { name }))
 			} else {
 				const createABrand = await BrandModel.create({ name });
 				return this.successResponse(req, createABrand)
 			}
 		} else {
-			return this.failedResponse(req, '请输入品牌名称')
+			return this.failedResponse(req, req.t('brand.inputTip'))
 		}
 	}
 
@@ -68,7 +51,7 @@ export class BrandController extends BaseController {
 			const updateABrand = await BrandModel.findByIdAndUpdate(id, { $set: { name } });
 			return this.successResponse(req, updateABrand)
 		} else {
-			return this.failedResponse(req, '请输入品牌名称')
+			return this.failedResponse(req, req.t('brand.inputTip'))
 		}
 	}
 

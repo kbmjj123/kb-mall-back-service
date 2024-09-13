@@ -59,7 +59,7 @@ export interface UserDTO {
 /**
  * 不带token的用户信息
 */
-export type UserWithoutToken = Omit<UserDTO, 'password' | 'refreshToken' | 'accessToken' | 'logoutTime'>
+export type UserWithoutToken = Omit<UserDTO, 'password' | 'refreshToken' | 'accessToken' | 'logoutTime' | 'isPasswordMatched'>
 /**
  * 编辑用户信息需需要参数
  */

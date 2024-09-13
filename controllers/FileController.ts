@@ -5,6 +5,7 @@ import { getFilePathFromReq, RESOURCES_DIR, upload } from '../config/UploaderGen
 import fs from 'fs'
 import crypto from 'crypto'
 import path from 'path'
+import { infoLogger } from "@/utils/Logger";
 
 // 计算文件hash的函数
 function calculateFileHash(filePath: string) {
@@ -28,7 +29,7 @@ export class FileController extends BaseController {
 	@Middlewares([upload.single('file')])
 	public async wrapFile(@Request() req: ExpressRequest) {
 		const uploadedFilePath = path.join(getFilePathFromReq(req), req.file?.filename as string);  // 获取已上传的文件路径
-		console.info('刚上传的本地文件路径：' + uploadedFilePath)
+		infoLogger.info('刚上传的本地文件路径：' + uploadedFilePath)
 		if (!fs.existsSync(path.join(RESOURCES_DIR, req.query.path as string))) {
 			fs.mkdirSync(path.join(RESOURCES_DIR, req.query.path as string))
 		}
@@ -43,17 +44,17 @@ export class FileController extends BaseController {
 			if (existingFileHash === uploadedFileHash) {
 				// 文件内容一致，删除上传的文件，返回现有文件路径
 				fs.unlinkSync(uploadedFilePath);
-				return this.successResponse(req, targetFilePath, '文件已存在！')
+				return this.successResponse(req, targetFilePath, req.t('file.exist'))
 			} else {
 				// 文件内容不一致，替换旧文件，返回更新后的文件路径
 				fs.unlinkSync(targetFilePath);
 				fs.renameSync(uploadedFilePath, targetFilePath);
-				return this.successResponse(req, targetFilePath, '文件不一致，已替换完成')
+				return this.successResponse(req, targetFilePath, req.t('file.replace'))
 			}
 		} else {
 			// 文件不存在，则直接上传
 			fs.renameSync(uploadedFilePath, targetFilePath);
-			return this.successResponse(req, targetFilePath, '文件已上传成功！')
+			return this.successResponse(req, targetFilePath, req.t('file.success'))
 		}
 	}
 
