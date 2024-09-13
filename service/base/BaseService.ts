@@ -14,6 +14,18 @@ export class BaseService<T> implements IService<T> {
 	constructor(model: Model<T>) {
 		this.model = model
 	}
+	sofeDeleteById(id: string, req: ExpressRequest): Promise<T> {
+		throw new Error("Method not implemented.");
+	}
+	isExist(): Promise<Boolean> {
+		throw new Error("Method not implemented.");
+	}
+	findList(nameInCollection: string, pageInfo: PageDTO): Promise<PageResultDTO<T>> {
+		throw new Error("Method not implemented.");
+	}
+	findAll(): Promise<T[]> {
+		throw new Error("Method not implemented.");
+	}
 
 	/**
 	 * 根据每次请求获取对应的语言信息配置
