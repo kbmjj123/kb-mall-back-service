@@ -1,5 +1,6 @@
+import { ISoftDeleteDTO } from "./soft-delete-dto/ISoftDeleteDTO";
 
-export interface AddressDTO {
+export interface AddressDTO extends ISoftDeleteDTO{
 	isDefault: boolean;
 	provinceCode: string;
 	provinceName: string;

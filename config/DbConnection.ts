@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { TrimValuePlugin } from '../plugins/global/TrimValuePlugin'
+import { SoftDeletePlugin } from '@/plugins/global/SoftDelatePlugin'
 import { infoLogger } from '@/utils/Logger'
 
 //! 开启数据库日志调试
@@ -25,6 +26,7 @@ export default async () => {
   try{
     // 在mongoose连接之前注册全局插件
     mongoose.plugin(TrimValuePlugin);
+		mongoose.plugin(SoftDeletePlugin)
 		const MONGODB_URL = process.env.MONGODB_URL as string
 		if(MONGODB_URL){
 			const conn = await mongoose.connect(MONGODB_URL);

@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
+import { ISoftDeleteDTO } from "./soft-delete-dto/ISoftDeleteDTO";
 
-export interface UserDTO {
+export interface UserDTO extends ISoftDeleteDTO{
 
 	/**
 	 * 用户id

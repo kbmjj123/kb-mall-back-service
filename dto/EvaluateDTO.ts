@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
+import { ISoftDeleteDTO } from "./soft-delete-dto/ISoftDeleteDTO";
 
-export interface EvaluateDto {
+export interface EvaluateDto extends ISoftDeleteDTO{
 	userId: Types.ObjectId;
 	userNick: string;
 	productId: Types.ObjectId;
