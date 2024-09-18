@@ -21,7 +21,7 @@ export class UserController extends BaseController {
 	public async getRegisterLink(@Request() req: ExpressRequest, @Queries() query: { email: string }): Promise<BaseObjectEntity<string>> {
 		const userServie = new UserService(req)
 		const { email } = query
-		const findUser = await userServie.isExist(email)
+		const findUser = await userServie.isExist({email}, req)
 		if (!findUser) {
 			// 邮箱账号不存在，允许下一步操作
 			const result = await sendRegister(email, req.t)
@@ -64,7 +64,7 @@ export class UserController extends BaseController {
 	public async getResetPwdLink(@Request() req: ExpressRequest, @Queries() query: { email: string }): Promise<BaseObjectEntity<string>> {
 		const { email } = query
 		const userService = new UserService(req)
-		const findUser = await userService.isExist(email)
+		const findUser = await userService.isExist({email}, req)
 		if (findUser) {
 			const result = await sendResetPwdEmail(email, req.t)
 			if (result) {
@@ -85,7 +85,7 @@ export class UserController extends BaseController {
 		const { email } = query
 		const codeService = new CodeService()
 		const userService = new UserService(req)
-		const findUser = await userService.isExist(email)
+		const findUser = await userService.isExist({email}, req)
 		if (!findUser) {
 			//? 生成6位数的随机验证码，然后记录到db中
 			const aCode = await codeService.generateRandomCode()
@@ -112,7 +112,7 @@ export class UserController extends BaseController {
 		const { email, code, password } = params
 		const userService = new UserService(req)
 		const codeService = new CodeService()
-		const findUser = await userService.isExist(email)
+		const findUser = await userService.isExist({email}, req)
 		const account = email.substring(0, email.indexOf('@'))
 		if (!findUser) {
 			// db中不存在这个邮箱的用户，则允许创建一新的用户
@@ -144,7 +144,7 @@ export class UserController extends BaseController {
 				if (decodeInfo && decodeInfo.email) {
 					const email = decodeInfo.email
 					const account = email.substring(0, email.indexOf('@'))
-					const findUser = await userService.isExist(email)
+					const findUser = await userService.isExist({email}, req)
 					if (!findUser) {
 						// db中不存在这个邮箱的用户，则允许创建一新的用户
 						const createUser = await userService.create({ email, password, account }, req);
@@ -178,7 +178,7 @@ export class UserController extends BaseController {
 		const res = req.res
 		const { email, password } = requestBody;
 		const userService = new UserService(req)
-		const findUser = await userService.isExist(email);
+		const findUser = await userService.isExist({email}, req);
 		if (findUser) {
 			//? 用户存在，则校验对应的密码
 			if (await findUser.isPasswordMatched(password)) {

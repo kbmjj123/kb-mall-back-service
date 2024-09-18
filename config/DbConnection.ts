@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { TrimValuePlugin } from '../plugins/global/TrimValuePlugin'
 import { SoftDeletePlugin } from '@/plugins/global/SoftDelatePlugin'
-import { infoLogger } from '@/utils/Logger'
+import { errorLogger, infoLogger } from '@/utils/Logger'
 
 //! 开启数据库日志调试
 mongoose.set('debug', function(collectionName, methodName, query: any, doc: any, options: any) {
@@ -21,18 +21,20 @@ mongoose.set('debug', function(collectionName, methodName, query: any, doc: any,
 	}
 	infoLogger.info(messageList.join('\n'))
 })
+// 在mongoose连接之前注册全局插件
+mongoose.plugin(TrimValuePlugin);
+mongoose.plugin(SoftDeletePlugin)
 
 export default async () => {
   try{
-    // 在mongoose连接之前注册全局插件
-    mongoose.plugin(TrimValuePlugin);
-		mongoose.plugin(SoftDeletePlugin)
 		const MONGODB_URL = process.env.MONGODB_URL as string
 		if(MONGODB_URL){
-			const conn = await mongoose.connect(MONGODB_URL);
 			mongoose.connection.on('connected', () => console.info('数据库连接成功～～'));
+			await mongoose.connect(MONGODB_URL);
+			infoLogger.info('数据库连接成功')
 		}
   }catch(error){
     console.error(error)
+		errorLogger.error('数据库连接失败')
   }
 }

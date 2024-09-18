@@ -1,4 +1,5 @@
 import { ISoftDeleteDTO } from '@/dto/soft-delete-dto/ISoftDeleteDTO'
+import { infoLogger } from '@/utils/Logger'
 import { Query, Schema } from 'mongoose'
 
 export type SoftDeleteOptions = {}
@@ -49,5 +50,4 @@ export const SoftDeletePlugin = (schema: Schema, options: SoftDeleteOptions) => 
 	deleteMethods.forEach(item => {
 		schema.statics[item] = handleDelete
 	})
-	schema.methods.remove = handleDelete
 }

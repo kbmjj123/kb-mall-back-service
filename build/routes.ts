@@ -57,6 +57,9 @@ const models: TsoaRoute.Models = {
     "UserDTO": {
         "dataType": "refObject",
         "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
             "_id": {"dataType":"string","required":true},
             "password": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
@@ -156,6 +159,9 @@ const models: TsoaRoute.Models = {
     "ProductDTO": {
         "dataType": "refObject",
         "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
             "languageList": {"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"}},
             "cates": {"dataType":"array","array":{"dataType":"refAlias","ref":"mongoose.Types.ObjectId"},"required":true},
             "productName": {"dataType":"string","required":true},
@@ -208,6 +214,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Partial_ProductDTO_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"cates":{"dataType":"array","array":{"dataType":"refAlias","ref":"mongoose.Types.ObjectId"}},"productName":{"dataType":"string"},"masterPicture":{"dataType":"string"},"descPictures":{"dataType":"array","array":{"dataType":"string"}},"slug":{"dataType":"string"},"state":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["online"]},{"dataType":"enum","enums":["offline"]}]},"richText":{"dataType":"string"},"brand":{"ref":"mongoose.Types.ObjectId"},"price":{"dataType":"double"},"activityPrice":{"dataType":"double"},"sales":{"dataType":"double"},"score":{"dataType":"double"},"languageList":{"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"}},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EditProductParams": {
+        "dataType": "refAlias",
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"Partial_ProductDTO_"},{"dataType":"nestedObjectLiteral","nestedProperties":{"brandId":{"dataType":"string","required":true}}}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BaseObjectEntity_ProductDTO-or-null_": {
         "dataType": "refObject",
         "properties": {
@@ -231,6 +247,9 @@ const models: TsoaRoute.Models = {
     "EvaluateDto": {
         "dataType": "refObject",
         "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
             "userId": {"ref":"mongoose.Types.ObjectId","required":true},
             "userNick": {"dataType":"string","required":true},
             "productId": {"ref":"mongoose.Types.ObjectId","required":true},
@@ -247,6 +266,9 @@ const models: TsoaRoute.Models = {
     "CateDTO": {
         "dataType": "refObject",
         "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
             "title": {"dataType":"string","required":true},
             "parentId": {"ref":"mongoose.Types.ObjectId","required":true},
             "level": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
@@ -287,6 +309,9 @@ const models: TsoaRoute.Models = {
     "BrandDTO": {
         "dataType": "refObject",
         "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
             "name": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -330,6 +355,9 @@ const models: TsoaRoute.Models = {
     "AddressDTO": {
         "dataType": "refObject",
         "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
             "isDefault": {"dataType":"boolean","required":true},
             "provinceCode": {"dataType":"string","required":true},
             "provinceName": {"dataType":"string","required":true},
@@ -357,19 +385,19 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_UserDTO.Exclude_keyofUserDTO.password-or-refreshToken-or-accessToken-or-logoutTime__": {
+    "Pick_UserDTO.Exclude_keyofUserDTO.password-or-refreshToken-or-accessToken-or-logoutTime-or-isPasswordMatched__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string","required":true},"_id":{"dataType":"string","required":true},"role":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["admin"]}],"required":true},"nickName":{"dataType":"string"},"avatar":{"dataType":"string"},"address":{"ref":"mongoose.Types.ObjectId"},"loginTime":{"dataType":"datetime"},"account":{"dataType":"string"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string","required":true},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"},"_id":{"dataType":"string","required":true},"role":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["admin"]}],"required":true},"nickName":{"dataType":"string"},"avatar":{"dataType":"string"},"address":{"ref":"mongoose.Types.ObjectId"},"loginTime":{"dataType":"datetime"},"account":{"dataType":"string"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Omit_UserDTO.password-or-refreshToken-or-accessToken-or-logoutTime_": {
+    "Omit_UserDTO.password-or-refreshToken-or-accessToken-or-logoutTime-or-isPasswordMatched_": {
         "dataType": "refAlias",
-        "type": {"ref":"Pick_UserDTO.Exclude_keyofUserDTO.password-or-refreshToken-or-accessToken-or-logoutTime__","validators":{}},
+        "type": {"ref":"Pick_UserDTO.Exclude_keyofUserDTO.password-or-refreshToken-or-accessToken-or-logoutTime-or-isPasswordMatched__","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserWithoutToken": {
         "dataType": "refAlias",
-        "type": {"ref":"Omit_UserDTO.password-or-refreshToken-or-accessToken-or-logoutTime_","validators":{}},
+        "type": {"ref":"Omit_UserDTO.password-or-refreshToken-or-accessToken-or-logoutTime-or-isPasswordMatched_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BaseObjectEntity_UserWithoutToken_": {
@@ -808,7 +836,7 @@ export function RegisterRoutes(app: Router) {
             async function ProductController_createProduct(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                    params: {"in":"body","name":"params","required":true,"dataType":"any"},
+                    params: {"in":"body","name":"params","required":true,"ref":"EditProductParams"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1440,6 +1468,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getAUser',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/account/list',
+            ...(fetchMiddlewares<RequestHandler>(AccountController)),
+            ...(fetchMiddlewares<RequestHandler>(AccountController.prototype.getUserList)),
+
+            async function AccountController_getUserList(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    query: {"in":"queries","name":"query","required":true,"ref":"PageDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new AccountController();
+
+              await templateService.apiHandler({
+                methodName: 'getUserList',
                 controller,
                 response,
                 next,

@@ -54,8 +54,9 @@ app.use(globalParamsValidate)
 // 统一的异常处理
 app.use(serviceErrorMW);
 
-app.listen(process.env.SERVICE_PORT, () => {
-  console.info('服务启动了～～')
-  //? 服务启动成功的时候，连接数据库
-  DbConnection();
+//? 在启动服务之前，连接数据库
+DbConnection().then(() => {
+	app.listen(process.env.SERVICE_PORT, () => {
+		console.info('服务启动了～～')
+	})
 })

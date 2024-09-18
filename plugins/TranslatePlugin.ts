@@ -34,7 +34,7 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 		doc.language = language;
 	})
 	schema.pre('save', function(next) {
-		console.info(this)
+		infoLogger.info('->开始执行全局插件操作了')
 		const doc = this as any
 		//? 拿到req中的language
 		const language = doc.language

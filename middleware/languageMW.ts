@@ -8,7 +8,7 @@ import path from 'path'
 export default function(app: Express) {
 	// languageMW.LanguageDetector是一个语言检测器，主要用于从req中监测到对应的语言
 	i18next.use(Backend).use(languageMW.LanguageDetector).init({
-		debug: true,
+		debug: false,
 		preload: ['en', 'zh-CN', 'zh-TW'],
 		backend: {
 			loadPath: path.join(__dirname, `../locales/{{lng}}.json`),

@@ -15,7 +15,7 @@ export const TrimValuePlugin = (schema: Schema, options: any) => {
           this[field] = this[field].toString().trim();// 统一去除字符串两端的空白字符串
         }
       }
-      next();
     })
+		next();
   })
 }

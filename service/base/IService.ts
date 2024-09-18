@@ -7,7 +7,7 @@ export interface IService<T> {
 	update(id: string, data: Partial<T>, req: ExpressRequest): Promise<T | null>;
 	sofeDeleteById(id: string, req: ExpressRequest): Promise<T>;
 	findById(id: string, req: ExpressRequest): Promise<T | null>;
-	isExist(): Promise<Boolean>;
+	isExist(query: FilterQuery<T>, req: ExpressRequest): Promise<T | null>;
 	findOne(filter: FilterQuery<T> | undefined, req: ExpressRequest): Promise<T | null>;
 	findList(nameInCollection: string, pageInfo: PageDTO): Promise<PageResultDTO<T>>
 	findAll(): Promise<T[]>

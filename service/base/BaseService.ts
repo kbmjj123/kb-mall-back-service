@@ -17,8 +17,8 @@ export class BaseService<T> implements IService<T> {
 	sofeDeleteById(id: string, req: ExpressRequest): Promise<T> {
 		throw new Error("Method not implemented.");
 	}
-	isExist(): Promise<Boolean> {
-		throw new Error("Method not implemented.");
+	isExist(query: FilterQuery<T>, req: ExpressRequest): Promise<T | null> {
+		return this.findOne(query, req)
 	}
 	findList(nameInCollection: string, pageInfo: PageDTO): Promise<PageResultDTO<T>> {
 		throw new Error("Method not implemented.");

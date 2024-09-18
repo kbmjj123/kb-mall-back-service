@@ -15,3 +15,5 @@ export interface ProductDTO extends LanguageDTO{
 	sales?: number | null | undefined;
 	score?: number | null | undefined;
 }
+
+export type EditProductParams = Partial<ProductDTO> & { brandId: string }

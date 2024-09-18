@@ -3,7 +3,7 @@ import { BaseController } from "./BaseController";
 import { PageDTO } from "@/dto/PageDTO";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import { ProductDTO } from "@/dto/ProductDTO";
+import { EditProductParams, ProductDTO } from "@/dto/ProductDTO";
 import { ProductModel } from "@/models/ProductModel";
 import { BasePageListEntity } from "@/entity/BasePageListEntity";
 import { ObjectId } from "mongodb";
@@ -130,14 +130,14 @@ export class ProductController extends BaseController {
 	*/
 	@Put('publish')
 	@Middlewares(validateProductMW)
-	public async createProduct(@Request() req: ExpressRequest, @Body() params: any): Promise<BaseObjectEntity<string>> {
+	public async createProduct(@Request() req: ExpressRequest, @Body() params: EditProductParams): Promise<BaseObjectEntity<string>> {
 		try {
 			// 默认初始化商品相关属性
 			params['sales'] = 0;
 			params['score'] = 0;
 			params['state'] = 'online';
 			const createAProductModel = new ProductModel(params);
-			createAProductModel.setLanguage(req.language)
+			// createAProductModel.setLanguage(req.language)
 			const err = createAProductModel.validateSync();
 			if (err) {
 				//? 参数异常，将异常信息返回给客户端
