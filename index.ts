@@ -4,7 +4,7 @@ import globalParamsValidate from './middleware/GlobalParamsValidateMW'
 import serviceErrorMW from './middleware/ServiceErrorMW';
 import ResWrapperWM from './middleware/ResWrapperWM';
 import cors from 'cors'
-import LanguageMW from './middleware/LanguageMW';
+import LanguageMW from './middleware/languageMW';
 import path from 'path'
 import { loadFromEnv } from './config/LoadConfig';
 import DbConnection from './config/DbConnection';// 引入数据库连接器
