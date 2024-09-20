@@ -6,10 +6,9 @@ import ResWrapperWM from './middleware/ResWrapperWM';
 import cors from 'cors'
 import LanguageMW from './middleware/LanguageMW';
 import path from 'path'
-const app = express();
+import { loadFromEnv } from './config/LoadConfig';
 import DbConnection from './config/DbConnection';// 引入数据库连接器
-import dotenv from 'dotenv'
-dotenv.config()	// 加载.env环境变量，使得整个程序可以通过process.env访问到.env文件中定义的变量
+
 import { RegisterRoutes } from './build/routes';
 import { setupSwagger } from './middleware/SwaggerDocMW';
 
@@ -19,6 +18,8 @@ import { loggerWrap } from './middleware/LogMiddleware';
 import { setUpEmailTemplateDebugger } from './middleware/EmailTemplateDebugger'
 import requestIp from 'request-ip'
 
+const app = express();
+loadFromEnv()
 LanguageMW(app)	// 语言安装包中间件
 
 app.use(cors());
