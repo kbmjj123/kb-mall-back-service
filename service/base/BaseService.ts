@@ -3,19 +3,22 @@ import { Document, FilterQuery, Model, QueryOptions, UpdateQuery } from "mongoos
 import { Request as ExpressRequest } from "express";
 import { PageDTO, PageResultDTO } from "@/dto/PageDTO";
 import { PAGE_SIZE } from "@/config/ConstantValues";
+import { ISoftDeleteDTO } from "@/dto/soft-delete-dto/ISoftDeleteDTO";
 
 /**
  * 数据库层面的基础服务，根据传递的参数，封装相关的数据库基本操作
 */
-export class BaseService<T> implements IService<T> {
+export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 
+	//@ts-ignore
 	private model: Model<T>;
-
+	//@ts-ignore
 	constructor(model: Model<T>) {
 		this.model = model
 	}
-	sofeDeleteById(id: string, req: ExpressRequest): Promise<T> {
-		throw new Error("Method not implemented.");
+	async sofeDeleteById(id: string, req: ExpressRequest): Promise<T | null> {
+		const doc = await this.model.findById(id)
+		return doc ? doc.softDelete() : null
 	}
 	isExist(query: FilterQuery<T>, req: ExpressRequest): Promise<T | null> {
 		return this.findOne(query, req)

@@ -21,17 +21,49 @@ export class UserController extends BaseController {
 	public async getRegisterLink(@Request() req: ExpressRequest, @Queries() query: { email: string }): Promise<BaseObjectEntity<string>> {
 		const userServie = new UserService(req)
 		const { email } = query
-		const findUser = await userServie.isExist({email}, req)
+		const findUser = await userServie.isExist({ email }, req)
 		if (!findUser) {
 			// 邮箱账号不存在，允许下一步操作
 			const result = await sendRegister(email, req.t)
 			if (result) {
-				return this.successResponse(req, '邮件发送成功')
+				return this.successResponse(req, req.t('user.deliveryEmailSuccess'))
 			} else {
-				return this.failedResponse(req, '邮件发送失败')
+				return this.failedResponse(req, req.t('user.deliveryEmailFailed'))
 			}
 		} else {
 			return this.failedResponse(req, req.t('user.emailAlreadyExist'))
+		}
+	}
+	/**
+	 * 新用户通过邮件链接进行注册
+	*/
+	@Post('/register')
+	public async createUser(@Request() req: ExpressRequest, @Body() requestBody: UserRegisterParams): Promise<BaseObjectEntity<UserDTO>> {
+		const userService = new UserService(req)
+		const { password, token } = requestBody;
+		if (token) {
+			try {
+				const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload
+				if (decodeInfo && decodeInfo.email) {
+					const email = decodeInfo.email
+					const account = email.substring(0, email.indexOf('@'))
+					const findUser = await userService.isExist({ email }, req)
+					if (!findUser) {
+						// db中不存在这个邮箱的用户，则允许创建一新的用户
+						const createUser = await userService.create({ email, password, account }, req);
+						return this.successResponse(req, createUser)
+					} else {
+						// db中已存在，则拒绝创建
+						return this.failedResponse(req, req.t('user.emailAlreadyExist'))
+					}
+				} else {
+					return this.failedResponse(req, req.t('user.tokenInValidate'))
+				}
+			} catch (err) {
+				return this.failedResponse(req, req.t('user.needValidateToken'))
+			}
+		} else {
+			return this.failedResponse(req, req.t('user.needValidateToken'))
 		}
 	}
 
@@ -64,7 +96,7 @@ export class UserController extends BaseController {
 	public async getResetPwdLink(@Request() req: ExpressRequest, @Queries() query: { email: string }): Promise<BaseObjectEntity<string>> {
 		const { email } = query
 		const userService = new UserService(req)
-		const findUser = await userService.isExist({email}, req)
+		const findUser = await userService.isExist({ email }, req)
 		if (findUser) {
 			const result = await sendResetPwdEmail(email, req.t)
 			if (result) {
@@ -85,7 +117,7 @@ export class UserController extends BaseController {
 		const { email } = query
 		const codeService = new CodeService()
 		const userService = new UserService(req)
-		const findUser = await userService.isExist({email}, req)
+		const findUser = await userService.isExist({ email }, req)
 		if (!findUser) {
 			//? 生成6位数的随机验证码，然后记录到db中
 			const aCode = await codeService.generateRandomCode()
@@ -112,7 +144,7 @@ export class UserController extends BaseController {
 		const { email, code, password } = params
 		const userService = new UserService(req)
 		const codeService = new CodeService()
-		const findUser = await userService.isExist({email}, req)
+		const findUser = await userService.isExist({ email }, req)
 		const account = email.substring(0, email.indexOf('@'))
 		if (!findUser) {
 			// db中不存在这个邮箱的用户，则允许创建一新的用户
@@ -132,38 +164,6 @@ export class UserController extends BaseController {
 	}
 
 	/**
-	 * 新用户注册
-	*/
-	@Post('/register')
-	public async createUser(@Request() req: ExpressRequest, @Body() requestBody: UserRegisterParams): Promise<BaseObjectEntity<UserDTO>> {
-		const userService = new UserService(req)
-		const { password, token } = requestBody;
-		if (token) {
-			try {
-				const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload
-				if (decodeInfo && decodeInfo.email) {
-					const email = decodeInfo.email
-					const account = email.substring(0, email.indexOf('@'))
-					const findUser = await userService.isExist({email}, req)
-					if (!findUser) {
-						// db中不存在这个邮箱的用户，则允许创建一新的用户
-						const createUser = await userService.create({ email, password, account }, req);
-						return this.successResponse(req, createUser)
-					} else {
-						// db中已存在，则拒绝创建
-						return this.failedResponse(req, req.t('user.emailAlreadyExist'))
-					}
-				} else {
-					return this.failedResponse(req, req.t('user.tokenInValidate'))
-				}
-			}catch(err){
-				return this.failedResponse(req, req.t('user.needValidateToken'))
-			}
-		} else {
-			return this.failedResponse(req, req.t('user.needValidateToken'))
-		}
-	}
-	/**
 	 * 修改用户信息，主要为用户自主修改
 	*/
 	// @Post('{id}')
@@ -178,7 +178,7 @@ export class UserController extends BaseController {
 		const res = req.res
 		const { email, password } = requestBody;
 		const userService = new UserService(req)
-		const findUser = await userService.isExist({email}, req);
+		const findUser = await userService.isExist({ email }, req);
 		if (findUser) {
 			//? 用户存在，则校验对应的密码
 			if (await findUser.isPasswordMatched(password)) {
@@ -186,22 +186,22 @@ export class UserController extends BaseController {
 				const accessToken = TokenGenerator.generateAccessToken(findUser._id);
 				const refreshToken = TokenGenerator.generateRefreshToken(findUser._id);
 				// 针对找到的用户信息追加token
-				const updateUser = await userService.findOneAndUpdate(req, { _id: findUser._id }, { $set: { accessToken, refreshToken } })
+				const updateUser = await userService.findOneAndUpdate(req, { _id: findUser._id }, { $set: { accessToken, refreshToken, loginTime: new Date() } }, { new: true, select: '-password' })
 				if (updateUser) {
 					res?.cookie("accessToken", accessToken, {
 						httpOnly: true,
 						maxAge: Number(process.env.JWT_ACCESS_EXPIRES_IN_TIME)
 					});
-					return this.successResponse(req, findUser)
+					return this.successResponse(req, updateUser)
 				} else {
-					return this.failedResponse(req, '系统异常，请稍后重试！')
+					return this.failedResponse(req, req.t('system.error'))
 				}
 			} else {
-				return this.failedResponse(req, '用户名或密码错误！')
+				return this.failedResponse(req, req.t('user.accountOrPasswordError'))
 			}
 		} else {
 			// 用户不存在
-			return this.failedResponse(req, '用户名或密码错误！')
+			return this.failedResponse(req, req.t('user.emailNoExist'))
 		}
 	}
 

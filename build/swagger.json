@@ -25,22 +25,6 @@
         "type": "object",
         "additionalProperties": false
       },
-      "BaseObjectEntity_unknown_": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {}
-        },
-        "type": "object",
-        "additionalProperties": false
-      },
       "mongoose.Types.ObjectId": {
         "type": "string"
       },
@@ -150,41 +134,6 @@
         "type": "object",
         "additionalProperties": false
       },
-      "Pick_UserDTO.email-or-password_": {
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "用户邮箱",
-            "example": "kbmjj123@gmail.com"
-          },
-          "password": {
-            "type": "string",
-            "description": "用户密码",
-            "example": "abc123!@#$"
-          }
-        },
-        "required": ["email", "password"],
-        "type": "object",
-        "description": "From T, pick a set of properties whose keys are in the union K"
-      },
-      "UserQuickRegisterParams": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Pick_UserDTO.email-or-password_"
-          },
-          {
-            "properties": {
-              "code": {
-                "type": "string",
-                "description": "邮箱验证码"
-              }
-            },
-            "required": ["code"],
-            "type": "object"
-          }
-        ],
-        "description": "携带验证码进行快速注册的实体"
-      },
       "Pick_UserDTO.password_": {
         "properties": {
           "password": {
@@ -214,20 +163,71 @@
           }
         ]
       },
-      "Pick_UserDTO.password-or-email_": {
+      "BaseObjectEntity_unknown_": {
         "properties": {
-          "email": {
-            "type": "string",
-            "description": "用户邮箱",
-            "example": "kbmjj123@gmail.com"
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
           },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {}
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Pick_UserDTO.email-or-password_": {
+        "properties": {
           "password": {
             "type": "string",
             "description": "用户密码",
             "example": "abc123!@#$"
+          },
+          "email": {
+            "type": "string",
+            "description": "用户邮箱",
+            "example": "kbmjj123@gmail.com"
           }
         },
-        "required": ["email", "password"],
+        "required": ["password", "email"],
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "UserQuickRegisterParams": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pick_UserDTO.email-or-password_"
+          },
+          {
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "邮箱验证码"
+              }
+            },
+            "required": ["code"],
+            "type": "object"
+          }
+        ],
+        "description": "携带验证码进行快速注册的实体"
+      },
+      "Pick_UserDTO.password-or-email_": {
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "用户密码",
+            "example": "abc123!@#$"
+          },
+          "email": {
+            "type": "string",
+            "description": "用户邮箱",
+            "example": "kbmjj123@gmail.com"
+          }
+        },
+        "required": ["password", "email"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
@@ -1116,6 +1116,37 @@
         ]
       }
     },
+    "/user/register": {
+      "post": {
+        "operationId": "CreateUser",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "新用户通过邮件链接进行注册",
+        "tags": ["用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegisterParams"
+              }
+            }
+          }
+        }
+      }
+    },
     "/user/resetPwd": {
       "post": {
         "operationId": "ResetPwd",
@@ -1241,37 +1272,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UserQuickRegisterParams"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/register": {
-      "post": {
-        "operationId": "CreateUser",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
-                }
-              }
-            }
-          }
-        },
-        "description": "新用户注册",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserRegisterParams"
               }
             }
           }

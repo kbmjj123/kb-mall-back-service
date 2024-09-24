@@ -19,6 +19,7 @@ export interface UserDTO extends ISoftDeleteDTO{
 	email: string;
 	/**
 	 * 用户角色，枚举类型，user代表普通用户，admin代表管理员
+	 * @example user
 	*/
 	role: "user" | "admin";
 	/**
@@ -31,6 +32,7 @@ export interface UserDTO extends ISoftDeleteDTO{
 	accessToken?: string | null | undefined;
 	/**
 	 * 用户昵称
+	 * @example 昵称
 	*/
 	nickName?: string | null | undefined;
 	/**
@@ -51,6 +53,7 @@ export interface UserDTO extends ISoftDeleteDTO{
 	logoutTime?: Date | null | undefined;
 	/**
 	 * 用户账号
+	 * @example 账号
 	*/
 	account?: string | null | undefined;
 

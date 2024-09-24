@@ -1,5 +1,4 @@
 import { ISoftDeleteDTO } from '@/dto/soft-delete-dto/ISoftDeleteDTO'
-import { infoLogger } from '@/utils/Logger'
 import { Query, Schema } from 'mongoose'
 
 export type SoftDeleteOptions = {}

@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema<UserDTO>({
 	},
 	password: {
 		type: String,
-		required: [true, '请维护用户密码']
+		required: [true, '请维护用户密码'],
+		hide: true	// 通过mongoose-hidden插件，将该属性默认情况下配置为隐藏的
 	},
 	email: {
 		type: String,
@@ -23,10 +24,22 @@ const userSchema = new mongoose.Schema<UserDTO>({
 		enum: ['admin', 'user'],
 		require: [true, '请维护用户角色']
 	},
-	nickName: String,
-	avatar: String,
-	address: mongoose.SchemaTypes.ObjectId,
-	loginTime: Date,
+	nickName: {
+		type: String,
+		default: ''
+	},
+	avatar: {
+		type: String,
+		default: ''
+	},
+	address: {
+		type: mongoose.SchemaTypes.ObjectId,
+		default: ''
+	},
+	loginTime: {
+		type: Date,
+		hide: true
+	},
 	logoutTime: Date
 })
 

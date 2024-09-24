@@ -17,5 +17,5 @@ export interface ISoftDeleteDTO {
 	/**
 	 * 针对所有相关的文档，提供文档实例的软删除方法
 	*/
-	softDelete(query: any): Promise<this>
+	softDelete(): Promise<this>
 }

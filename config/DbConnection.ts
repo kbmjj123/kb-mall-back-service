@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import { TrimValuePlugin } from '../plugins/global/TrimValuePlugin'
 import { SoftDeletePlugin } from '@/plugins/global/SoftDelatePlugin'
+import { AutoHidePropertyPlugin } from '@/plugins/global/AutoHidePropertyPlugin'
 import { errorLogger, infoLogger } from '@/utils/Logger'
 
 //! 开启数据库日志调试
@@ -22,7 +23,8 @@ mongoose.set('debug', function(collectionName, methodName, query: any, doc: any,
 	infoLogger.info(messageList.join('\n'))
 })
 // 在mongoose连接之前注册全局插件
-mongoose.plugin(TrimValuePlugin);
+mongoose.plugin(AutoHidePropertyPlugin)
+mongoose.plugin(TrimValuePlugin)
 mongoose.plugin(SoftDeletePlugin)
 
 export default async () => {

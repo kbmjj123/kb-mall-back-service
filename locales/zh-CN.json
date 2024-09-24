@@ -5,6 +5,9 @@
     "paramsError": "请求参数有误，请检查后重新提交",
     "noFoundError": "您请求的地址无效，请求地址为{{originalUrl}}"
   },
+  "system": {
+    "error": "系统异常，请稍后重试！"
+  },
   "template": {
     "newRegisterSubject": "新用户注册",
     "registerSuccessSubject": "注册成功",
@@ -42,6 +45,8 @@
     "needValidateToken": "请传递有效的token",
     "emailAlreadyExist": "此邮箱已存在，请勿重复创建！",
     "emailNoExist": "邮箱不存在，请确认输入是否有误！",
-    "tokenInValidate": "链接已失效，请重新获取链接"
+    "tokenInValidate": "链接已失效，请重新获取链接",
+    "deliveryEmailSuccess": "邮件发送成功！",
+    "deliveryEmailFailed": "邮件发送失败！"
   }
 }
