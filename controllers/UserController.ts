@@ -1,13 +1,14 @@
 import { UserDTO, UserLoginParams, UserQuickRegisterParams, UserRegisterParams } from "@/dto/UserDTO";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
-import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch, Queries } from 'tsoa'
+import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch, Queries, Middlewares, Header } from 'tsoa'
 import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
 import TokenGenerator from "@/config/TokenGenerator";
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { sendRandomCodeEmail, sendRegister, sendResetPwdEmail } from '@/service/EmailSenderService'
 import { UserService } from "@/service/UserService";
 import { CodeService } from "@/service/CodeService";
+import { checkLogin } from "@/middleware/AuthMiddleware";
 
 
 @Route('user')
@@ -206,9 +207,24 @@ export class UserController extends BaseController {
 	}
 
 	/**
+	 * 获取当前登录用户信息
+	*/
+	@Get('/info')
+	@Middlewares(checkLogin)
+	public async getUserInfo(@Request() req: ExpressRequest): Promise<BaseObjectEntity<UserDTO>> {
+		const findUser = req.user
+		if(findUser){
+			return this.successResponse(req, findUser)
+		}else{
+			return this.failedResponse(req, req.t('user.loginTimeOut'))
+		}
+	}
+
+	/**
 	 * 刷新用户的accessToken以及refreshToken，即延长用户的在线有效性
 	*/
 	@Patch('/refreshToken')
+	@Middlewares(checkLogin)
 	public async refreshToken(@Request() req: ExpressRequest, @Body() requestBody: { refreshToken: string }): Promise<BaseObjectEntity<{ accessToken: string, refreshToken: string }>> {
 		let { refreshToken } = requestBody
 		if (refreshToken) {
