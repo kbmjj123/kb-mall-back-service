@@ -67,7 +67,7 @@ export type UserWithoutToken = Omit<UserDTO, 'password' | 'refreshToken' | 'acce
 /**
  * 编辑用户信息需需要参数
  */
-export type EditUserParams = Pick<UserDTO, 'email' | 'account' | 'avatar' | 'nickName'>
+export type EditUserParams = Pick<UserDTO, 'account' | 'avatar' | 'nickName'>
 
 /**
  * 用户登录所需参数

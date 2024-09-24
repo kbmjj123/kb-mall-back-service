@@ -1,7 +1,7 @@
-import { UserDTO, UserLoginParams, UserQuickRegisterParams, UserRegisterParams } from "@/dto/UserDTO";
+import { EditUserParams, UserDTO, UserLoginParams, UserQuickRegisterParams, UserRegisterParams } from "@/dto/UserDTO";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
-import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch, Queries, Middlewares, Header } from 'tsoa'
+import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch, Queries, Middlewares, Header, Deprecated } from 'tsoa'
 import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
 import TokenGenerator from "@/config/TokenGenerator";
 import jwt, { JwtPayload } from 'jsonwebtoken'
@@ -9,7 +9,12 @@ import { sendRandomCodeEmail, sendRegister, sendResetPwdEmail } from '@/service/
 import { UserService } from "@/service/UserService";
 import { CodeService } from "@/service/CodeService";
 import { checkLogin } from "@/middleware/AuthMiddleware";
+import { body } from 'express-validator'
+import ParamsValidateMW from "@/middleware/ParamsValidateMW";
 
+const validateUserWM = [
+	body('')
+]
 
 @Route('user')
 @Tags('用户模块')
@@ -39,7 +44,7 @@ export class UserController extends BaseController {
 	 * 新用户通过邮件链接进行注册
 	*/
 	@Post('/register')
-	public async createUser(@Request() req: ExpressRequest, @Body() requestBody: UserRegisterParams): Promise<BaseObjectEntity<UserDTO>> {
+	public async registerNewAccount(@Request() req: ExpressRequest, @Body() requestBody: UserRegisterParams): Promise<BaseObjectEntity<UserDTO>> {
 		const userService = new UserService(req)
 		const { password, token } = requestBody;
 		if (token) {
@@ -51,7 +56,7 @@ export class UserController extends BaseController {
 					const findUser = await userService.isExist({ email }, req)
 					if (!findUser) {
 						// db中不存在这个邮箱的用户，则允许创建一新的用户
-						const createUser = await userService.create({ email, password, account }, req);
+						const createUser = await userService.create({ email, password, account, avatar: userService.generateUniqueAvatar(email) }, req);
 						return this.successResponse(req, createUser)
 					} else {
 						// db中已存在，则拒绝创建
@@ -81,7 +86,7 @@ export class UserController extends BaseController {
 				const email = decodeInfo.email
 				const updateUser = await userService.findOneAndUpdate(req, { email }, { password })
 				if (updateUser) {
-					return this.successResponse(req, '')
+					return this.successResponse(req)
 				} else {
 					return this.failedResponse(req, '')
 				}
@@ -101,7 +106,7 @@ export class UserController extends BaseController {
 		if (findUser) {
 			const result = await sendResetPwdEmail(email, req.t)
 			if (result) {
-				return this.successResponse(req, '')
+				return this.successResponse(req)
 			} else {
 				return this.failedResponse(req, '')
 			}
@@ -125,7 +130,7 @@ export class UserController extends BaseController {
 			if (aCode) {
 				const result = await sendRandomCodeEmail(email, aCode.content as string, req.t)
 				if (result) {
-					return this.successResponse(req, '')
+					return this.successResponse(req)
 				} else {
 					return this.failedResponse(req, '')
 				}
@@ -167,9 +172,28 @@ export class UserController extends BaseController {
 	/**
 	 * 修改用户信息，主要为用户自主修改
 	*/
-	// @Post('{id}')
-	// public async modifyAUser(@Path() id: string, @Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
-	// }
+	@Post('{id}/edit')
+	@Middlewares([checkLogin])
+	public async modifyAUser(@Path() id: string, @Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
+		const { account, avatar, nickName } = requestBody
+		const userService: UserService = new UserService(req)
+		const findUser = await userService.isExist({ _id: id }, req)
+		if (findUser) {
+			if (!account && !avatar && !nickName) {
+				return this.failedResponse(req, req.t('user.editAccountParamsTip'))
+			}
+			const updateUser = await userService.update(id, {
+				account, avatar, nickName
+			}, req)
+			if (updateUser) {
+				return this.successResponse(req, updateUser)
+			} else {
+				return this.failedResponse(req, req.t('system.error'))
+			}
+		} else {
+			return this.failedResponse(req, req.t('user.accountNoExist'))
+		}
+	}
 
 	/**
 	 * 用户登录接口
@@ -213,10 +237,50 @@ export class UserController extends BaseController {
 	@Middlewares(checkLogin)
 	public async getUserInfo(@Request() req: ExpressRequest): Promise<BaseObjectEntity<UserDTO>> {
 		const findUser = req.user
-		if(findUser){
+		if (findUser) {
 			return this.successResponse(req, findUser)
-		}else{
+		} else {
 			return this.failedResponse(req, req.t('user.loginTimeOut'))
+		}
+	}
+
+	/**
+	 * 退出登录
+	*/
+	@Post('/logout')
+	@Middlewares([checkLogin])
+	public async logout(@Request() req: ExpressRequest): Promise<BaseObjectEntity<String | null>> {
+		const user = req.user
+		if (user) {
+			const userService = new UserService(req)
+			const updateUser = await userService.update(user._id, { logoutTime: new Date() }, req)
+			if (updateUser) {
+				return this.successResponse(req, null)
+			} else {
+				return this.failedResponse(req, req.t('system.error'))
+			}
+		} else {
+			return this.failedResponse(req, req.t('user.accountNoExist'))
+		}
+	}
+
+	/**
+	 * 用户注销(删除账号)
+	*/
+	@Delete('/delete')
+	@Middlewares([checkLogin])
+	public async deleteAccount(@Request() req: ExpressRequest,): Promise<BaseObjectEntity<UserDTO>> {
+		const user = req.user
+		if (user) {
+			const userServie = new UserService(req)
+			const deleteUser = await userServie.sofeDeleteById(user._id, req)
+			if (deleteUser) {
+				return this.successResponse(req, deleteUser)
+			} else {
+				return this.failedResponse(req, req.t('system.error'))
+			}
+		} else {
+			return this.failedResponse(req, req.t('user.accountNoExist'))
 		}
 	}
 
@@ -224,6 +288,7 @@ export class UserController extends BaseController {
 	 * 刷新用户的accessToken以及refreshToken，即延长用户的在线有效性
 	*/
 	@Patch('/refreshToken')
+	@Deprecated()
 	@Middlewares(checkLogin)
 	public async refreshToken(@Request() req: ExpressRequest, @Body() requestBody: { refreshToken: string }): Promise<BaseObjectEntity<{ accessToken: string, refreshToken: string }>> {
 		let { refreshToken } = requestBody

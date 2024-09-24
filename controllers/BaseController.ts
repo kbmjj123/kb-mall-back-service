@@ -23,10 +23,10 @@ export class BaseController extends Controller{
 		}
 	}
 
-	protected successResponse<T>(req: ExpressRequest, data: T, message: string = ''): BaseObjectEntity<T> {
+	protected successResponse<T>(req: ExpressRequest, data?: T, message: string = ''): BaseObjectEntity<T> {
 		const result =  {
 			status: LogicResult.SUCCESS,
-			message,
+			message: message || req.t('tip.success'),
 			data
 		}
 		this.logResponse(result)
@@ -36,7 +36,7 @@ export class BaseController extends Controller{
 	protected successListResponse<T>(req: ExpressRequest, data: PageListType<T>, message: string = ''): BasePageListEntity<T> {
 		const result =  {
 			status: LogicResult.SUCCESS,
-			message,
+			message: message || req.t('tip.failed'),
 			data
 		}
 		this.logResponse(result)

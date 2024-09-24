@@ -54,6 +54,7 @@
     "random": "^5.1.0",
     "request-ip": "^3.3.0",
     "serve-static": "^1.15.0",
+    "superagent": "^10.1.0",
     "tsconfig-paths": "^4.2.0",
     "tsoa": "^6.4.0"
   },
@@ -75,6 +76,7 @@
     "@types/nodemailer": "^6.4.15",
     "@types/request-ip": "^0.0.41",
     "@types/serve-static": "^1.15.7",
+    "@types/superagent": "^8.1.9",
     "@types/swagger-ui-express": "^4.1.6",
     "@typescript-eslint/eslint-plugin": "^8.1.0",
     "@typescript-eslint/parser": "^8.1.0",

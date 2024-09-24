@@ -37,6 +37,8 @@
   },
   "user": {
     "permissionLimitTip": "当前用户无权限",
+    "accountNoExist": "账号不存在，请检查对应参数",
+    "editAccountParamsTip": "请至少维护其中一参数",
     "inputEmailTip": "请维护邮箱账号",
     "inputPasswordTip": "请维护用户密码",
     "inputUserRole": "请维护用户角色",
