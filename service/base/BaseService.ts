@@ -55,7 +55,7 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 		return this.model.create(data)
 	}
 	update(id: string, data: Partial<T>, req: ExpressRequest): Promise<T | null> {
-		const options = this.getLanguageOptions(req, {})
+		const options = this.getLanguageOptions(req, {new: true})
 		return this.model.findByIdAndUpdate(id, data).setOptions(options)
 	}
 	findById(id: string, req: ExpressRequest): Promise<T | null> {

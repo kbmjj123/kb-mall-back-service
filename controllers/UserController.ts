@@ -172,10 +172,11 @@ export class UserController extends BaseController {
 	/**
 	 * 修改用户信息，主要为用户自主修改
 	*/
-	@Post('{id}/edit')
+	@Post('/edit')
 	@Middlewares([checkLogin])
-	public async modifyAUser(@Path() id: string, @Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
+	public async modifyAUser(@Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
 		const { account, avatar, nickName } = requestBody
+		const id = req.user.id
 		const userService: UserService = new UserService(req)
 		const findUser = await userService.isExist({ _id: id }, req)
 		if (findUser) {
@@ -253,7 +254,7 @@ export class UserController extends BaseController {
 		const user = req.user
 		if (user) {
 			const userService = new UserService(req)
-			const updateUser = await userService.update(user._id, { logoutTime: new Date() }, req)
+			const updateUser = await userService.update(user._id, { logoutTime: new Date(), accessToken: null, refreshToken: null }, req)
 			if (updateUser) {
 				return this.successResponse(req, null)
 			} else {
@@ -318,7 +319,4 @@ export class UserController extends BaseController {
 		}
 	}
 
-	/**
-	 * 删除一个用户
-	*/
 }

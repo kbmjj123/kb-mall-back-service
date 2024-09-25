@@ -214,6 +214,28 @@
         ],
         "description": "携带验证码进行快速注册的实体"
       },
+      "Pick_UserDTO.account-or-avatar-or-nickName_": {
+        "properties": {
+          "account": {
+            "type": "string",
+            "description": "用户账号"
+          },
+          "avatar": {
+            "type": "string",
+            "description": "用户头像"
+          },
+          "nickName": {
+            "type": "string",
+            "description": "用户昵称"
+          }
+        },
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "EditUserParams": {
+        "$ref": "#/components/schemas/Pick_UserDTO.account-or-avatar-or-nickName_",
+        "description": "编辑用户信息需需要参数"
+      },
       "Pick_UserDTO.password-or-email_": {
         "properties": {
           "password": {
@@ -234,6 +256,25 @@
       "UserLoginParams": {
         "$ref": "#/components/schemas/Pick_UserDTO.password-or-email_",
         "description": "用户登录所需参数"
+      },
+      "BaseObjectEntity_String-or-null_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
       },
       "BaseObjectEntity__accessToken-string--refreshToken-string__": {
         "properties": {
@@ -994,6 +1035,18 @@
             "description": "用户邮箱",
             "example": "kbmjj123@gmail.com"
           },
+          "account": {
+            "type": "string",
+            "description": "用户账号"
+          },
+          "avatar": {
+            "type": "string",
+            "description": "用户头像"
+          },
+          "nickName": {
+            "type": "string",
+            "description": "用户昵称"
+          },
           "createTime": {
             "type": "string",
             "format": "date-time",
@@ -1018,14 +1071,6 @@
             "enum": ["user", "admin"],
             "description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
           },
-          "nickName": {
-            "type": "string",
-            "description": "用户昵称"
-          },
-          "avatar": {
-            "type": "string",
-            "description": "用户头像"
-          },
           "address": {
             "$ref": "#/components/schemas/mongoose.Types.ObjectId",
             "description": "用户地址id"
@@ -1034,10 +1079,6 @@
             "type": "string",
             "format": "date-time",
             "description": "登录时间"
-          },
-          "account": {
-            "type": "string",
-            "description": "用户账号"
           }
         },
         "required": ["email", "_id", "role"],
@@ -1118,7 +1159,7 @@
     },
     "/user/register": {
       "post": {
-        "operationId": "CreateUser",
+        "operationId": "RegisterNewAccount",
         "responses": {
           "200": {
             "description": "Ok",
@@ -1278,9 +1319,9 @@
         }
       }
     },
-    "/user/login": {
+    "/user/edit": {
       "post": {
-        "operationId": "CheckUser",
+        "operationId": "ModifyAUser",
         "responses": {
           "200": {
             "description": "Ok",
@@ -1302,11 +1343,105 @@
           "content": {
             "application/json": {
               "schema": {
+                "$ref": "#/components/schemas/EditUserParams"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "operationId": "CheckUser",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "用户登录接口",
+        "tags": ["用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
                 "$ref": "#/components/schemas/UserLoginParams"
               }
             }
           }
         }
+      }
+    },
+    "/user/info": {
+      "get": {
+        "operationId": "GetUserInfo",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取当前登录用户信息",
+        "tags": ["用户模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/user/logout": {
+      "post": {
+        "operationId": "Logout",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_String-or-null_"
+                }
+              }
+            }
+          }
+        },
+        "description": "退出登录",
+        "tags": ["用户模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/user/delete": {
+      "delete": {
+        "operationId": "DeleteAccount",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "用户注销(删除账号)",
+        "tags": ["用户模块"],
+        "security": [],
+        "parameters": []
       }
     },
     "/user/refreshToken": {
@@ -1326,6 +1461,7 @@
         },
         "description": "刷新用户的accessToken以及refreshToken，即延长用户的在线有效性",
         "tags": ["用户模块"],
+        "deprecated": true,
         "security": [],
         "parameters": [],
         "requestBody": {

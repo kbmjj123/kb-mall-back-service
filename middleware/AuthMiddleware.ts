@@ -5,7 +5,10 @@ import { LogicResult } from '@/enum/http'
 import TokenGenerator from '@/config/TokenGenerator'
 import { UserService } from '@/service/UserService'
 
-// 只是单纯判断是否已登录
+/**
+ * 用户是否已登录的拦截中间件
+ * 主要根据用户记录中是否拥有refreshToken值来进行判断
+*/
 export const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
 	// 获取客户端携带的token信息
 	let token = req?.headers?.authorization;
@@ -16,7 +19,7 @@ export const checkLogin = async (req: Request, res: Response, next: NextFunction
 			const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
 			// decodeInfo.id 存在，则是一个有效的用户id，说明是一个正常的登录状态
 			const findUser = await UserModel.findById(decodeInfo.id);
-			if (findUser?.account) {
+			if (findUser?.refreshToken) {
 				//! 这里针对需要鉴权登录的相关接口，追加一个自动延活token的逻辑
 				const refreshToken = TokenGenerator.generateRefreshToken(decodeInfo.id)
 				const accessToken = TokenGenerator.generateAccessToken(decodeInfo.id)
@@ -26,7 +29,7 @@ export const checkLogin = async (req: Request, res: Response, next: NextFunction
 				// 直接在中间件这里做一个拦截
 				next();
 			} else {
-				res.failed(LogicResult.LOGIN_TIMEOUT, null, req.t('tip.failed'))
+				res.failed(LogicResult.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
 			}
 		} catch (error) {
 			res.failed(LogicResult.FORBIT, '', req.t('user.permissionLimitTip'))

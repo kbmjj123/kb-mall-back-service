@@ -198,3 +198,6 @@ const query = {
 	[我是动态的名称变量]: value
 }  as FilterQuery<T>
 ```
+
+#### 当在调用collection的update操作时
+> 当我们在调用`Model.update()`操作的时候，需要传递`new=true`给到这个options对象，使其能够在方法调用后返回更新后的记录，而不是更新前的记录

@@ -15,6 +15,7 @@ export const loggerWrap = (app: Express) => {
 			`Response Time: ${tokens['response-time'](req, res)}ms`,
 			`Content Length: ${tokens.res(req, res, 'content-length')}`,
 			`User-Agent: ${req.headers['user-agent']}`,
+			`authorization: ${req.headers['authorization']}`,
 			`Client IP: ${req.clientIp}`
 		].join('\n')
 	}, {
