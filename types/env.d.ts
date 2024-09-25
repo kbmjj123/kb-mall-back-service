@@ -9,7 +9,10 @@ declare namespace NodeJS {
 		JWT_REFRESH_EXPIRES_IN_TIME: number,
 		PREVIEW_EMAIL_TEMPLATE: boolean,	// 是否开启预览邮件模版的标识
 		GMAIL_ACCOUNT: string,			// 用来发送邮件的邮箱账号
-		GMAIL_PASSWORD: string,			// 用来发送邮件的邮箱密码
+		GMAIL_CLIENT_ID: string,		// 用来发送邮件的clientID
+		GMAIL_CLIENT_SECRET: string,// 用来发送邮件的clientSecret
+		GMAIL_REFRESH_TOKEN: string,// 用来发送邮件的刷新token
+		GMAIL_ACCESS_TOKEN: string,	// 用来发送邮件的访问token
 		MALL_LINK: string,					// 商城的链接地址
 		REGISTER_LINK: string,			// 注册用的链接地址
 		RESET_PWD_LINK: string,			// 重置密码用的链接地址

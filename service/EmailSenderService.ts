@@ -7,11 +7,16 @@ import { TFunction } from 'i18next'
 
 // 创建一个 SMTP 传输实例
 const transporter = nodemailer.createTransport({
-	service: 'gmail',
-	secure: true, 
+	host: "smtp.gmail.com",
+	port: 465,
+	secure: true,
 	auth: {
-		user: process.env.GMAIL_ACCOUNT, // 使用环境变量
-		pass: process.env.GMAIL_PASSWORD  // 使用环境变量
+		type: "OAuth2",
+		user: process.env.GMAIL_ACCOUNT,
+		clientId: process.env.GMAIL_CLIENT_ID,
+		clientSecret: process.env.GMAIL_CLIENT_SECRET,
+		refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+		accessToken: process.env.GMAIL_ACCESS_TOKEN
 	},
 	
 });
