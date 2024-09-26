@@ -257,6 +257,39 @@
         "$ref": "#/components/schemas/Pick_UserDTO.password-or-email_",
         "description": "用户登录所需参数"
       },
+      "BaseObjectEntity_String_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "ModifyPwdParams": {
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "description": "新密码"
+          },
+          "oldPassword": {
+            "type": "string",
+            "description": "旧密码"
+          }
+        },
+        "required": ["newPassword", "oldPassword"],
+        "type": "object",
+        "description": "修改密码参数"
+      },
       "BaseObjectEntity_String-or-null_": {
         "properties": {
           "status": {
@@ -1400,6 +1433,37 @@
         "tags": ["用户模块"],
         "security": [],
         "parameters": []
+      }
+    },
+    "/user/modifyPwd": {
+      "post": {
+        "operationId": "ModifyPwd",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_String_"
+                }
+              }
+            }
+          }
+        },
+        "description": "根据旧密码修改新密码",
+        "tags": ["用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyPwdParams"
+              }
+            }
+          }
+        }
       }
     },
     "/user/logout": {

@@ -1,6 +1,6 @@
 import express from "express";
 import type { i18n } from 'i18next'
-import type { IUser } from '@/model/user-model'
+import type { UserDTO } from "@/dto/UserDTO";
 
 declare global {
 	namespace Express {
@@ -9,7 +9,7 @@ declare global {
 			failed: (status: number, payload: any, msg: string) => {}
 		}
 		export interface Request {
-			user?: IUser,			// 追加在req中的用户信息，便于后续中间件直接获取
+			user?: UserDTO,			// 追加在req中的用户信息，便于后续中间件直接获取
 			//! 以下是request-ip中间件追加的属性
 			clientIp: string,
 			//! 以下是i18next-http-middleware中间件追加的属性

@@ -1,6 +1,6 @@
-import { EditUserParams, UserDTO, UserLoginParams, UserQuickRegisterParams, UserRegisterParams } from "@/dto/UserDTO";
+import { EditUserParams, ModifyPwdParams, UserDTO, UserLoginParams, UserQuickRegisterParams, UserRegisterParams } from "@/dto/UserDTO";
 import { BaseController } from "./BaseController";
-import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
+import { Request as ExpressRequest, Response as ExpressResponse, NextFunction } from 'express'
 import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch, Queries, Middlewares, Header, Deprecated } from 'tsoa'
 import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
 import TokenGenerator from "@/config/TokenGenerator";
@@ -12,9 +12,11 @@ import { checkLogin } from "@/middleware/AuthMiddleware";
 import { body } from 'express-validator'
 import ParamsValidateMW from "@/middleware/ParamsValidateMW";
 
-const validateUserWM = [
-	body('')
-]
+const validateEditPwdMW = (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => [
+	body('oldPassword').notEmpty().withMessage(req.t('user.needOldPwdTip')),
+	body('newPassword').notEmpty().withMessage(req.t('user.needNewPwdTip')),
+	ParamsValidateMW
+].forEach(mw => mw(req, res, next))
 
 @Route('user')
 @Tags('用户模块')
@@ -176,22 +178,26 @@ export class UserController extends BaseController {
 	@Middlewares([checkLogin])
 	public async modifyAUser(@Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
 		const { account, avatar, nickName } = requestBody
-		const id = req.user.id
-		const userService: UserService = new UserService(req)
-		const findUser = await userService.isExist({ _id: id }, req)
-		if (findUser) {
-			if (!account && !avatar && !nickName) {
-				return this.failedResponse(req, req.t('user.editAccountParamsTip'))
-			}
-			const updateUser = await userService.update(id, {
-				account, avatar, nickName
-			}, req)
-			if (updateUser) {
-				return this.successResponse(req, updateUser)
+		const id = req.user?._id
+		if(id){
+			const userService: UserService = new UserService(req)
+			const findUser = await userService.isExist({ _id: id }, req)
+			if (findUser) {
+				if (!account && !avatar && !nickName) {
+					return this.failedResponse(req, req.t('user.editAccountParamsTip'))
+				}
+				const updateUser = await userService.update(id, {
+					account, avatar, nickName
+				}, req)
+				if (updateUser) {
+					return this.successResponse(req, updateUser)
+				} else {
+					return this.failedResponse(req, req.t('system.error'))
+				}
 			} else {
-				return this.failedResponse(req, req.t('system.error'))
+				return this.failedResponse(req, req.t('user.accountNoExist'))
 			}
-		} else {
+		}else{
 			return this.failedResponse(req, req.t('user.accountNoExist'))
 		}
 	}
@@ -235,12 +241,38 @@ export class UserController extends BaseController {
 	 * 获取当前登录用户信息
 	*/
 	@Get('/info')
-	@Middlewares(checkLogin)
+	@Middlewares([checkLogin])
 	public async getUserInfo(@Request() req: ExpressRequest): Promise<BaseObjectEntity<UserDTO>> {
 		const findUser = req.user
 		if (findUser) {
 			return this.successResponse(req, findUser)
 		} else {
+			return this.failedResponse(req, req.t('user.loginTimeOut'))
+		}
+	}
+
+	/**
+	 * 根据旧密码修改新密码
+	*/
+	@Post('/modifyPwd')
+	@Middlewares([checkLogin, validateEditPwdMW])
+	public async modifyPwd(@Request() req: ExpressRequest, @Body() requestBody: ModifyPwdParams): Promise<BaseObjectEntity<String>>{
+		const user = req.user
+		const { oldPassword, newPassword } = requestBody
+		if(user){
+			const userService = new UserService(req)
+			if(await user.isPasswordMatched(oldPassword)){
+				// 旧密码一致，允许进行更新操作
+				const updateUser = await userService.update(user._id, { password: newPassword}, req)
+				if(updateUser){
+					return this.successResponse(req)
+				}else{
+					return this.failedResponse(req, req.t('system.error'))
+				}
+			}else{
+				return this.failedResponse(req, req.t('user.oldPwdNotMatchTip'))
+			}
+		}else{
 			return this.failedResponse(req, req.t('user.loginTimeOut'))
 		}
 	}

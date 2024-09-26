@@ -25,7 +25,9 @@ export const checkLogin = async (req: Request, res: Response, next: NextFunction
 				const accessToken = TokenGenerator.generateAccessToken(decodeInfo.id)
 				const updateUser = await userService.findOneAndUpdate(req, {_id: decodeInfo.id}, { $set: { accessToken, refreshToken } })
 				// 将已经验证通过的账号信息追加到req.user中，并传递给下一个中间件
-				req.user = updateUser
+				if(updateUser){
+					req.user = updateUser
+				}
 				// 直接在中间件这里做一个拦截
 				next();
 			} else {

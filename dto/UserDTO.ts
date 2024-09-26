@@ -74,6 +74,20 @@ export type EditUserParams = Pick<UserDTO, 'account' | 'avatar' | 'nickName'>
  */
 export type UserLoginParams = Pick<UserDTO, 'password' | 'email'>
 
+/**
+ * 修改密码参数
+*/
+export type ModifyPwdParams = {
+	/**
+	 * 旧密码
+	*/
+	oldPassword: string,
+	/**
+	 * 新密码
+	*/
+	newPassword: string
+}
+
 export type UserRegisterParams = Pick<UserDTO, 'password'> & {
 	/**
 		 * 用户注册所使用的jwt token

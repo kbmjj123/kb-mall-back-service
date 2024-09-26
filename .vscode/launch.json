@@ -4,22 +4,15 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Nodemon with ts-node",
-      "runtimeExecutable": "nodemon",
-      "runtimeArgs": [
-        "--exec",
-        "ts-node",
-        "-r",
-        "tsconfig-paths/register",
-				"--verbose"
-      ],
-      "args": ["${workspaceFolder}/index.ts"],
-      "restart": true,
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      
-      "skipFiles": ["<node_internals>/**"],
-			"runtimeVersion": "18.7.0"  // 确保使用支持 ??= 的版本
+      "name": "Debug Dev",
+      "runtimeArgs": ["-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+      "args": ["index.ts"],
+      "cwd": "${workspaceFolder}",
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "runtimeVersion": "18.7.0"  // 确保使用支持 ??= 的版本
     }
   ]
 }
