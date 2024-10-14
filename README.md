@@ -505,4 +505,3 @@ DbConnection().then(() => {
 ## 项目调试
 > 作为后端API服务开发，一般都需要进行接口API的调试与验证，因此，这边采用`postman`来进行调试，通过配置其中的公共逻辑部分以及对应的参数获取逻辑，使得整个项目能够共用同一个接口调试逻辑！
 > 👉 这个是我的team：https://www.postman.com/zglin8902/workspace/kbmjj123
-
