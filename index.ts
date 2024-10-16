@@ -26,15 +26,16 @@ app.use(cors());
 //! 追加响应体的中间件，统一格式化响应结果
 app.use(ResWrapperWM);
 
+//? 配置解析请求体的中间件
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 //? 配置获取客户端请求的ip地址中间件
 app.use(requestIp.mw())
 
 //? 配置请求输出日志展示的中间件
 loggerWrap(app)
 
-//? 配置解析请求体的中间件
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 //? 配置静态资源直接访问
 app.use(serveStatic(path.join(__dirname, 'resources')))

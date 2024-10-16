@@ -7,18 +7,7 @@
   },
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"],
-      "@/enum": ["./enum"],
-      "@/entity": ["./entity"],
-      "@/config": ["./config"],
-      "@/control": ["./control"],
-      "@/middleware": ["./middleware"],
-      "@/models": ["./models"],
-      "@/plugins": ["./plugins"],
-      "@/service": ["./service"],
-      "@/utils": ["./utils"]
-    }
+    "paths": {}
   },
   "spec": {
     "outputDirectory": "build",

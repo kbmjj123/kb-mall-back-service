@@ -8,7 +8,7 @@
     "build-openapi": "tsoa spec",
     "build-routes": "tsoa routes --verbose",
     "build-doc": "tsoa spec-and-routes",
-    "serve": "pnpm build-doc && nodemon --exec ts-node -r tsconfig-paths/register index.ts",
+    "serve": "pnpm build-doc && nodemon --exec ts-node index.ts",
     "dev": "cross-env NODE_ENV=development pnpm serve",
     "prod": "cross-env NODE_ENV=production pnpm serve",
     "prepare": "husky install"
