@@ -1,5 +1,5 @@
-import { TranslateService } from '@/service/TranslateService'
-import { infoLogger } from '@/utils/Logger'
+import { TranslateService } from '../service/TranslateService'
+import { infoLogger } from '../utils/Logger'
 import { Schema, Model } from 'mongoose'
 
 /**

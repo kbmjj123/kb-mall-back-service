@@ -1,4 +1,4 @@
-import { TProductDTO } from "@/dto/translate-dto/TProductDTO";
+import { TProductDTO } from "../../dto/translate-dto/TProductDTO";
 import mongoose from "mongoose";
 
 export const T_PRODUCT_KEYS = [

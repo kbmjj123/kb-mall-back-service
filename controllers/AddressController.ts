@@ -1,11 +1,11 @@
 import { Route, Tags, Request, Body, Get, Post, Delete, Put, Path, Queries } from "tsoa";
 import { Request as ExpressRequest } from 'express'
 import { BaseController } from "./BaseController";
-import { BasePageListEntity } from "@/entity/BasePageListEntity";
-import { AddressDTO } from "@/dto/AddressDTO";
-import { PageDTO } from "@/dto/PageDTO";
-import { AddressModel } from "@/models/AddressModel";
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
+import { BasePageListEntity } from "../entity/BasePageListEntity";
+import { AddressDTO } from "../dto/AddressDTO";
+import { PageDTO } from "../dto/PageDTO";
+import { AddressModel } from "../models/AddressModel";
+import { BaseObjectEntity } from "../entity/BaseObjectEntity";
 
 @Route('address')
 @Tags('地址模块')

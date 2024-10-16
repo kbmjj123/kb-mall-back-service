@@ -1,8 +1,8 @@
 import { Body, Get, Put, Queries, Request, Route, Tags } from "tsoa";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest } from 'express'
-import { PageDTO } from "@/dto/PageDTO";
-import { EvaluateDto } from "@/dto/EvaluateDTO";
+import { PageDTO } from "../dto/PageDTO";
+import { EvaluateDto } from "../dto/EvaluateDTO";
 
 @Route('evaluate')
 @Tags('商品评价模块')

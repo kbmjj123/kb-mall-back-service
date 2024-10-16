@@ -1,7 +1,7 @@
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import { BasePageListEntity, PageListType } from "@/entity/BasePageListEntity";
-import { LogicResult } from "@/enum/http";
-import { infoLogger, errorLogger } from "@/utils/Logger";
+import { BaseObjectEntity } from "../entity/BaseObjectEntity";
+import { BasePageListEntity, PageListType } from "../entity/BasePageListEntity";
+import { LogicResult } from "../enum/http";
+import { infoLogger, errorLogger } from "../utils/Logger";
 import { Request as ExpressRequest } from "express";
 import { Controller } from "tsoa";
 

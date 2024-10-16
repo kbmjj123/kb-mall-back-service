@@ -1,16 +1,16 @@
-import { EditUserParams, ModifyPwdParams, UserDTO, UserLoginParams, UserQuickRegisterParams, UserRegisterParams } from "@/dto/UserDTO";
+import { EditUserParams, ModifyPwdParams, UserDTO, UserLoginParams, UserQuickRegisterParams, UserRegisterParams } from "../dto/UserDTO";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest, Response as ExpressResponse, NextFunction } from 'express'
 import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch, Queries, Middlewares, Header, Deprecated } from 'tsoa'
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import TokenGenerator from "@/config/TokenGenerator";
+import { BaseObjectEntity } from "../entity/BaseObjectEntity";
+import TokenGenerator from "../config/TokenGenerator";
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import { sendRandomCodeEmail, sendRegister, sendResetPwdEmail } from '@/service/EmailSenderService'
-import { UserService } from "@/service/UserService";
-import { CodeService } from "@/service/CodeService";
-import { checkLogin } from "@/middleware/AuthMiddleware";
+import { sendRandomCodeEmail, sendRegister, sendResetPwdEmail } from '../service/EmailSenderService'
+import { UserService } from "../service/UserService";
+import { CodeService } from "../service/CodeService";
+import { checkLogin } from "../middleware/AuthMiddleware";
 import { body } from 'express-validator'
-import ParamsValidateMW from "@/middleware/ParamsValidateMW";
+import ParamsValidateMW from "../middleware/ParamsValidateMW";
 
 const validateEditPwdMW = (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => [
 	body('oldPassword').notEmpty().withMessage(req.t('user.needOldPwdTip')),
@@ -45,7 +45,7 @@ export class UserController extends BaseController {
 	/**
 	 * 新用户通过邮件链接进行注册
 	*/
-	@Post('/register')
+	@Post('register')
 	public async registerNewAccount(@Request() req: ExpressRequest, @Body() requestBody: UserRegisterParams): Promise<BaseObjectEntity<UserDTO>> {
 		const userService = new UserService(req)
 		const { password, token } = requestBody;
@@ -147,7 +147,7 @@ export class UserController extends BaseController {
 	/**
 	 * 通过邮件验证码进行快速注册
 	*/
-	@Post('/registerWithCode')
+	@Post('registerWithCode')
 	public async registerWithCode(@Request() req: ExpressRequest, @Body() params: UserQuickRegisterParams): Promise<BaseObjectEntity<UserDTO>> {
 		const { email, code, password } = params
 		const userService = new UserService(req)
@@ -174,7 +174,7 @@ export class UserController extends BaseController {
 	/**
 	 * 修改用户信息，主要为用户自主修改
 	*/
-	@Post('/edit')
+	@Post('edit')
 	@Middlewares([checkLogin])
 	public async modifyAUser(@Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
 		const { account, avatar, nickName } = requestBody
@@ -205,7 +205,7 @@ export class UserController extends BaseController {
 	/**
 	 * 用户登录接口
 	*/
-	@Post('/login')
+	@Post('login')
 	public async checkUser(@Request() req: ExpressRequest, @Body() requestBody: UserLoginParams): Promise<BaseObjectEntity<UserDTO>> {
 		const res = req.res
 		const { email, password } = requestBody;
@@ -240,7 +240,7 @@ export class UserController extends BaseController {
 	/**
 	 * 获取当前登录用户信息
 	*/
-	@Get('/info')
+	@Get('info')
 	@Middlewares([checkLogin])
 	public async getUserInfo(@Request() req: ExpressRequest): Promise<BaseObjectEntity<UserDTO>> {
 		const findUser = req.user
@@ -254,7 +254,7 @@ export class UserController extends BaseController {
 	/**
 	 * 根据旧密码修改新密码
 	*/
-	@Post('/modifyPwd')
+	@Post('modifyPwd')
 	@Middlewares([checkLogin, validateEditPwdMW])
 	public async modifyPwd(@Request() req: ExpressRequest, @Body() requestBody: ModifyPwdParams): Promise<BaseObjectEntity<String>>{
 		const user = req.user
@@ -280,7 +280,7 @@ export class UserController extends BaseController {
 	/**
 	 * 退出登录
 	*/
-	@Post('/logout')
+	@Post('logout')
 	@Middlewares([checkLogin])
 	public async logout(@Request() req: ExpressRequest): Promise<BaseObjectEntity<String | null>> {
 		const user = req.user
@@ -300,7 +300,7 @@ export class UserController extends BaseController {
 	/**
 	 * 用户注销(删除账号)
 	*/
-	@Delete('/delete')
+	@Delete('delete')
 	@Middlewares([checkLogin])
 	public async deleteAccount(@Request() req: ExpressRequest,): Promise<BaseObjectEntity<UserDTO>> {
 		const user = req.user
@@ -320,7 +320,7 @@ export class UserController extends BaseController {
 	/**
 	 * 刷新用户的accessToken以及refreshToken，即延长用户的在线有效性
 	*/
-	@Patch('/refreshToken')
+	@Patch('refreshToken')
 	@Deprecated()
 	@Middlewares(checkLogin)
 	public async refreshToken(@Request() req: ExpressRequest, @Body() requestBody: { refreshToken: string }): Promise<BaseObjectEntity<{ accessToken: string, refreshToken: string }>> {

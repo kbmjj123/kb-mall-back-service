@@ -1,6 +1,6 @@
 import { validationResult } from 'express-validator'
 import { Request, Response, NextFunction } from 'express'
-import { LogicResult } from '@/enum/http';
+import { LogicResult } from '../enum/http';
 
 export default function (req: Request, res: Response, next: NextFunction) {
 	const errorResult = validationResult(req);  // 统一从req中获取校验执行结果

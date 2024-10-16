@@ -1,4 +1,4 @@
-import { infoLogger } from '@/utils/Logger';
+import { infoLogger } from '../utils/Logger';
 import { Model, Types } from 'mongoose'
 
 export class TranslateService<T> {

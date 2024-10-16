@@ -1,6 +1,6 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import bcrypt from 'bcrypt'
-import { UserDTO } from "@/dto/UserDTO";
+import { UserDTO } from "../dto/UserDTO";
 
 const userSchema = new mongoose.Schema<UserDTO>({
 	account: {

@@ -61,10 +61,10 @@ const config: Config = {
   // forceCoverageMatch: [],
 
   // A path to a module which exports an async function that is triggered once before all test suites
-  // globalSetup: undefined,
+  globalSetup: './__test__/globals/setup.ts',	// 全局初始化文件路径
 
   // A path to a module which exports an async function that is triggered once after all test suites
-  // globalTeardown: undefined,
+  globalTeardown: './__test__/globals/tearDown.ts',	// 全局销毁文件路径
 
   // A set of global variables that need to be available in all test environments
   // globals: {
@@ -96,7 +96,7 @@ const config: Config = {
 		"^@/entity$": "<rootDir>/entity",
 		"^@/config$": "<rootDir>/config",
 		"^@/models$": "<rootDir>/models",
-		"^@/service$": "<rootDir>/models",
+		"^@/service$": "<rootDir>/service",
 	},
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -181,6 +181,7 @@ const config: Config = {
   // This option allows use of a custom test runner
   // testRunner: "jest-circus/runner",
 
+	testTimeout: 10000,
   // A map from regular expressions to paths to transformers
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {//the content you'd placed at "global"

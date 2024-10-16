@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { EvaluateDto } from "@/dto/EvaluateDTO";
+import { EvaluateDto } from "../dto/EvaluateDTO";
 
 const evaluateSchema = new mongoose.Schema<EvaluateDto>({
   userId: {

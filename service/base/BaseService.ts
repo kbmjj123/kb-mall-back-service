@@ -1,9 +1,9 @@
 import { IService } from "./IService";
 import { Document, FilterQuery, Model, QueryOptions, UpdateQuery } from "mongoose";
 import { Request as ExpressRequest } from "express";
-import { PageDTO, PageResultDTO } from "@/dto/PageDTO";
-import { PAGE_SIZE } from "@/config/ConstantValues";
-import { ISoftDeleteDTO } from "@/dto/soft-delete-dto/ISoftDeleteDTO";
+import { PageDTO, PageResultDTO } from "../../dto/PageDTO";
+import { PAGE_SIZE } from "../../config/ConstantValues";
+import { ISoftDeleteDTO } from "../../dto/soft-delete-dto/ISoftDeleteDTO";
 
 /**
  * 数据库层面的基础服务，根据传递的参数，封装相关的数据库基本操作

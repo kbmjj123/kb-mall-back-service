@@ -1,9 +1,9 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import { UserModel } from '@/models/UserModel'
+import { UserModel } from '../models/UserModel'
 import { Request, Response, NextFunction } from 'express'
-import { LogicResult } from '@/enum/http'
-import TokenGenerator from '@/config/TokenGenerator'
-import { UserService } from '@/service/UserService'
+import { LogicResult } from '../enum/http'
+import TokenGenerator from '../config/TokenGenerator'
+import { UserService } from '../service/UserService'
 
 /**
  * 用户是否已登录的拦截中间件

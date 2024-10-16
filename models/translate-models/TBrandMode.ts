@@ -1,4 +1,4 @@
-import { TBrandDTO } from "@/dto/translate-dto/TBrandDTO"
+import { TBrandDTO } from "../../dto/translate-dto/TBrandDTO"
 import mongoose from "mongoose"
 
 export const T_BRAND_KEYS = [

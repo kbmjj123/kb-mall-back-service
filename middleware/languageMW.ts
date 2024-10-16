@@ -1,4 +1,4 @@
-import { infoLogger } from '@/utils/Logger'
+import { infoLogger } from '../utils/Logger'
 import { Express } from 'express'
 import i18next from 'i18next'
 import languageMW from 'i18next-http-middleware'

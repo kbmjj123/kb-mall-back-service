@@ -1,16 +1,16 @@
 import { Body, Get, Route, Request, Path, Delete, Post, Put, Middlewares, Queries, Tags } from "tsoa";
 import { BaseController } from "./BaseController";
-import { PageDTO } from "@/dto/PageDTO";
+import { PageDTO } from "../dto/PageDTO";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import { EditProductParams, ProductDTO } from "@/dto/ProductDTO";
-import { ProductModel } from "@/models/ProductModel";
-import { BasePageListEntity } from "@/entity/BasePageListEntity";
+import { BaseObjectEntity } from "../entity/BaseObjectEntity";
+import { EditProductParams, ProductDTO } from "../dto/ProductDTO";
+import { ProductModel } from "../models/ProductModel";
+import { BasePageListEntity } from "../entity/BasePageListEntity";
 import { ObjectId } from "mongodb";
 import { body } from 'express-validator'
-import ParamsValidateMW from "@/middleware/ParamsValidateMW";
-import { CateModel } from "@/models/CateModel";
-import { BrandModel } from "@/models/BrandModel";
+import ParamsValidateMW from "../middleware/ParamsValidateMW";
+import { CateModel } from "../models/CateModel";
+import { BrandModel } from "../models/BrandModel";
 
 /**
  * 商品字段自定义校验

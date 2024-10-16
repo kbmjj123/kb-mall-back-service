@@ -1,9 +1,9 @@
 import { Body, Delete, Get, Path, Post, Put, Request, Route, Tags } from "tsoa";
 import { Request as ExpressRequest } from 'express'
 import { BaseController } from "./BaseController";
-import { CateModel } from "@/models/CateModel";
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import { CateDTO } from "@/dto/CateDTO";
+import { CateModel } from "../models/CateModel";
+import { BaseObjectEntity } from "../entity/BaseObjectEntity";
+import { CateDTO } from "../dto/CateDTO";
 
 @Route('cate')
 @Tags('分类模块')

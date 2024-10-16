@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { ProductDTO } from "@/dto/ProductDTO";
-import { TranslatePlugin } from "@/plugins/TranslatePlugin";
+import { ProductDTO } from "../dto/ProductDTO";
+import { TranslatePlugin } from "../plugins/TranslatePlugin";
 import { T_PRODUCT_KEYS, TProductModel } from "./translate-models/TProductModel";
 const MODEL_NAME = 'productModel'
 const productSchema = new mongoose.Schema<ProductDTO>({

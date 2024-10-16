@@ -1,5 +1,5 @@
-import { PageDTO, PageResultDTO } from '@/dto/PageDTO';
-import { ISoftDeleteDTO } from '@/dto/soft-delete-dto/ISoftDeleteDTO';
+import { PageDTO, PageResultDTO } from '../../dto/PageDTO';
+import { ISoftDeleteDTO } from '../../dto/soft-delete-dto/ISoftDeleteDTO';
 import { Request as ExpressRequest } from 'express'
 import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
 

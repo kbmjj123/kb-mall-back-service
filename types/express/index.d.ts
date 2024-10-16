@@ -1,6 +1,6 @@
 import express from "express";
 import type { i18n } from 'i18next'
-import type { UserDTO } from "@/dto/UserDTO";
+import type { UserDTO } from "../../dto/UserDTO";
 
 declare global {
 	namespace Express {

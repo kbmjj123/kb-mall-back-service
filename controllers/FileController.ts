@@ -5,7 +5,7 @@ import { getFilePathFromReq, RESOURCES_DIR, upload } from '../config/UploaderGen
 import fs from 'fs'
 import crypto from 'crypto'
 import path from 'path'
-import { infoLogger } from "@/utils/Logger";
+import { infoLogger } from "../utils/Logger";
 
 // 计算文件hash的函数
 function calculateFileHash(filePath: string) {

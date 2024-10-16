@@ -1,5 +1,5 @@
-import { HttpMethod } from "@/enum/http"
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity"
+import { HttpMethod } from "../../enum/http"
+import { BaseObjectEntity } from "../../entity/BaseObjectEntity"
 
 /**
  * 请求参数类型
