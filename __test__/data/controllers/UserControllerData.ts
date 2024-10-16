@@ -1,6 +1,6 @@
 import type { UnitTestCaseType } from '../../types/UnitTestCaseType'
 import { validateAccountInfo } from '../../helpers/MockData'
-import { LogicResult } from '@/enum/http'
+import { LogicResult } from '../../../enum/http'
 
 /**
  * 登录单元测试数据源

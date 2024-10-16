@@ -15,19 +15,19 @@ export const testEndPoint = async (
 	let response;
 	switch(method){
 		case 'get':
-			response = await request(app).get(url).send()
+			response = await request(global.server).get(url).send()
 			break
 		case 'post': 
-			response = await request(app).post(url).send(requestData)
+			response = await request(global.server).post(url).send(requestData)
 			break
 		case 'put': 
-			response = await request(app).put(url).send(requestData)
+			response = await request(global.server).put(url).send(requestData)
 			break
 		case 'delete': 
-			response = await request(app).delete(url).send(requestData)
+			response = await request(global.server).delete(url).send(requestData)
 			break
 		case 'patch':
-			response = await request(app).patch(url).send(requestData)
+			response = await request(global.server).patch(url).send(requestData)
 			break
 		default:
 			throw new Error('Unsupported HTTP method!')
