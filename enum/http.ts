@@ -6,3 +6,9 @@ export enum LogicResult {
 	NO_FOUND = 404,
 	LOGIN_TIMEOUT = -999
 }
+
+export enum HttpCode {
+	SUCCESS = 200
+}
+
+export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'

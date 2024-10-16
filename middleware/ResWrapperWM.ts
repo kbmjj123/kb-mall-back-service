@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
-import { LogicResult } from '@/enum/http'; 
+import { LogicResult } from '../enum/http'; 
 
 const SUCCESS_FLAG = LogicResult.SUCCESS;
 const FAILED_FLAG = LogicResult.FAILED;

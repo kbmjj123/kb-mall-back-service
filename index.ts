@@ -61,3 +61,5 @@ DbConnection().then(() => {
 		console.info('服务启动了～～')
 	})
 })
+
+export default app

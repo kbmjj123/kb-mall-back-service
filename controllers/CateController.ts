@@ -13,9 +13,9 @@ export class CateController extends BaseController {
 	public async getCateList(@Request() req: ExpressRequest): Promise<BaseObjectEntity<Array<CateDTO>>> {
 		//? 获取一级列表-->由于有异步嵌套，采用将一个异步查询转换为等待执行的promise
 		const cateList1 = await CateModel.find({ level: 0 });
-		const cateListPromises = cateList1.map(async (cate1) => {
+		const cateListPromises = cateList1.map(async (cate1: { _id: any; toObject: () => any; }) => {
 			const cateList2 = await CateModel.find({ parentId: cate1._id });
-			const childCateListPromise = cateList2.map(async (cate2) => {
+			const childCateListPromise = cateList2.map(async (cate2: { _id: any; toObject: () => any; }) => {
 				const cateList3 = await CateModel.find({ parentId: cate2._id });
 				return {
 					...cate2.toObject(),  //! 这里将对象转换为普通的js对象输出

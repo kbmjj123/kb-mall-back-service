@@ -1,5 +1,5 @@
 
-import { LogicResult } from '@/enum/http';
+import { LogicResult } from '../enum/http';
 import { Request, Response, NextFunction } from 'express';
 import { ValidateError } from 'tsoa';
 
