@@ -1,6 +1,6 @@
 import random from 'random'
 import { CodeModel } from '../models/CodeModel'
-import { CodeType } from '../enum/user'
+import { CodeType } from '../enum/business'
 import { BaseService } from './base/BaseService'
 import { CodeDTO } from '../dto/CodeDTO'
 

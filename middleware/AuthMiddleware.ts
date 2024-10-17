@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { UserModel } from '../models/UserModel'
 import { Request, Response, NextFunction } from 'express'
-import { LogicResult } from '../enum/http'
+import { ResultCode, UserCode } from '../enum/http'
 import TokenGenerator from '../config/TokenGenerator'
 import { UserService } from '../service/UserService'
 
@@ -31,13 +31,13 @@ export const checkLogin = async (req: Request, res: Response, next: NextFunction
 				// 直接在中间件这里做一个拦截
 				next();
 			} else {
-				res.failed(LogicResult.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
+				res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
 			}
 		} catch (error) {
-			res.failed(LogicResult.FORBIT, '', req.t('user.permissionLimitTip'))
+			res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
 		}
 	} else {
-		res.failed(LogicResult.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
+		res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
 	}
 }
 // 默认的全局拦截判断逻辑
@@ -54,14 +54,14 @@ export const checkRole = async (req: Request, res: Response, next: NextFunction)
 			req.user = findUser
 			// 直接在中间件这里做一个拦截
 			if ('user' === findUser.role) {
-				res.failed(LogicResult.FORBIT, '', req.t('user.permissionLimitTip'))
+				res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
 			} else {
 				next();
 			}
 		} else {
-			res.failed(LogicResult.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
+			res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
 		}
 	} catch (error) {
-		res.failed(LogicResult.FORBIT, '', req.t('user.permissionLimitTip'))
+		res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
 	}
 }

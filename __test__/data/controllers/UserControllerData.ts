@@ -1,6 +1,6 @@
 import type { UnitTestCaseType } from '../../types/UnitTestCaseType'
 import { validateAccountInfo } from '../../helpers/MockData'
-import { LogicResult } from '../../../enum/http'
+import { ResultCode } from '../../../enum/http'
 
 /**
  * 登录单元测试数据源
@@ -14,7 +14,7 @@ export const loginTestCases: Array<UnitTestCaseType> = [
 			params: {...validateAccountInfo}
 		},
 		expectedResponse: {
-			status: LogicResult.SUCCESS
+			status: ResultCode.SUCCESS
 		}
 	},
 	// {

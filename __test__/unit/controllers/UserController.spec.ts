@@ -8,11 +8,8 @@ describe('User Test Cases', () => {
 	// 修改密码
 	//? 用户登录
 	test.each(loginTestCases)('$description', async ({ input, expectedResponse }) => {
-		const response = await testEndPoint(input.url, input.method, input.params)
-		expect(response.statusCode).toBe(200)
-		expect(response.body).toEqual(expect.objectContaining({
-			status: expectedResponse.status
-		}))
+		const response = await testEndPoint(input.url, input.method, input.params, expectedResponse.status)
+		
 	})
 	// 退出登录
 	// 账号注销 
