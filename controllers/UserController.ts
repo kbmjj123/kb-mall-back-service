@@ -11,10 +11,23 @@ import { CodeService } from "../service/CodeService";
 import { checkLogin } from "../middleware/AuthMiddleware";
 import { body } from 'express-validator'
 import ParamsValidateMW from "../middleware/ParamsValidateMW";
+import { UserCode } from "../enum/code/UserCode";
 
+/**
+ * 验证修改密码的参数
+*/
 const validateEditPwdMW = (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => [
 	body('oldPassword').notEmpty().withMessage(req.t('user.needOldPwdTip')),
 	body('newPassword').notEmpty().withMessage(req.t('user.needNewPwdTip')),
+	ParamsValidateMW
+].forEach(mw => mw(req, res, next))
+
+/**
+ * 验证登录的参数
+*/
+const validateLoginMW = (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => [
+	body('email').notEmpty().isEmail().withMessage(req.t('user.inputEmailTip')),
+	body('password').notEmpty().withMessage(req.t('user.inputPasswordTip')),
 	ParamsValidateMW
 ].forEach(mw => mw(req, res, next))
 
@@ -206,6 +219,7 @@ export class UserController extends BaseController {
 	 * 用户登录接口
 	*/
 	@Post('login')
+	@Middlewares([validateLoginMW])
 	public async checkUser(@Request() req: ExpressRequest, @Body() requestBody: UserLoginParams): Promise<BaseObjectEntity<UserDTO>> {
 		const res = req.res
 		const { email, password } = requestBody;
@@ -229,11 +243,11 @@ export class UserController extends BaseController {
 					return this.failedResponse(req, req.t('system.error'))
 				}
 			} else {
-				return this.failedResponse(req, req.t('user.accountOrPasswordError'))
+				return this.failedResponse(req, req.t('user.accountOrPasswordError'), UserCode.ACCOUNT_OR_PWD_ERROR)
 			}
 		} else {
 			// 用户不存在
-			return this.failedResponse(req, req.t('user.emailNoExist'))
+			return this.failedResponse(req, req.t('user.emailNoExist'), UserCode.USER_NO_EXIST)
 		}
 	}
 

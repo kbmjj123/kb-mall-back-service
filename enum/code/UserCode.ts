@@ -9,7 +9,7 @@ export enum UserCode{
 	/**
 	 * 账号或密码错误
 	*/
-	USER_OR_PWD_ERROR = 10002,
+	ACCOUNT_OR_PWD_ERROR = 10002,
 	/**
 	 * 账号已注销
 	*/

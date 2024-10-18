@@ -1,7 +1,8 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { UserModel } from '../models/UserModel'
 import { Request, Response, NextFunction } from 'express'
-import { ResultCode, UserCode } from '../enum/http'
+import { ResultCode } from '../enum/http'
+import { UserCode } from '../enum/code/UserCode'
 import TokenGenerator from '../config/TokenGenerator'
 import { UserService } from '../service/UserService'
 

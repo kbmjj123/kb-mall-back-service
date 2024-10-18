@@ -96,7 +96,7 @@ export class ProductController extends BaseController {
 				// 删除成功
 				return this.successResponse(req, id)
 			} else {
-				return this.failedResponse(req, '操作失败，请稍后重试', id)
+				return this.failedResponse(req, '操作失败，请稍后重试')
 			}
 		} else {
 			return this.failedResponse(req, '请传递需要删除的商品id')
