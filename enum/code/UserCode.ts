@@ -17,5 +17,5 @@ export enum UserCode{
 	/**
 	 * 登录超时
 	*/
-	LOGIN_TIMEOUT = -999
+	LOGIN_TIMEOUT = 100999
 }

@@ -5,9 +5,9 @@ export enum ProductCode{
 	/**
 	 * 商品不存在
 	*/
-	PRODUCT_NO_EXIST = 20001,
+	PRODUCT_NO_EXIST = 200001,
 	/**
 	 * 商品库存不足
 	*/
-	PRODUCT_NO_STOCK = 20002,
+	PRODUCT_NO_STOCK = 200002,
 }
