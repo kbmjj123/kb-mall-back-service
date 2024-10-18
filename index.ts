@@ -55,9 +55,26 @@ app.use(globalParamsValidate)
 // 统一的异常处理
 app.use(serviceErrorMW);
 
-//? 在启动服务之前，连接数据库
-DbConnection().then(() => {
-	app.listen(process.env.SERVICE_PORT, () => {
-		console.info('服务启动了～～')
+// //? 在启动服务之前，连接数据库
+// DbConnection().then(() => {
+// 	app.listen(process.env.SERVICE_PORT, () => {
+// 		console.info('服务启动了～～')
+// 	})
+// })
+
+//? 对外提供的手动启动服务方法，主要供单元测试所使用
+export const startService = async () => {
+	//? 在启动服务之前，连接数据库
+	await DbConnection()
+	return app.listen(process.env.SERVICE_PORT, () => {
+		console.info('手动启动服务了～～')
 	})
-})
+}
+
+if('test' !== process.env.NODE_ENV){
+	startService().catch(err => {
+		console.error('服务启动发生错误: ', err)
+	})
+}
+
+export default app
