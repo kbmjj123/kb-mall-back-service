@@ -26,7 +26,7 @@ export class UserController extends BaseController {
 	/**
 	 * 根据邮箱获取注册的链接
 	*/
-	@Get('getRegisterLink')
+	@Get('/getRegisterLink')
 	public async getRegisterLink(@Request() req: ExpressRequest, @Queries() query: { email: string }): Promise<BaseObjectEntity<string>> {
 		const userServie = new UserService(req)
 		const { email } = query
@@ -101,7 +101,7 @@ export class UserController extends BaseController {
 	/**
 	 * 根据邮箱获取重置密码的链接
 	*/
-	@Get('getResetPwdLink')
+	@Get('/getResetPwdLink')
 	public async getResetPwdLink(@Request() req: ExpressRequest, @Queries() query: { email: string }): Promise<BaseObjectEntity<string>> {
 		const { email } = query
 		const userService = new UserService(req)

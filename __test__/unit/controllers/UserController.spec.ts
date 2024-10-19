@@ -29,7 +29,6 @@ describe('User Test Cases', () => {
 				const decodeInfo = jwt.verify(data.assessToken, process.env.JWT_ACCESS_SECRET as string) as JwtPayload
 				expect(decodeInfo).toHaveProperty('id')
 			}
-			
 		}
 	})
 	// 退出登录
