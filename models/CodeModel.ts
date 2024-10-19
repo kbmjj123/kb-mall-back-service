@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { CodeDTO } from "@/dto/CodeDTO";
+import { CodeDTO } from "../dto/CodeDTO";
 
 const codeSchema = new mongoose.Schema<CodeDTO>({
 	content: {

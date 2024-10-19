@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { BrandDTO } from "@/dto/BrandDTO";
-import { TranslatePlugin } from "@/plugins/TranslatePlugin";
+import { BrandDTO } from "../dto/BrandDTO";
+import { TranslatePlugin } from "../plugins/TranslatePlugin";
 import { T_BRAND_KEYS, TBrandModel } from "./translate-models/TBrandMode";
 
 const MODEL_NAME = 'brandModel'

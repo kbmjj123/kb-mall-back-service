@@ -1,7 +1,7 @@
-import { BrandDTO } from "@/dto/BrandDTO";
+import { BrandDTO } from "../dto/BrandDTO";
 import { BaseService } from "./base/BaseService";
 import { Request } from "express";
-import { BrandModel } from "@/models/BrandModel";
+import { BrandModel } from "../models/BrandModel";
 
 /**
  * 品牌的db操作服务

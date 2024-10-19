@@ -1,6 +1,6 @@
 import mongoose, { InferSchemaType } from "mongoose";
-import { CateDTO } from "@/dto/CateDTO";
-import { TranslatePlugin } from "@/plugins/TranslatePlugin";
+import { CateDTO } from "../dto/CateDTO";
+import { TranslatePlugin } from "../plugins/TranslatePlugin";
 import { T_CATE_KEYS, TCateModel } from "./translate-models/TCateModel";
 
 const MODEL_NAME = 'cateModel'

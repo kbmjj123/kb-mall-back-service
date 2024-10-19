@@ -1,8 +1,8 @@
 import nodemailer, { SendMailOptions } from 'nodemailer'
-import { infoLogger, errorLogger } from '@/utils/Logger';
+import { infoLogger, errorLogger } from '../utils/Logger';
 import path from 'path'
 import ejs from 'ejs'
-import TokenGenerator from '@/config/TokenGenerator';
+import TokenGenerator from '../config/TokenGenerator';
 import { TFunction } from 'i18next'
 
 // 创建一个 SMTP 传输实例

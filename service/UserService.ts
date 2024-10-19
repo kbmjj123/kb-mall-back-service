@@ -1,8 +1,8 @@
-import { UserDTO } from "@/dto/UserDTO";
+import { UserDTO } from "../dto/UserDTO";
 import { BaseService } from "./base/BaseService";
 import { Request as ExpressRequest } from "express";
-import { UserModel } from "@/models/UserModel";
-import { RANDOM_USER_AVATAR_HOST } from "@/config/ConstantValues";
+import { UserModel } from "../models/UserModel";
+import { RANDOM_USER_AVATAR_HOST } from "../config/ConstantValues";
 
 export class UserService extends BaseService<UserDTO> {
 	private req: ExpressRequest

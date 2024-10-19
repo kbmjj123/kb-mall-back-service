@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { AddressDTO } from "@/dto/AddressDTO";
+import { AddressDTO } from "../dto/AddressDTO";
 const addressSchema = new mongoose.Schema<AddressDTO>({
 	isDefault: {
 		type: Boolean,

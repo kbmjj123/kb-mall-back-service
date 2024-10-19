@@ -1,10 +1,10 @@
 import { Get, Path, Route, Tags, Request, Queries } from "tsoa";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest } from 'express'
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import { UserWithoutToken } from "@/dto/UserDTO";
-import { UserService } from "@/service/UserService";
-import { PageDTO } from "@/dto/PageDTO";
+import { BaseObjectEntity } from "../entity/BaseObjectEntity";
+import { UserWithoutToken } from "../dto/UserDTO";
+import { UserService } from "../service/UserService";
+import { PageDTO } from "../dto/PageDTO";
 
 @Route('account')
 @Tags('账号模块')

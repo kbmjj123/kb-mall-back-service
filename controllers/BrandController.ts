@@ -1,12 +1,12 @@
 import { Get, Route, Tags, Request, Body, Queries, Put, Post, Path, Delete } from "tsoa";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest } from 'express'
-import { PageDTO } from "@/dto/PageDTO";
-import { BrandModel } from "@/models/BrandModel";
-import { BasePageListEntity } from "@/entity/BasePageListEntity";
-import { BrandDTO } from "@/dto/BrandDTO";
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import { BrandService } from "@/service/BrandService";
+import { PageDTO } from "../dto/PageDTO";
+import { BrandModel } from "../models/BrandModel";
+import { BasePageListEntity } from "../entity/BasePageListEntity";
+import { BrandDTO } from "../dto/BrandDTO";
+import { BaseObjectEntity } from "../entity/BaseObjectEntity";
+import { BrandService } from "../service/BrandService";
 
 @Route('brand')
 @Tags('品牌模块')

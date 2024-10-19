@@ -1,13 +1,13 @@
-import { infoLogger } from '@/utils/Logger';
+import { infoLogger } from '../utils/Logger';
 import { Model, Types } from 'mongoose'
 
 export class TranslateService<T> {
 
 	// 与业务collection关联的语言collection的model，用于语言doc的存取
-	//@ts-ignore
+	// @ts-ignore
 	private translateModel: Model<T>;
 
-	//@ts-ignore
+	// @ts-ignore
 	constructor(model: Model<T>){
 		this.translateModel = model
 	}

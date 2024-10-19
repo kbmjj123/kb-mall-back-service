@@ -1,7 +1,7 @@
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import { BasePageListEntity, PageListType } from "@/entity/BasePageListEntity";
-import { LogicResult } from "@/enum/http";
-import { infoLogger, errorLogger } from "@/utils/Logger";
+import { BaseObjectEntity } from "../entity/BaseObjectEntity";
+import { BasePageListEntity, PageListType } from "../entity/BasePageListEntity";
+import { ResultCode } from "../enum/http";
+import { infoLogger, errorLogger } from "../utils/Logger";
 import { Request as ExpressRequest } from "express";
 import { Controller } from "tsoa";
 
@@ -25,7 +25,7 @@ export class BaseController extends Controller{
 
 	protected successResponse<T>(req: ExpressRequest, data?: T, message: string = ''): BaseObjectEntity<T> {
 		const result =  {
-			status: LogicResult.SUCCESS,
+			status: ResultCode.SUCCESS,
 			message: message || req.t('tip.success'),
 			data
 		}
@@ -35,7 +35,7 @@ export class BaseController extends Controller{
 
 	protected successListResponse<T>(req: ExpressRequest, data: PageListType<T>, message: string = ''): BasePageListEntity<T> {
 		const result =  {
-			status: LogicResult.SUCCESS,
+			status: ResultCode.SUCCESS,
 			message: message || req.t('tip.failed'),
 			data
 		}
@@ -45,7 +45,7 @@ export class BaseController extends Controller{
 
 	protected failedResponse<T>(req: ExpressRequest, message: string = '', code?: number, data?: T): BaseObjectEntity<T> {
 		const result =  {
-			status: code || LogicResult.FAILED,
+			status: code || ResultCode.FAILED,
 			message,
 			data
 		}

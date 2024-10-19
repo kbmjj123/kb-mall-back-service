@@ -1,9 +1,9 @@
 import { Get, Route, Request, Tags } from "tsoa";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest } from 'express'
-import countries from '@/config/json/CountryCode'
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import { CountryDTO } from "@/dto/CountryDTO";
+import countries from '../config/json/CountryCode'
+import { BaseObjectEntity } from "../entity/BaseObjectEntity";
+import { CountryDTO } from "../dto/CountryDTO";
 
 @Route('resource')
 @Tags('资源模块')

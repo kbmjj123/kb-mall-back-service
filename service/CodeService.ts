@@ -1,9 +1,8 @@
 import random from 'random'
-import { Request } from 'express'
-import { CodeModel } from '@/models/CodeModel'
-import { CodeType } from '@/enum/user'
+import { CodeModel } from '../models/CodeModel'
+import { CodeType } from '../enum/business'
 import { BaseService } from './base/BaseService'
-import { CodeDTO } from '@/dto/CodeDTO'
+import { CodeDTO } from '../dto/CodeDTO'
 
 export class CodeService extends BaseService<CodeDTO> {
 
