@@ -11,6 +11,7 @@ import { CodeService } from "@/service/CodeService";
 import { checkLogin } from "@/middleware/AuthMiddleware";
 import { body } from 'express-validator'
 import ParamsValidateMW from "@/middleware/ParamsValidateMW";
+import { UserCode } from "@/enum/code/UserCode";
 
 const validateEditPwdMW = (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => [
 	body('oldPassword').notEmpty().withMessage(req.t('user.needOldPwdTip')),
@@ -229,11 +230,11 @@ export class UserController extends BaseController {
 					return this.failedResponse(req, req.t('system.error'))
 				}
 			} else {
-				return this.failedResponse(req, req.t('user.accountOrPasswordError'))
+				return this.failedResponse(req, req.t('user.accountOrPasswordError'), UserCode.ACCOUNT_OR_PWD_ERROR)
 			}
 		} else {
 			// 用户不存在
-			return this.failedResponse(req, req.t('user.emailNoExist'))
+			return this.failedResponse(req, req.t('user.emailNoExist'), UserCode.USER_NO_EXIST)
 		}
 	}
 
