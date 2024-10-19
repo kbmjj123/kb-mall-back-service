@@ -1,17 +1,17 @@
-import { EditUserParams, ModifyPwdParams, UserDTO, UserLoginParams, UserQuickRegisterParams, UserRegisterParams } from "@/dto/UserDTO";
+import { EditUserParams, ModifyPwdParams, UserDTO, UserLoginParams, UserQuickRegisterParams, UserRegisterParams } from "../dto/UserDTO";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest, Response as ExpressResponse, NextFunction } from 'express'
 import { Tags, Route, Request, Path, Body, Get, Post, Put, Delete, Patch, Queries, Middlewares, Header, Deprecated } from 'tsoa'
-import { BaseObjectEntity } from "@/entity/BaseObjectEntity";
-import TokenGenerator from "@/config/TokenGenerator";
+import { BaseObjectEntity } from "../entity/BaseObjectEntity";
+import TokenGenerator from "../config/TokenGenerator";
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import { sendRandomCodeEmail, sendRegister, sendResetPwdEmail } from '@/service/EmailSenderService'
-import { UserService } from "@/service/UserService";
-import { CodeService } from "@/service/CodeService";
-import { checkLogin } from "@/middleware/AuthMiddleware";
+import { sendRandomCodeEmail, sendRegister, sendResetPwdEmail } from '../service/EmailSenderService'
+import { UserService } from "../service/UserService";
+import { CodeService } from "../service/CodeService";
+import { checkLogin } from "../middleware/AuthMiddleware";
 import { body } from 'express-validator'
-import ParamsValidateMW from "@/middleware/ParamsValidateMW";
-import { UserCode } from "@/enum/code/UserCode";
+import ParamsValidateMW from "../middleware/ParamsValidateMW";
+import { UserCode } from "../enum/code/UserCode";
 
 const validateEditPwdMW = (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => [
 	body('oldPassword').notEmpty().withMessage(req.t('user.needOldPwdTip')),
@@ -180,7 +180,7 @@ export class UserController extends BaseController {
 	public async modifyAUser(@Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
 		const { account, avatar, nickName } = requestBody
 		const id = req.user?._id
-		if(id){
+		if (id) {
 			const userService: UserService = new UserService(req)
 			const findUser = await userService.isExist({ _id: id }, req)
 			if (findUser) {
@@ -198,7 +198,7 @@ export class UserController extends BaseController {
 			} else {
 				return this.failedResponse(req, req.t('user.accountNoExist'))
 			}
-		}else{
+		} else {
 			return this.failedResponse(req, req.t('user.accountNoExist'))
 		}
 	}
@@ -257,23 +257,23 @@ export class UserController extends BaseController {
 	*/
 	@Post('/modifyPwd')
 	@Middlewares([checkLogin, validateEditPwdMW])
-	public async modifyPwd(@Request() req: ExpressRequest, @Body() requestBody: ModifyPwdParams): Promise<BaseObjectEntity<String>>{
+	public async modifyPwd(@Request() req: ExpressRequest, @Body() requestBody: ModifyPwdParams): Promise<BaseObjectEntity<String>> {
 		const user = req.user
 		const { oldPassword, newPassword } = requestBody
-		if(user){
+		if (user) {
 			const userService = new UserService(req)
-			if(await user.isPasswordMatched(oldPassword)){
+			if (await user.isPasswordMatched(oldPassword)) {
 				// 旧密码一致，允许进行更新操作
-				const updateUser = await userService.update(user._id, { password: newPassword}, req)
-				if(updateUser){
+				const updateUser = await userService.update(user._id, { password: newPassword }, req)
+				if (updateUser) {
 					return this.successResponse(req)
-				}else{
+				} else {
 					return this.failedResponse(req, req.t('system.error'))
 				}
-			}else{
+			} else {
 				return this.failedResponse(req, req.t('user.oldPwdNotMatchTip'))
 			}
-		}else{
+		} else {
 			return this.failedResponse(req, req.t('user.loginTimeOut'))
 		}
 	}

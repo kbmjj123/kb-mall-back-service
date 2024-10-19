@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import { TrimValuePlugin } from '../plugins/global/TrimValuePlugin'
-import { SoftDeletePlugin } from '@/plugins/global/SoftDelatePlugin'
-import { AutoHidePropertyPlugin } from '@/plugins/global/AutoHidePropertyPlugin'
-import { errorLogger, infoLogger } from '@/utils/Logger'
+import { SoftDeletePlugin } from '../plugins/global/SoftDelatePlugin'
+import { AutoHidePropertyPlugin } from '../plugins/global/AutoHidePropertyPlugin'
+import { errorLogger, infoLogger } from '../utils/Logger'
 
 //! 开启数据库日志调试
 mongoose.set('debug', function(collectionName, methodName, query: any, doc: any, options: any) {
