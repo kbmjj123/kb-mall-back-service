@@ -43,9 +43,9 @@ export class BaseController extends Controller{
 		return result
 	}
 
-	protected failedResponse<T>(req: ExpressRequest, message: string = '', data?: T): BaseObjectEntity<T> {
+	protected failedResponse<T>(req: ExpressRequest, message: string = '', code?: number, data?: T): BaseObjectEntity<T> {
 		const result =  {
-			status: LogicResult.FAILED,
+			status: LogicResult.FAILED || code,
 			message,
 			data
 		}

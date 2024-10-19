@@ -1,8 +1,16 @@
 import { testEndPoint } from "../../helpers/TestUtils";
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test, beforeAll } from "@jest/globals";
 import { loginTestCases } from "../../data/controllers/UserControllerData";
 import { ResultCode } from "../../../enum/http";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { startService } from "../../../index";
+
+beforeAll(async () => {
+	if(!global.server){
+		global.server = await startService()
+		console.info('手动全局服务启动完毕')
+	}
+})
 
 describe('User Test Cases', () => {
 	// 新用户注册

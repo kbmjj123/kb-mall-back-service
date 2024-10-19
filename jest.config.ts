@@ -56,7 +56,7 @@ const config: Config = {
   // fakeTimers: {
   //   "enableGlobally": false
   // },
-	testTimeout: 1000,
+	testTimeout: 30000,
   // Force coverage collection from ignored files using an array of glob patterns
   // forceCoverageMatch: [],
 
