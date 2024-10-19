@@ -5,21 +5,6 @@
   "routes": {
     "routesDir": "build"
   },
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"],
-      "@/enum": ["./enum"],
-      "@/entity": ["./entity"],
-      "@/config": ["./config"],
-      "@/control": ["./control"],
-      "@/middleware": ["./middleware"],
-      "@/models": ["./models"],
-      "@/plugins": ["./plugins"],
-      "@/service": ["./service"],
-      "@/utils": ["./utils"]
-    }
-  },
   "spec": {
     "outputDirectory": "build",
     "specVersion": 3,
