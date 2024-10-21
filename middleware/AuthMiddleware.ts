@@ -45,24 +45,28 @@ export const checkLogin = async (req: Request, res: Response, next: NextFunction
 export const checkRole = async (req: Request, res: Response, next: NextFunction) => {
 	// 获取客户端携带的token信息
 	let token = req?.headers?.authorization;
-	token = token?.split(' ')[1] as string;
-	try {
-		const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
-		// decodeInfo.id 存在，则是一个有效的用户id，说明是一个正常的登录状态
-		const findUser = await UserModel.findById(decodeInfo.id);
-		if (findUser?.account) {
-			// 将已经验证通过的账号信息追加到req.user中，并传递给下一个中间件
-			req.user = findUser
-			// 直接在中间件这里做一个拦截
-			if ('user' === findUser.role) {
-				res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
+	if(token){
+		token = token.split(' ')[1] as string;
+		try {
+			const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
+			// decodeInfo.id 存在，则是一个有效的用户id，说明是一个正常的登录状态
+			const findUser = await UserModel.findById(decodeInfo.id);
+			if (findUser?.account) {
+				// 将已经验证通过的账号信息追加到req.user中，并传递给下一个中间件
+				req.user = findUser
+				// 直接在中间件这里做一个拦截
+				if ('user' === findUser.role) {
+					res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
+				} else {
+					next();
+				}
 			} else {
-				next();
+				res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
 			}
-		} else {
-			res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
+		} catch (error) {
+			res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
 		}
-	} catch (error) {
-		res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
+	}else{
+		res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut') )
 	}
 }

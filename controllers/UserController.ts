@@ -79,7 +79,7 @@ export class UserController extends BaseController {
 	/**
 	 * 重置密码
 	*/
-	@Post('resetPwd')
+	@Post('/resetPwd')
 	public async resetPwd(@Request() req: ExpressRequest, @Body() params: { token: string, password: string }): Promise<BaseObjectEntity<string>> {
 		const { token, password } = params
 		if (token) {
@@ -121,7 +121,7 @@ export class UserController extends BaseController {
 	/**
 	 * 快速注册获取验证码邮件
 	*/
-	@Get('quickRegisterCode')
+	@Get('/quickRegisterCode')
 	public async getQuickRegisterCode(@Request() req: ExpressRequest, @Queries() query: { email: string }) {
 		const { email } = query
 		const codeService = new CodeService()
@@ -322,7 +322,6 @@ export class UserController extends BaseController {
 	 * 刷新用户的accessToken以及refreshToken，即延长用户的在线有效性
 	*/
 	@Patch('/refreshToken')
-	@Deprecated()
 	@Middlewares(checkLogin)
 	public async refreshToken(@Request() req: ExpressRequest, @Body() requestBody: { refreshToken: string }): Promise<BaseObjectEntity<{ accessToken: string, refreshToken: string }>> {
 		let { refreshToken } = requestBody

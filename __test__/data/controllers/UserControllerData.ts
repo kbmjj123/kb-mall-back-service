@@ -2,6 +2,8 @@ import type { UnitTestCaseType } from '../../types/UnitTestCaseType'
 import { validateAccountInfo, alreadyCanceledAccountInfo } from '../../helpers/MockData'
 import { ResultCode } from '../../../enum/http'
 import { UserCode } from '../../../enum/code/UserCode'
+import { getGlobalAccessToken } from '../utils/DataUtils'
+
 
 const noExistAccount = 'uuu@uuu.com'
 
@@ -62,6 +64,71 @@ export const loginTestCases: Array<UnitTestCaseType> = [
 ]
 
 /**
- * 自己单元测试数据源
+ * 获取当前登录用户信息数据源
+*/
+export const loginedTestCases: Array<UnitTestCaseType> = [
+	{
+		description: 'Query the user information of successful login',
+		input: {
+			url: '/user/info',
+			method: 'get',
+			params: {},
+			header: () => ({
+				authorization: `Bearer ${getGlobalAccessToken()}`
+			})
+		},
+		expectedResponse: {
+			status: ResultCode.SUCCESS
+		}
+	},
+	{
+		description: 'No token is brought to access resources that require authentication',
+		input: {
+			url: '/user/info',
+			method: 'get',
+			params: {},
+		},
+		expectedResponse: {
+			status: UserCode.LOGIN_TIMEOUT
+		}
+	},
+	{
+		description: 'Carrying the wrong token to access resources that require authentication',
+		input: {
+			url: '/user/info',
+			method: 'get',
+			params: {},
+			header: {
+				authorization: `Bearer ${getGlobalAccessToken()}-78987`
+			}
+		},
+		expectedResponse: {
+			status: ResultCode.FORBIT
+		}
+	},
+]
+
+/**
+ * 用户注册单元测试数据源
 */
 export const registerTestCases = []
+
+/**
+ * 退出登录 单元测试数据源
+*/
+export const logoutTestCases = [
+	{
+		description: 'User logs out normally',
+		input: {
+			url: '/user/logout',
+			method: 'post',
+			params: {},
+			header: () => ({
+				authorization: `Bearer ${getGlobalAccessToken()}`
+			})
+		},
+		expectedResponse: {
+			status: ResultCode.SUCCESS
+		}
+	}
+]

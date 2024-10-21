@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { expect } from '@jest/globals'
-import { HttpCode } from '../../enum/http';
-
+import { HttpCode, ResultCode } from '../../enum/http';
+import { validateAccountInfo } from './MockData';
 
 /**
  * 通用接口测试方法
@@ -14,24 +14,25 @@ export const testEndPoint = async (
 	url: string,
 	method: 'get' | 'post' | 'put' | 'delete' | 'patch',
 	requestData: object | undefined | string,
-	expectedStatus: number
+	expectedStatus: number,
+	header?: Record<string, any>
 ) => {
 	let response;
-	switch(method){
+	switch (method) {
 		case 'get':
-			response = await request(global.server).get(url).send()
+			response = await request(global.server).get(url).send().set(header ? header : {})
 			break
-		case 'post': 
-			response = await request(global.server).post(url).send(requestData)
+		case 'post':
+			response = await request(global.server).post(url).send(requestData).set(header ? header : {})
 			break
-		case 'put': 
-			response = await request(global.server).put(url).send(requestData)
+		case 'put':
+			response = await request(global.server).put(url).send(requestData).set(header ? header : {})
 			break
-		case 'delete': 
-			response = await request(global.server).delete(url).send(requestData)
+		case 'delete':
+			response = await request(global.server).delete(url).send(requestData).set(header ? header : {})
 			break
 		case 'patch':
-			response = await request(global.server).patch(url).send(requestData)
+			response = await request(global.server).patch(url).send(requestData).set(header ? header : {})
 			break
 		default:
 			throw new Error('Unsupported HTTP method!')
@@ -48,4 +49,19 @@ export const testEndPoint = async (
 	}))
 	//? ***************** 公共校验结束 *****************
 	return response
+}
+
+/**
+ * 抽离出来的一个登录成功的动作，将登录成功后的token存储到全局中，后续都自动从这个中获取
+*/
+export const cacheAccessToken = async () => {
+	const response = await request(global.server).post('/user/login').send(validateAccountInfo)
+	if(response.body.status === ResultCode.SUCCESS){
+		const token = response.body.data.accessToken
+		if(!global.appendHeaders){
+			global.appendHeaders = {}
+		}
+		global.appendHeaders['authorization'] = token
+		console.info('完成token的全局缓存', token)
+	}
 }
