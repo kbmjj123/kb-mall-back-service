@@ -114,9 +114,61 @@ export const loginedTestCases: Array<UnitTestCaseType> = [
 export const registerTestCases = []
 
 /**
+ * 修改用户信息 单元测试数据源
+*/
+export const modifyUserInfoTestCases: Array<UnitTestCaseType> = [
+	{
+		description: 'Modify user information',
+		input: {
+			url: '/user/edit',
+			method: 'post',
+			params: {
+				account: '我是新的账号', 
+				avatar: 'xxx.png', 
+				nickName: '我是新昵称'
+			},
+			header: () => ({
+				authorization: `Bearer ${getGlobalAccessToken()}`
+			})
+		},
+		expectedResponse: {
+			status: ResultCode.SUCCESS
+		}
+	},
+	{
+		description: 'Account no exist',
+		input: {
+			url: '/user/edit',
+			method: 'post',
+			params: {},
+			header: () => ({
+				authorization: `Bearer ${getGlobalAccessToken()}--88888`
+			})
+		},
+		expectedResponse: {
+			status: UserCode.USER_NO_EXIST
+		}
+	},
+	{
+		description: 'No parameters are carried to modify user information',
+		input: {
+			url: '/user/edit',
+			method: 'post',
+			params: {},
+			header: () => ({
+				authorization: `Bearer ${getGlobalAccessToken()}`
+			})
+		},
+		expectedResponse: {
+			status: ResultCode.PARAMS_ERROR
+		}
+	}
+]
+
+/**
  * 退出登录 单元测试数据源
 */
-export const logoutTestCases = [
+export const logoutTestCases: Array<UnitTestCaseType> = [
 	{
 		description: 'User logs out normally',
 		input: {

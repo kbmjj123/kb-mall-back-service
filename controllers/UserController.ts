@@ -12,6 +12,7 @@ import { checkLogin } from "../middleware/AuthMiddleware";
 import { body } from 'express-validator'
 import ParamsValidateMW from "../middleware/ParamsValidateMW";
 import { UserCode } from "../enum/code/UserCode";
+import { ResultCode } from "../enum/http";
 
 const validateEditPwdMW = (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => [
 	body('oldPassword').notEmpty().withMessage(req.t('user.needOldPwdTip')),
@@ -185,21 +186,29 @@ export class UserController extends BaseController {
 			const findUser = await userService.isExist({ _id: id }, req)
 			if (findUser) {
 				if (!account && !avatar && !nickName) {
-					return this.failedResponse(req, req.t('user.editAccountParamsTip'))
+					return this.failedResponse(req, req.t('user.editAccountParamsTip'), ResultCode.PARAMS_ERROR)
 				}
-				const updateUser = await userService.update(id, {
-					account, avatar, nickName
-				}, req)
+				let updateParams: Partial<UserDTO> = {}
+				if(account){
+					updateParams['account'] = account
+				}
+				if(avatar){
+					updateParams['avatar'] = avatar
+				}
+				if(nickName){
+					updateParams['nickName'] = nickName
+				}
+				const updateUser = await userService.update(id, updateParams, req)
 				if (updateUser) {
 					return this.successResponse(req, updateUser)
 				} else {
 					return this.failedResponse(req, req.t('system.error'))
 				}
 			} else {
-				return this.failedResponse(req, req.t('user.accountNoExist'))
+				return this.failedResponse(req, req.t('user.accountNoExist'), UserCode.USER_NO_EXIST)
 			}
 		} else {
-			return this.failedResponse(req, req.t('user.accountNoExist'))
+			return this.failedResponse(req, req.t('user.accountNoExist'), UserCode.USER_NO_EXIST)
 		}
 	}
 
@@ -289,7 +298,7 @@ export class UserController extends BaseController {
 			const userService = new UserService(req)
 			const updateUser = await userService.update(user._id, { logoutTime: new Date(), accessToken: null, refreshToken: null }, req)
 			if (updateUser) {
-				return this.successResponse(req, null)
+				return this.successResponse(req, updateUser._id)
 			} else {
 				return this.failedResponse(req, req.t('system.error'))
 			}

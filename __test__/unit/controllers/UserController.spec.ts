@@ -1,9 +1,12 @@
 import { cacheAccessToken, testEndPoint } from "../../helpers/TestUtils";
 import { describe, expect, test, beforeAll } from "@jest/globals";
-import { loginTestCases, loginedTestCases, logoutTestCases } from "../../data/controllers/UserControllerData";
+import { loginTestCases, loginedTestCases, logoutTestCases, modifyUserInfoTestCases } from "../../data/controllers/UserControllerData";
 import { ResultCode } from "../../../enum/http";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { startService } from "../../../index";
+import { UserService } from "../../../service/UserService";
+import { getMockedRequest } from "../../data/utils/DataUtils";
+import { Request } from "express";
 
 beforeAll(async () => {
 	if (!global.server) {
@@ -13,14 +16,18 @@ beforeAll(async () => {
 })
 
 describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
-	// 新用户注册
+	//? 新用户注册
+	describe('**** Register new account ****', () => {
+		
+	})
 	// 忘记密码-> 重置密码
-	// 修改密码
+	//? 修改密码
+	// describe('**** Modify User Password', () => {})
 	//? 用户登录
 	describe('**** User Login ****', () => {
-		test.each(loginTestCases)('$description', async ({ input, expectedResponse }) => {
-			const response = await testEndPoint(input.url, input.method, input.params, expectedResponse.status)
-			if (response.body.status === ResultCode) {
+		test.each(loginTestCases)('$description', async (params) => {
+			const response = await testEndPoint(params)
+			if (response.body.status === ResultCode.SUCCESS) {
 				// 针对成功过的情况进行详细的验证
 				expect(response.body).toHaveProperty('data')
 				const data = response.body.data
@@ -40,9 +47,30 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 			// 执行一次用户登录，用来获取到对应的用户信息token
 			await cacheAccessToken()
 		})
-		test.each(loginedTestCases)('$description', async ({ input, expectedResponse }) => {
-			const response = await testEndPoint(input.url, input.method, input.params,
-				expectedResponse.status, typeof input.header === 'function' ? input.header() : input.header)
+		test.each(loginedTestCases)('$description', async (params) => {
+			const response = await testEndPoint(params)
+		})
+	})
+	
+	//? 修改用户信息
+	describe('**** Modify User Info ****', () => {
+		beforeAll(async () => {
+			// 执行一次用户登录，用来获取到对应的用户信息token
+			await cacheAccessToken()
+		})
+		test.each(modifyUserInfoTestCases)('$description', async (params) => {
+			const response = await testEndPoint(params)
+			if(response.body.status === ResultCode.SUCCESS){
+				const testParams = params.input.params!
+				expect(response.body).toHaveProperty('data')
+				const data = response.body.data
+				if(data){
+					expect(data).toHaveProperty('id')
+					expect(testParams.account).toBe(data.account)
+					expect(testParams.avatar).toBe(data.avatar)
+					expect(testParams.nickName).toBe(data.nickName)
+				}
+			}
 		})
 	})
 
@@ -52,11 +80,22 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 			// 先正常登录
 			await cacheAccessToken()
 		})
-		test.each(logoutTestCases)('$description', async ({ input, expectedResponse }) => {
-			const response = await testEndPoint(input.url, input.method, input.params,
-				expectedResponse.status, typeof input.header === 'function' ? input.header() : input.header)
+		test.each(logoutTestCases)('$description', async (params) => {
+			const response = await testEndPoint(params)
+			if(response.body.status === ResultCode.SUCCESS) {
+				expect(response.body).toHaveProperty('data')
+				const userId = response.body.data		// 获取到退出登录的当前用户id
+				expect(userId).not.toBeNull()
+				const req = getMockedRequest() as Request
+				const userService = new UserService(req)
+				const findAUser = await userService.findById(userId, req)
+				expect(findAUser).not.toBeNull()
+			}
 		})
 	})
-	// 账号注销 
+	//? 用户注销
+	describe('**** User Delete ****', () => {
+
+	})
 
 })
