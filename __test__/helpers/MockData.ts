@@ -3,7 +3,8 @@
 */
 export const validateAccountInfo = {
 	email: 'kbmjj123@gmail.com',
-	password: 'abc123!@#$'
+	password: 'abc123!@#$',
+	newPassword: 'abc123!@#$'
 }
 /**
  * 已被注销的账号信息

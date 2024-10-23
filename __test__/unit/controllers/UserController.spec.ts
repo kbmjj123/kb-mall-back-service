@@ -1,12 +1,13 @@
 import { cacheAccessToken, testEndPoint } from "../../helpers/TestUtils";
 import { describe, expect, test, beforeAll } from "@jest/globals";
-import { loginTestCases, loginedTestCases, logoutTestCases, modifyUserInfoTestCases } from "../../data/controllers/UserControllerData";
+import { deleteUserTestCases, generateRegisterCodeTestCases, loginTestCases, loginedTestCases, logoutTestCases, modifyPwdWithOldPwdTestCases, modifyUserInfoTestCases, registerTestCases } from "../../data/controllers/UserControllerData";
 import { ResultCode } from "../../../enum/http";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { startService } from "../../../index";
 import { UserService } from "../../../service/UserService";
 import { getMockedRequest } from "../../data/utils/DataUtils";
 import { Request } from "express";
+import { UnitTestCaseType } from "../../types/UnitTestCaseType";
 
 beforeAll(async () => {
 	if (!global.server) {
@@ -16,13 +17,39 @@ beforeAll(async () => {
 })
 
 describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
+	
+	//? 获取注册新账号的所需的链接，这里仅简化为token的生成
+	describe('**** Generate register token ****', () => {
+		test.each(generateRegisterCodeTestCases)('$descriptioin', async params => {
+			// 先随机生成一个邮箱账号来注册
+			// 设置模拟函数的返回值(主要是模拟发送邮件动作)
+		})
+	})
+
 	//? 新用户注册
 	describe('**** Register new account ****', () => {
-		
+		test.each(registerTestCases)('$description', async params => {
+
+		})
+	})
+	// 修改密码 -> 根据旧密码来修改新密码
+	describe('**** Modify password with old password ****', () => {
+		test.each(modifyPwdWithOldPwdTestCases)('$description', async params => {
+			const response = await testEndPoint(params)
+			if(response.body.status === ResultCode.SUCCESS){
+				expect(response.body).toHaveProperty('data')
+				const data = response.body.data
+				if(data){
+
+				}
+			}
+		})
 	})
 	// 忘记密码-> 重置密码
 	//? 修改密码
-	// describe('**** Modify User Password', () => {})
+	describe('**** Modify User Password', () => {
+
+	})
 	//? 用户登录
 	describe('**** User Login ****', () => {
 		test.each(loginTestCases)('$description', async (params) => {
@@ -39,6 +66,11 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 				}
 			}
 		})
+	})
+
+	//? 刷新token
+	describe('**** Refresh token ****', () => {
+		
 	})
 
 	//? 获取登录用户信息--> 从请求头中捞对应的token
@@ -93,9 +125,19 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 			}
 		})
 	})
-	//? 用户注销
+	//? 用户删除
 	describe('**** User Delete ****', () => {
-
+		test.each(deleteUserTestCases)('$description', async params => {
+			// 注册新账号
+			// 缓存新账号相关信息
+			const response = await testEndPoint(params)
+			expect(response.body.status).toBe(ResultCode.SUCCESS)
+			expect(response.body).toHaveProperty('data')
+			const data = response.body.data
+			expect(data.deleteTime).not.toBeNull()
+			// 使用临时注册的账号来登录，看是否提示已经被删除，无法进行正常登录了
+			const loginRes = await testEndPoint({} as UnitTestCaseType)
+		})
 	})
 
 })

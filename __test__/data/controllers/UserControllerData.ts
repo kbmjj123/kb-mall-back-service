@@ -8,6 +8,36 @@ import { getGlobalAccessToken } from '../utils/DataUtils'
 const noExistAccount = 'uuu@uuu.com'
 
 /**
+ * 发送带token的注册链接
+*/
+export const generateRegisterCodeTestCases: Array<UnitTestCaseType> = [
+	{
+		description: 'Generate a registration link with token',
+		input: {
+			url: '/user/getRegisterLink',
+			method: 'get',
+			params: {}
+		},
+		expectedResponse: {
+			status: ResultCode.SUCCESS
+		}
+	},
+	{
+		description: 'Email already exist',
+		input: {
+			url: '/user/getRegisterLink',
+			method: 'get',
+			params: {
+				email: validateAccountInfo.email
+			}
+		},
+		expectedResponse: {
+			status: UserCode.USER_ALREADY_EXIST
+		}
+	}
+]
+
+/**
  * 登录单元测试数据源
 */
 export const loginTestCases: Array<UnitTestCaseType> = [
@@ -111,7 +141,47 @@ export const loginedTestCases: Array<UnitTestCaseType> = [
 /**
  * 用户注册单元测试数据源
 */
-export const registerTestCases = []
+export const registerTestCases: Array<UnitTestCaseType> = [
+	{
+		description: 'Register new account successfully',
+		input: {
+			url: '/user/register',
+			method: 'post',
+			params: {
+				password: '', 
+				token: ''
+			}
+		},
+		expectedResponse: {
+			status: ResultCode.SUCCESS
+		}
+	},
+	{
+		description: 'Account already exists',
+		input: {
+			url: '/user/register',
+			method: 'post',
+			params: {
+				password: '',
+				token: ''
+			}
+		},
+		expectedResponse: {
+			status: UserCode.USER_ALREADY_EXIST
+		},
+	},
+	{
+		description: 'Invalidate params',
+		input: {
+			url: '/user/register',
+			method: 'post',
+			params: {}
+		},
+		expectedResponse: {
+			status: ResultCode.PARAMS_ERROR
+		}
+	}
+]
 
 /**
  * 修改用户信息 单元测试数据源
@@ -166,6 +236,43 @@ export const modifyUserInfoTestCases: Array<UnitTestCaseType> = [
 ]
 
 /**
+ * 修改用户密码(根据旧密码修改新密码)
+*/
+export const modifyPwdWithOldPwdTestCases: Array<UnitTestCaseType> = [
+	{
+		description: 'Successfully changed the new password using the old password',
+		input: {
+			url: '/user/modifyPwd',
+			method: 'post',
+			params: {
+				oldPassword: validateAccountInfo.password,
+				newPassword: validateAccountInfo.newPassword
+			},
+			header: () => ({
+				authorization: `Bearer ${getGlobalAccessToken()}`
+			})
+		},
+		expectedResponse: {
+			status: ResultCode.SUCCESS
+		}
+	},
+	{
+		description: 'Invalidate params',
+		input: {
+			url: '/user/modifyPwd',
+			method: 'post',
+			params: {},
+			header: () => ({
+				authorization: `Bearer ${getGlobalAccessToken()}`
+			})
+		},
+		expectedResponse: {
+			status: ResultCode.PARAMS_ERROR
+		}
+	}
+]
+
+/**
  * 退出登录 单元测试数据源
 */
 export const logoutTestCases: Array<UnitTestCaseType> = [
@@ -173,6 +280,26 @@ export const logoutTestCases: Array<UnitTestCaseType> = [
 		description: 'User logs out normally',
 		input: {
 			url: '/user/logout',
+			method: 'post',
+			params: {},
+			header: () => ({
+				authorization: `Bearer ${getGlobalAccessToken()}`
+			})
+		},
+		expectedResponse: {
+			status: ResultCode.SUCCESS
+		}
+	}
+]
+
+/**
+ * 用户注销
+*/
+export const deleteUserTestCases: Array<UnitTestCaseType> = [
+	{
+		description: 'User delete',
+		input: {
+			url: '/user/delete',
 			method: 'post',
 			params: {},
 			header: () => ({

@@ -280,10 +280,10 @@ export class UserController extends BaseController {
 					return this.failedResponse(req, req.t('system.error'))
 				}
 			} else {
-				return this.failedResponse(req, req.t('user.oldPwdNotMatchTip'))
+				return this.failedResponse(req, req.t('user.oldPwdNotMatchTip'), UserCode.ACCOUNT_OLD_PWD_ERROR)
 			}
 		} else {
-			return this.failedResponse(req, req.t('user.loginTimeOut'))
+			return this.failedResponse(req, req.t('user.loginTimeOut'), UserCode.LOGIN_TIMEOUT)
 		}
 	}
 
