@@ -20,15 +20,13 @@ export const checkLogin = async (req: Request, res: Response, next: NextFunction
 			const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
 			// decodeInfo.id 存在，则是一个有效的用户id，说明是一个正常的登录状态
 			const findUser = await UserModel.findById(decodeInfo.id);
-			if (findUser?.refreshToken) {
-				//! 这里针对需要鉴权登录的相关接口，追加一个自动延活token的逻辑
-				const refreshToken = TokenGenerator.generateRefreshToken(decodeInfo.id)
-				const accessToken = TokenGenerator.generateAccessToken(decodeInfo.id)
-				const updateUser = await userService.findOneAndUpdate(req, {_id: decodeInfo.id}, { $set: { accessToken, refreshToken } })
+			if (findUser) {
+				//// 这里针对需要鉴权登录的相关接口，追加一个自动延活token的逻辑
+				// const refreshToken = TokenGenerator.generateRefreshToken(decodeInfo.id)
+				// const accessToken = TokenGenerator.generateAccessToken(decodeInfo.id)
+				// const updateUser = await userService.findOneAndUpdate(req, {_id: decodeInfo.id}, { $set: { accessToken, refreshToken } })
 				// 将已经验证通过的账号信息追加到req.user中，并传递给下一个中间件
-				if(updateUser){
-					req.user = updateUser
-				}
+				req.user = findUser
 				// 直接在中间件这里做一个拦截
 				next();
 			} else {

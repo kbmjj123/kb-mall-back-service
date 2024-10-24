@@ -38,6 +38,55 @@ export const generateRegisterCodeTestCases: Array<UnitTestCaseType> = [
 ]
 
 /**
+ * 刷新token的单元测试数据
+*/
+export const refreshTokenTestCases: Array<UnitTestCaseType> = [
+	{
+		description: 'Use refreshToken to refresh the old token',
+		input: {
+			url: '/user/refreshToken',
+			method: 'patch',
+			params: {},
+			header: () => ({
+				authorization: `Bearer ${getGlobalAccessToken()}`
+			})
+		},
+		expectedResponse: {
+			status: ResultCode.SUCCESS
+		}
+	},
+	{
+		description: 'No refreshToken is carried for the refresh token operation',
+		input: {
+			url: '/user/refreshToken',
+			method: 'patch',
+			params: {
+				refreshToken: ''
+			}
+		},
+		expectedResponse: {
+			status: ResultCode.PARAMS_ERROR
+		}
+	},
+	{
+		description: 'Bring an expired accessToken to refresh the token',
+		input: {
+			url: '/user/refreshToken',
+			method: 'patch',
+			params: {
+				refreshToken: ''
+			},
+			header: () => ({
+				authorization: `Bearer ${getGlobalAccessToken()}`
+			})
+		},
+		expectedResponse: {
+			status: UserCode.LOGIN_TIMEOUT
+		}
+	}
+]
+
+/**
  * 登录单元测试数据源
 */
 export const loginTestCases: Array<UnitTestCaseType> = [

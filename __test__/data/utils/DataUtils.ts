@@ -1,11 +1,18 @@
 import { Request } from "express";
 
 /**
- * 获取全局的token
+ * 获取全局的accessToken
 */
 export const getGlobalAccessToken = () => {
 	console.info('全局可用的token=', global.appendHeaders)
-	return global.appendHeaders && global.appendHeaders['authorization']
+	return global.appendHeaders && global.appendHeaders['accessToken']
+}
+
+/**
+ * 获取全局的refreshToken
+*/
+export const getGlobalRefreshToken = () => {
+	return global.appendHeaders && global.appendHeaders['refreshToken']
 }
 
 /**

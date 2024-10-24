@@ -1,11 +1,11 @@
-import { cacheAccessToken, testEndPoint } from "../../helpers/TestUtils";
+import { cacheTokens, testEndPoint } from "../../helpers/TestUtils";
 import { describe, expect, test, beforeAll } from "@jest/globals";
-import { deleteUserTestCases, generateRegisterCodeTestCases, loginTestCases, loginedTestCases, logoutTestCases, modifyPwdWithOldPwdTestCases, modifyUserInfoTestCases, registerTestCases } from "../../data/controllers/UserControllerData";
+import { deleteUserTestCases, generateRegisterCodeTestCases, loginTestCases, loginedTestCases, logoutTestCases, modifyPwdWithOldPwdTestCases, modifyUserInfoTestCases, refreshTokenTestCases, registerTestCases } from "../../data/controllers/UserControllerData";
 import { ResultCode } from "../../../enum/http";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { startService } from "../../../index";
 import { UserService } from "../../../service/UserService";
-import { getMockedRequest } from "../../data/utils/DataUtils";
+import { getGlobalRefreshToken, getMockedRequest } from "../../data/utils/DataUtils";
 import { Request } from "express";
 import { UnitTestCaseType } from "../../types/UnitTestCaseType";
 
@@ -69,15 +69,31 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 	})
 
 	//? 刷新token
-	describe('**** Refresh token ****', () => {
-		
+	describe.only('**** Refresh token ****', () => {
+		beforeAll(async () => {
+			await cacheTokens()
+		})
+		test.each(refreshTokenTestCases)('$description', async params => {
+			if(params.expectedResponse.status === ResultCode.SUCCESS){
+				params.input.params = {
+					// 针对预期将要成功刷新token的场景传递正确的待刷新token参数
+					refreshToken: getGlobalRefreshToken()
+				}
+			}
+			const response = await testEndPoint(params)
+			if(response.body.status === ResultCode.SUCCESS){
+				// 针对实际已经成功的场景进行对应的校验操作
+				
+			}
+		})
+		// 成功后--> 用户的refreshToken是否发生了变化，modifyTime是否发生了变化
 	})
 
 	//? 获取登录用户信息--> 从请求头中捞对应的token
 	describe('**** Get User Info ****', () => {
 		beforeAll(async () => {
 			// 执行一次用户登录，用来获取到对应的用户信息token
-			await cacheAccessToken()
+			await cacheTokens()
 		})
 		test.each(loginedTestCases)('$description', async (params) => {
 			const response = await testEndPoint(params)
@@ -88,7 +104,7 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 	describe('**** Modify User Info ****', () => {
 		beforeAll(async () => {
 			// 执行一次用户登录，用来获取到对应的用户信息token
-			await cacheAccessToken()
+			await cacheTokens()
 		})
 		test.each(modifyUserInfoTestCases)('$description', async (params) => {
 			const response = await testEndPoint(params)
@@ -110,7 +126,7 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 	describe('**** User Logout ****', () => {
 		beforeAll(async () => {
 			// 先正常登录
-			await cacheAccessToken()
+			await cacheTokens()
 		})
 		test.each(logoutTestCases)('$description', async (params) => {
 			const response = await testEndPoint(params)

@@ -48,14 +48,16 @@ export const testEndPoint = async (testParams: UnitTestCaseType) => {
 /**
  * 抽离出来的一个登录成功的动作，将登录成功后的token存储到全局中，后续都自动从这个中获取
 */
-export const cacheAccessToken = async () => {
+export const cacheTokens = async () => {
 	const response = await request(global.server).post('/user/login').send(validateAccountInfo)
 	if(response.body.status === ResultCode.SUCCESS){
-		const token = response.body.data.accessToken
+		const accessToken = response.body.data.accessToken
+		const refreshToken = response.body.data.refreshToken
 		if(!global.appendHeaders){
 			global.appendHeaders = {}
 		}
-		global.appendHeaders['authorization'] = token
-		console.info('完成token的全局缓存', token)
+		global.appendHeaders['accessToken'] = accessToken
+		global.appendHeaders['refreshToken'] = refreshToken
+		console.info('完成token的全局缓存', accessToken)
 	}
 }

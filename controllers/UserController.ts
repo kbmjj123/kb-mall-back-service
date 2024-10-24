@@ -350,13 +350,14 @@ export class UserController extends BaseController {
 						refreshToken
 					})
 				} else {
-					return this.failedResponse(req, req.t('user.needValidateToken'));
+					return this.failedResponse(req, req.t('user.needValidateToken'), ResultCode.PARAMS_ERROR);
 				}
 			} else {
-				return this.failedResponse(req, req.t('user.permissionLimitTip'))
+				// 用户的refreshToken中传递了无效的用户id
+				return this.failedResponse(req, req.t('user.permissionLimitTip'), ResultCode.FORBIT)
 			}
 		} else {
-			return this.failedResponse(req, req.t('user.needValidateToken'))
+			return this.failedResponse(req, req.t('user.needValidateToken'), ResultCode.PARAMS_ERROR)
 		}
 	}
 
