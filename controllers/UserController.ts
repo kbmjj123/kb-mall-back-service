@@ -38,10 +38,10 @@ export class UserController extends BaseController {
 			if (result) {
 				return this.successResponse(req, req.t('user.deliveryEmailSuccess'))
 			} else {
-				return this.failedResponse(req, req.t('user.deliveryEmailFailed'))
+				return this.failedResponse(req, req.t('user.deliveryEmailFailed'), UserCode.DELIVERY_EMAIL_ERROR)
 			}
 		} else {
-			return this.failedResponse(req, req.t('user.emailAlreadyExist'))
+			return this.failedResponse(req, req.t('user.emailAlreadyExist'), UserCode.USER_ALREADY_EXIST)
 		}
 	}
 	/**
@@ -64,16 +64,17 @@ export class UserController extends BaseController {
 						return this.successResponse(req, createUser)
 					} else {
 						// db中已存在，则拒绝创建
-						return this.failedResponse(req, req.t('user.emailAlreadyExist'))
+						return this.failedResponse(req, req.t('user.emailAlreadyExist'), UserCode.USER_ALREADY_EXIST)
 					}
 				} else {
-					return this.failedResponse(req, req.t('user.tokenInValidate'))
+					return this.failedResponse(req, req.t('user.tokenInValidate'), UserCode.REGISTER_LINK_INVALID)
 				}
 			} catch (err) {
-				return this.failedResponse(req, req.t('user.needValidateToken'))
+				console.error(err)
+				return this.failedResponse(req, req.t('user.needValidateToken'), ResultCode.PARAMS_ERROR)
 			}
 		} else {
-			return this.failedResponse(req, req.t('user.needValidateToken'))
+			return this.failedResponse(req, req.t('user.needValidateToken'), ResultCode.PARAMS_ERROR)
 		}
 	}
 

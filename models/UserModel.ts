@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema<UserDTO>({
 		default: ''
 	},
 	address: {
-		type: mongoose.SchemaTypes.ObjectId,
+		type: [String, mongoose.SchemaTypes.ObjectId],
 		default: ''
 	},
 	loginTime: {

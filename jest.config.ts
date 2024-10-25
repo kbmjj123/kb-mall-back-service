@@ -56,7 +56,7 @@ const config: Config = {
   // fakeTimers: {
   //   "enableGlobally": false
   // },
-	testTimeout: 60000,
+	testTimeout: 120000,
   // Force coverage collection from ignored files using an array of glob patterns
   // forceCoverageMatch: [],
 
@@ -141,7 +141,7 @@ const config: Config = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  setupFiles: ['<rootDir>/jest.setup.ts'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],

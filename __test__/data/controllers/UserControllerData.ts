@@ -3,6 +3,7 @@ import { validateAccountInfo, alreadyCanceledAccountInfo, newPassword } from '..
 import { ResultCode } from '../../../enum/http'
 import { UserCode } from '../../../enum/code/UserCode'
 import { getGlobalAccessToken } from '../utils/DataUtils'
+import TokenGenerator from '../../../config/TokenGenerator'
 
 
 const noExistAccount = 'uuu@uuu.com'
@@ -198,8 +199,8 @@ export const registerTestCases: Array<UnitTestCaseType> = [
 			url: '/user/register',
 			method: 'post',
 			params: {
-				password: '',
-				token: ''
+				password: newPassword,
+				token: TokenGenerator.generateValidateToken(validateAccountInfo.email)
 			}
 		},
 		expectedResponse: {

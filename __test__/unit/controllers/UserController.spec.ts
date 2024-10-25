@@ -8,6 +8,8 @@ import { UserService } from "../../../service/UserService";
 import { getGlobalRefreshToken, getMockedRequest } from "../../data/utils/DataUtils";
 import { Request } from "express";
 import { UnitTestCaseType } from "../../types/UnitTestCaseType";
+import { generateNewEmailAccount, newPassword } from "../../helpers/MockData";
+import TokenGenerator from "../../../config/TokenGenerator";
 
 beforeAll(async () => {
 	if (!global.server) {
@@ -29,6 +31,17 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 	//? 新用户注册
 	describe('**** Register new account ****', () => {
 		test.each(registerTestCases)('$description', async params => {
+			// 需要token(email) + password
+			// --> 需要模拟生成一个邮箱，然后在此基础上来生成一个对应的token
+			if(ResultCode.SUCCESS === params.expectedResponse.status){
+				// 对于成功的情况，其请求参数在发起时生成，这里是随机生成一个待注册的账号
+				const emailAccount = generateNewEmailAccount()
+				params.input.params = {
+					token: TokenGenerator.generateValidateToken(emailAccount),
+					password: newPassword
+				}
+			}
+			const response = await testEndPoint(params)
 
 		})
 	})
@@ -69,7 +82,7 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 	})
 
 	//? 刷新token
-	describe.only('**** Refresh token ****', () => {
+	describe('**** Refresh token ****', () => {
 		beforeAll(async () => {
 			await cacheTokens()
 		})

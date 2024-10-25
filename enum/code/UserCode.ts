@@ -23,6 +23,14 @@ export enum UserCode{
 	*/
 	USER_ALREADY_EXIST = 100005,
 	/**
+	 * 邮件发送失败
+	*/
+	DELIVERY_EMAIL_ERROR = 100006,
+	/**
+	 * 注册链接已失效
+	*/
+	REGISTER_LINK_INVALID = 100007,
+	/**
 	 * 登录超时
 	*/
 	LOGIN_TIMEOUT = 100999
