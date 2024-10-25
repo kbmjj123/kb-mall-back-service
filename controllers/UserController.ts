@@ -89,15 +89,23 @@ export class UserController extends BaseController {
 			const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload
 			if (decodeInfo && decodeInfo.email) {
 				const email = decodeInfo.email
-				const updateUser = await userService.findOneAndUpdate(req, { email }, { password })
-				if (updateUser) {
-					return this.successResponse(req)
-				} else {
-					return this.failedResponse(req, '')
+				const findUser = await userService.isExist({ email }, req)
+				if(findUser){
+					const updateUser = await userService.findOneAndUpdate(req, { email }, { password })
+					if (updateUser) {
+						return this.successResponse(req)
+					} else {
+						return this.failedResponse(req, req.t('system.error'))
+					}
+				}else{
+					return this.failedResponse(req, req.t('user.accountNoExist'), UserCode.USER_NO_EXIST)
 				}
+			}else{
+				return this.failedResponse(req, req.t('user.inputEmailTip'), ResultCode.PARAMS_ERROR)
 			}
+		}else{
+			return this.failedResponse(req, req.t('user.needValidateToken'), ResultCode.PARAMS_ERROR)
 		}
-		return this.failedResponse(req, '')
 	}
 
 	/**
@@ -116,7 +124,7 @@ export class UserController extends BaseController {
 				return this.failedResponse(req, '')
 			}
 		} else {
-			return this.failedResponse(req, req.t('user.emailNoExist'))
+			return this.failedResponse(req, req.t('user.emailNoExist'), UserCode.USER_NO_EXIST)
 		}
 	}
 

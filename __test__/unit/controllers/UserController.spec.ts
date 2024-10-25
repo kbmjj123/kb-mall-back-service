@@ -1,6 +1,6 @@
 import { cacheTokens, testEndPoint } from "../../helpers/TestUtils";
 import { describe, expect, test, beforeAll } from "@jest/globals";
-import { deleteUserTestCases, generateRegisterCodeTestCases, loginTestCases, loginedTestCases, logoutTestCases, modifyPwdWithOldPwdTestCases, modifyUserInfoTestCases, refreshTokenTestCases, registerTestCases } from "../../data/controllers/UserControllerData";
+import { deleteUserTestCases, generateRegisterCodeTestCases, loginTestCases, loginedTestCases, logoutTestCases, modifyPwdWithOldPwdTestCases, modifyUserInfoTestCases, refreshTokenTestCases, registerTestCases, resetPwdTestCases } from "../../data/controllers/UserControllerData";
 import { ResultCode } from "../../../enum/http";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { startService } from "../../../index";
@@ -8,8 +8,9 @@ import { UserService } from "../../../service/UserService";
 import { getGlobalRefreshToken, getMockedRequest } from "../../data/utils/DataUtils";
 import { Request } from "express";
 import { UnitTestCaseType } from "../../types/UnitTestCaseType";
-import { generateNewEmailAccount, newPassword } from "../../helpers/MockData";
+import { generateNewEmailAccount, newPassword, validateAccountInfo } from "../../helpers/MockData";
 import TokenGenerator from "../../../config/TokenGenerator";
+import { UserCode } from "../../../enum/code/UserCode";
 
 beforeAll(async () => {
 	if (!global.server) {
@@ -45,7 +46,7 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 
 		})
 	})
-	// 修改密码 -> 根据旧密码来修改新密码
+	//? 修改密码 -> 根据旧密码来修改新密码
 	describe('**** Modify password with old password ****', () => {
 		test.each(modifyPwdWithOldPwdTestCases)('$description', async params => {
 			const response = await testEndPoint(params)
@@ -58,10 +59,28 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 			}
 		})
 	})
-	// 忘记密码-> 重置密码
-	//? 修改密码
-	describe('**** Modify User Password', () => {
-
+	//? 忘记密码-> 重置密码
+	describe.only('**** Modify User Password', () => {
+		// 根据邮箱获取重置密码的token
+		test.each(resetPwdTestCases)('$description', async params => {
+			if(ResultCode.SUCCESS === params.expectedResponse.status){
+				// 针对需要成功的情况，提供一个有效的token
+				params.input.params = {
+					token: TokenGenerator.generateValidateToken(validateAccountInfo.email),
+					password: newPassword
+				}
+			}
+			if(UserCode.USER_NO_EXIST === params.expectedResponse.status){
+				// 针对不存在的邮箱账号-->模拟生成一个邮箱
+				const emailAccount = generateNewEmailAccount()
+				params.input.params = {
+					token: TokenGenerator.generateValidateToken(emailAccount),
+					password: newPassword
+				}
+			}
+			const response = await testEndPoint(params)
+		})
+		// 
 	})
 	//? 用户登录
 	describe('**** User Login ****', () => {

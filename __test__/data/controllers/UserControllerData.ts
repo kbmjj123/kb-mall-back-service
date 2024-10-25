@@ -221,6 +221,51 @@ export const registerTestCases: Array<UnitTestCaseType> = [
 ]
 
 /**
+ * 重置密码单元测试数据源
+*/
+export const resetPwdTestCases: Array<UnitTestCaseType> = [
+	{
+		description: 'Password reset successfully',
+		input: {
+			url: '/user/resetPwd',
+			method: 'post',
+			params: {
+				token: '',
+				password: newPassword
+			}
+		},
+		expectedResponse: {
+			status: ResultCode.SUCCESS
+		}
+	},
+	{
+		description: 'Reset a non-existent email account',
+		input: {
+			url: '/user/resetPwd',
+			method: 'post',
+			params: {
+				token: '',
+				password: newPassword
+			}
+		},
+		expectedResponse: {
+			status: UserCode.USER_NO_EXIST
+		}
+	},
+	{
+		description: 'Reset password without parameters',
+		input: {
+			url: '/user/resetPwd',
+			method: 'post',
+			params: {}
+		},
+		expectedResponse: {
+			status: ResultCode.PARAMS_ERROR
+		}
+	}
+]
+
+/**
  * 修改用户信息 单元测试数据源
 */
 export const modifyUserInfoTestCases: Array<UnitTestCaseType> = [
