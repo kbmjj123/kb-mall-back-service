@@ -13,6 +13,20 @@
         "NODE_ENV": "development"
       },
       "runtimeVersion": "18.7.0"  // 确保使用支持 ??= 的版本
+    },
+		{
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Jest Tests",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      "args": [
+        "--runInBand", // 使测试在同一线程中运行，便于调试
+        "--watchAll=false" // 禁用 watch 模式
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "cwd": "${workspaceFolder}"
     }
   ]
 }

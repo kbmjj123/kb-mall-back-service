@@ -49,6 +49,7 @@ export const testEndPoint = async (testParams: UnitTestCaseType) => {
  * 抽离出来的一个登录成功的动作，将登录成功后的token存储到全局中，后续都自动从这个中获取
 */
 export const cacheTokens = async () => {
+	debugger
 	const response = await request(global.server).post('/user/login').send(validateAccountInfo)
 	if(response.body.status === ResultCode.SUCCESS){
 		const accessToken = response.body.data.accessToken

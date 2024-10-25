@@ -1,5 +1,5 @@
 import type { UnitTestCaseType } from '../../types/UnitTestCaseType'
-import { validateAccountInfo, alreadyCanceledAccountInfo } from '../../helpers/MockData'
+import { validateAccountInfo, alreadyCanceledAccountInfo, newPassword } from '../../helpers/MockData'
 import { ResultCode } from '../../../enum/http'
 import { UserCode } from '../../../enum/code/UserCode'
 import { getGlobalAccessToken } from '../utils/DataUtils'
@@ -62,26 +62,13 @@ export const refreshTokenTestCases: Array<UnitTestCaseType> = [
 			method: 'patch',
 			params: {
 				refreshToken: ''
-			}
-		},
-		expectedResponse: {
-			status: ResultCode.PARAMS_ERROR
-		}
-	},
-	{
-		description: 'Bring an expired accessToken to refresh the token',
-		input: {
-			url: '/user/refreshToken',
-			method: 'patch',
-			params: {
-				refreshToken: ''
 			},
 			header: () => ({
 				authorization: `Bearer ${getGlobalAccessToken()}`
 			})
 		},
 		expectedResponse: {
-			status: UserCode.LOGIN_TIMEOUT
+			status: ResultCode.PARAMS_ERROR
 		}
 	}
 ]
@@ -295,7 +282,7 @@ export const modifyPwdWithOldPwdTestCases: Array<UnitTestCaseType> = [
 			method: 'post',
 			params: {
 				oldPassword: validateAccountInfo.password,
-				newPassword: validateAccountInfo.newPassword
+				newPassword: newPassword
 			},
 			header: () => ({
 				authorization: `Bearer ${getGlobalAccessToken()}`

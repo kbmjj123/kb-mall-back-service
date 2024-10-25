@@ -1525,7 +1525,6 @@
         },
         "description": "刷新用户的accessToken以及refreshToken，即延长用户的在线有效性",
         "tags": ["用户模块"],
-        "deprecated": true,
         "security": [],
         "parameters": [],
         "requestBody": {

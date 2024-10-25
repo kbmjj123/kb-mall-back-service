@@ -61,7 +61,7 @@ describe('@@@@@@@@@@@ User Test Cases @@@@@@@@@@@', () => {
 				if (data) {
 					// 登录成功的用户必须拥有登录的token
 					expect(data).toHaveProperty('accessToken')
-					const decodeInfo = jwt.verify(data.assessToken, process.env.JWT_ACCESS_SECRET as string) as JwtPayload
+					const decodeInfo = jwt.verify(data.accessToken, process.env.JWT_ACCESS_SECRET as string) as JwtPayload
 					expect(decodeInfo).toHaveProperty('id')
 				}
 			}
