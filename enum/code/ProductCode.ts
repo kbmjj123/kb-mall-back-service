@@ -10,4 +10,8 @@ export enum ProductCode{
 	 * 商品库存不足
 	*/
 	PRODUCT_NO_STOCK = 200002,
+	/**
+	 * 品牌名称已存在
+	*/
+	BRAND_ALREADY_EXIST = 200101
 }

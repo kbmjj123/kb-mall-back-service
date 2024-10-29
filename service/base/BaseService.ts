@@ -26,8 +26,8 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	findList(nameInCollection: string, pageInfo: PageDTO): Promise<PageResultDTO<T>> {
 		throw new Error("Method not implemented.");
 	}
-	findAll(): Promise<T[]> {
-		throw new Error("Method not implemented.");
+	findAll(req: ExpressRequest): Promise<T[]> {
+		return this.model.find().setOptions(this.getLanguageOptions(req, {}))
 	}
 
 	/**

@@ -12,4 +12,5 @@ export class BrandService extends BaseService<BrandDTO> {
 		super(BrandModel)
 		this.req = req
 	}
+	
 }

@@ -844,6 +844,46 @@
         "type": "object",
         "additionalProperties": false
       },
+      "Pick_BrandDTO.id-or-name_": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id"
+          },
+          "name": {
+            "type": "string",
+            "description": "品牌名称"
+          }
+        },
+        "required": ["id", "name"],
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "SingleBrandDTO": {
+        "$ref": "#/components/schemas/Pick_BrandDTO.id-or-name_",
+        "description": "简版的品牌信息类型"
+      },
+      "BaseObjectEntity_Array_SingleBrandDTO__": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/SingleBrandDTO"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
       "BrandDTO": {
         "properties": {
           "createTime": {
@@ -862,11 +902,20 @@
             "nullable": true,
             "description": "记录删除时间"
           },
+          "id": {
+            "type": "string",
+            "description": "id"
+          },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "品牌名称"
+          },
+          "icon": {
+            "type": "string",
+            "description": "品牌图标"
           }
         },
-        "required": ["name"],
+        "required": ["id", "name"],
         "type": "object",
         "additionalProperties": false
       },
@@ -934,6 +983,61 @@
         },
         "type": "object",
         "additionalProperties": false
+      },
+      "Partial_BrandDTO_": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id"
+          },
+          "name": {
+            "type": "string",
+            "description": "品牌名称"
+          },
+          "icon": {
+            "type": "string",
+            "description": "品牌图标"
+          },
+          "createTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录创建时间"
+          },
+          "modifyTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录修改时间"
+          },
+          "deleteTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录删除时间"
+          }
+        },
+        "type": "object",
+        "description": "Make all properties in T optional"
+      },
+      "EditBrandDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Partial_BrandDTO_"
+          },
+          {
+            "properties": {
+              "language": {
+                "type": "string"
+              },
+              "languageList": {
+                "items": {
+                  "$ref": "#/components/schemas/Partial_BrandDTO_"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "description": "发布品牌所需的参数定义--多语言支持"
       },
       "BaseObjectEntity_BrandDTO-or-null_": {
         "properties": {
@@ -1985,6 +2089,26 @@
         ]
       }
     },
+    "/brand/allList": {
+      "get": {
+        "operationId": "GetAllBandList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_Array_SingleBrandDTO__"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["品牌模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
     "/brand/list": {
       "get": {
         "operationId": "GetBrandList",
@@ -2057,7 +2181,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BrandDTO"
+                "$ref": "#/components/schemas/EditBrandDTO"
               }
             }
           }
@@ -2117,6 +2241,7 @@
             }
           }
         },
+        "description": "删除品牌",
         "tags": ["品牌模块"],
         "security": [],
         "parameters": [

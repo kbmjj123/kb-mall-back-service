@@ -27,6 +27,8 @@ export class TranslateService<T> {
 	updateTranslates(id: Types.ObjectId | string, language: string, updates: any) {
 		//TODO 执行相关的更新操作
 		infoLogger.info('缓存翻译数据')
+		infoLogger.info(`language = ${language}`)
+		infoLogger.info(updates)
 	}
 
 }

@@ -29,19 +29,19 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 	// 在collection注册好插件时，也就创建好了对应的翻译服务
 	const tService: TranslateService<ServiceType> = new TranslateService(options.model)
 	cachedModelKeys[options.modelName] = options.keysInCollection
+	//! 为需要翻译服务的schema对应的model添加setLanguage方法，将req中的language字段追加到model中
 	schema.method('setLanguage', function(language: string) {
 		let doc = this as any
 		doc.language = language;
 	})
-	schema.pre('save', function(next) {
-		infoLogger.info('->开始执行全局插件操作了')
-		const doc = this as any
-		//? 拿到req中的language
-		const language = doc.language
-		infoLogger.info('--->' + language + '<---')
-		// tService.updateTranslates()
+	//? 这里将其定义为save之后，是因为如果是新增的话，需要拿到对应的businessId来进行对应的语言collection赋值
+	schema.post('save', function(doc) {
+		infoLogger.info('->成功保存文档记录')
+		//? 拿到doc中的language
+		const language = doc.language as string
+		infoLogger.info('所接收到的language--->' + language + '<---')
 		infoLogger.info('这里将在保存动作自动追加翻译数据到翻译表中')
-		next()
+		tService.updateTranslates(doc._id as string, language, doc)
 	})
 	schema.post(['find', 'findOne', 'findOneAndUpdate'], function(doc, next) {
 		console.info(doc)

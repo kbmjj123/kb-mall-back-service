@@ -11,6 +11,6 @@ export interface IService<T extends ISoftDeleteDTO> {
 	isExist(query: FilterQuery<T>, req: ExpressRequest): Promise<T | null>;
 	findOne(filter: FilterQuery<T> | undefined, req: ExpressRequest): Promise<T | null>;
 	findList(nameInCollection: string, pageInfo: PageDTO): Promise<PageResultDTO<T>>
-	findAll(): Promise<T[]>
+	findAll(req: ExpressRequest): Promise<T[]>
 	findOneAndUpdate(req: ExpressRequest, filter?: FilterQuery<T> | undefined, update?: UpdateQuery<T> | undefined, options?: QueryOptions<T> | null | undefined): Promise<T | null>;
 }

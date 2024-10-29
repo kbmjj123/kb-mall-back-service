@@ -1,6 +1,9 @@
 import { TBrandDTO } from "../../dto/translate-dto/TBrandDTO"
 import mongoose from "mongoose"
 
+/**
+ * 需要翻译的字段
+*/
 export const T_BRAND_KEYS = [
 	'name'
 ]
