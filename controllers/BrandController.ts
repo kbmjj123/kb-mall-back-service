@@ -36,14 +36,14 @@ export class BrandController extends BaseController {
 	*/
 	@Put('/')
 	public async addABrand(@Request() req: ExpressRequest, @Body() params: EditBrandDTO): Promise<BaseObjectEntity<BrandDTO>> {
-		const { name, icon, languageList } = params;
+		const { name, icon, languageList, language } = params;
 		if (name) {
 			const brandService = new BrandService(req)
 			const findABrand = await brandService.isExist({ name }, req);
 			if (findABrand) {
 				return this.failedResponse(req, req.t('brand.exist', { name }), ProductCode.BRAND_ALREADY_EXIST)
 			} else {
-				const createABrand = await brandService.create({ name, icon, languageList }, req);
+				const createABrand = await brandService.create({ name, icon, languageList, language }, req);
 				return this.successResponse(req, createABrand)
 			}
 		} else {

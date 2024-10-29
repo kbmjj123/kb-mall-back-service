@@ -36,12 +36,10 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 	})
 	//? 这里将其定义为save之后，是因为如果是新增的话，需要拿到对应的businessId来进行对应的语言collection赋值
 	schema.post('save', function(doc) {
-		infoLogger.info('->成功保存文档记录')
 		//? 拿到doc中的language
 		const language = doc.language as string
-		infoLogger.info('所接收到的language--->' + language + '<---')
-		infoLogger.info('这里将在保存动作自动追加翻译数据到翻译表中')
-		tService.updateTranslates(doc._id as string, language, doc)
+		const cachedLanguageKeys = cachedModelKeys[options.modelName]	// 获取注册插件时所定义的需要缓存的key对象
+		tService.updateTranslates(doc._id as string, language, doc, cachedLanguageKeys)
 	})
 	schema.post(['find', 'findOne', 'findOneAndUpdate'], function(doc, next) {
 		console.info(doc)

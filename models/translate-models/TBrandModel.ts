@@ -12,7 +12,12 @@ const tBrandSchema = new mongoose.Schema<TBrandDTO>({
 	businessId: {
 		type: mongoose.SchemaTypes.ObjectId,
 		required: [true, '请维护业务id']
-	}
+	},
+	name: {
+		type: String,
+		required: [true, '请维护品牌名称']
+	},
+	language: String
 })
 
 export const TBrandModel = mongoose.model('tBrandModel', tBrandSchema, 'tBrands')
