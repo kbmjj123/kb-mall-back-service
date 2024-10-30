@@ -13,7 +13,10 @@ const brandSchema = new mongoose.Schema<BrandDTO>({
   },
 	icon: String,
 	language: String,
-	languageList: Array<LanguageDTO>
+	languageList: {
+		type: Array<LanguageDTO>,
+		hide: true
+	}
 });
 
 brandSchema.plugin(TranslatePlugin, {

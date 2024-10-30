@@ -15,11 +15,23 @@ export class TranslateService<T> {
 
 	/**
 	 * 根据业务id以及对应的目标语言来获取语言数据
+	 * @param id 业务id
+	 * @param language 当前所需要查询的语言
+	 * @param doc 即将要被覆盖的对象
 	*/
-	getTranslate(id: Types.ObjectId | string, language: string) {
-		//TODO 执行相关的db查询操作
+	async getTranslate(id: Types.ObjectId | string, language: string, doc: any, languageKeyArray: string[]) {
+		// 执行相关的db查询操作
 		infoLogger.info('获取对应语言model中对应语言的数据', language)
-		// this.translateModel.find()
+		const lastLanguageItem = await this.translateModel.findOne({ businessId: id, language }) as Document
+		if(lastLanguageItem){
+			// 找到对应的语言记录--> 覆盖原来文档中的对象
+			if(languageKeyArray && languageKeyArray.length > 0){
+				languageKeyArray.forEach(keyItem => {
+					doc[keyItem] = lastLanguageItem[keyItem] as string
+				})
+			}
+		}
+		return doc
 	}
 
 	/**
