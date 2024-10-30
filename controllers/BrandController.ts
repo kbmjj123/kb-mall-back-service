@@ -1,4 +1,4 @@
-import { Get, Route, Tags, Request, Body, Queries, Put, Post, Path, Delete } from "tsoa";
+import { Get, Route, Tags, Request, Body, Queries, Put, Post, Path, Delete, Middlewares } from "tsoa";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest } from 'express'
 import { PageDTO } from "../dto/PageDTO";
@@ -9,6 +9,8 @@ import { BaseObjectEntity } from "../entity/BaseObjectEntity";
 import { BrandService } from "../service/BrandService";
 import { ProductCode } from "../enum/code/ProductCode";
 import { ResultCode } from "../enum/http";
+import { appendLanguage } from "../middleware/AddLanguageMW";
+
 
 @Route('brand')
 @Tags('品牌模块')
@@ -36,8 +38,11 @@ export class BrandController extends BaseController {
 	*/
 	@Put('/')
 	public async addABrand(@Request() req: ExpressRequest, @Body() params: EditBrandDTO): Promise<BaseObjectEntity<BrandDTO>> {
-		const { name, icon, languageList, language } = params;
+		let { name, icon, languageList, language } = params;
 		if (name) {
+			if(!language){
+				language = req.language
+			}
 			const brandService = new BrandService(req)
 			const findABrand = await brandService.isExist({ name }, req);
 			if (findABrand) {
@@ -52,13 +57,35 @@ export class BrandController extends BaseController {
 	}
 
 	/**
+	 * 获取一品牌信息
+	*/
+	@Get('/{id}')
+	@Middlewares([appendLanguage])
+	public async getABrand(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<BrandDTO>>{
+		if(id){
+			const brandService = new BrandService(req)
+			const aBrand = await brandService.findById(id, req)
+			if(aBrand){
+				return this.successResponse(req, aBrand)
+			}else{
+				return this.failedResponse(req, req.t('brand.noExist'))
+			}
+		}else{
+			return this.failedResponse(req, req.t('tip.paramsError'), ResultCode.PARAMS_ERROR)
+		}
+	}
+
+	/**
 	 * 编辑一品牌
 	*/
 	@Post('/{id}')
 	public async editABrand(@Request() req: ExpressRequest, @Path() id: string, @Body() params: BrandDTO): Promise<BaseObjectEntity<BrandDTO | null>> {
-		const { name } = params;
-		if (name) {
-			const updateABrand = await BrandModel.findByIdAndUpdate(id, { $set: { name } });
+		if (params.name) {
+			if(!params.language){
+				params.language = req.language
+			}
+			const brandService = new BrandService(req)
+			const updateABrand = await brandService.update(id, params, req);
 			return this.successResponse(req, updateABrand)
 		} else {
 			return this.failedResponse(req, req.t('brand.inputTip'))

@@ -2230,6 +2230,34 @@
       }
     },
     "/brand/{id}": {
+      "get": {
+        "operationId": "GetABrand",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_BrandDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取一品牌信息",
+        "tags": ["品牌模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
       "post": {
         "operationId": "EditABrand",
         "responses": {

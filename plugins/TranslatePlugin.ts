@@ -43,11 +43,9 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 	})
 	schema.post(['find', 'findOne', 'findOneAndUpdate'], async function(doc) {
 		const query = this as any
-		console.info(query.options)
 		//? 拿到req中的language
-		const language = query.language
-		infoLogger.info('--->' + language)
-		//TODO 这里将通过service自动从对应的collection中获取到对应的翻译数据，然后追加覆盖到当前的对象类型中
+		const language = query.options.language
+		// 这里将通过service自动从对应的collection中获取到对应的翻译数据，然后追加覆盖到当前的对象类型中
 		const cachedLanguageKeys = cachedModelKeys[options.modelName]	// 获取注册插件时所定义的需要缓存的key对象
 		if(Array.isArray(doc)){
 			// 查询出来的是列表，则自动覆盖显耀覆盖的字段

@@ -27,7 +27,10 @@ export class TranslateService<T> {
 			// 找到对应的语言记录--> 覆盖原来文档中的对象
 			if(languageKeyArray && languageKeyArray.length > 0){
 				languageKeyArray.forEach(keyItem => {
+					//@ts-ignore
 					doc[keyItem] = lastLanguageItem[keyItem] as string
+					//@ts-ignore
+					doc['language'] = lastLanguageItem['language'] as string
 				})
 			}
 		}

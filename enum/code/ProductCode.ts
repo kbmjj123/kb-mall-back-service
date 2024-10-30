@@ -13,5 +13,9 @@ export enum ProductCode{
 	/**
 	 * 品牌名称已存在
 	*/
-	BRAND_ALREADY_EXIST = 200101
+	BRAND_ALREADY_EXIST = 200101,
+	/**
+	 * 品牌不存在
+	*/
+	BRAND_NO_EXIST = 200102,
 }

@@ -21,7 +21,8 @@
   },
   "brand": {
     "exist": "品牌名：({name})已存在，请勿重复创建",
-    "inputTip": "请输入品牌名称"
+    "inputTip": "请输入品牌名称",
+    "noExist": "品牌不存在"
   },
   "cate": {},
   "file": {
