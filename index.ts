@@ -45,22 +45,19 @@ setUpEmailTemplateDebugger(app)
 app.get('/', (req, res) => {
 	res.send('<p>服务成功访问了～～</p>')
 })
+// 注册生成的路由
 RegisterRoutes(app);
+// 注册接口文档路由
 setupSwagger(app);
+// 统一的异常处理
+app.use(serviceErrorMW);
 
 // 处理请求404
 app.use(noFoundWM);
 // 全局参数校验
 app.use(globalParamsValidate)
-// 统一的异常处理
-app.use(serviceErrorMW);
 
-// //? 在启动服务之前，连接数据库
-// DbConnection().then(() => {
-// 	app.listen(process.env.SERVICE_PORT, () => {
-// 		console.info('服务启动了～～')
-// 	})
-// })
+
 
 //? 对外提供的手动启动服务方法，主要供单元测试所使用
 export const startService = async () => {

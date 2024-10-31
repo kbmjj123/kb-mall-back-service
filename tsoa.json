@@ -1,6 +1,6 @@
 {
   "entryFile": "index.ts",
-  "noImplicitAdditionalProperties": "throw-on-extras",
+  "noImplicitAdditionalProperties": "silently-remove-extras",
   "controllerPathGlobs": ["controllers/*Controller.ts"],
   "routes": {
     "routesDir": "build"

@@ -37,6 +37,7 @@ export class BrandController extends BaseController {
 	 * 新增一品牌
 	*/
 	@Put('/')
+	@Middlewares([appendLanguage])
 	public async addABrand(@Request() req: ExpressRequest, @Body() params: EditBrandDTO): Promise<BaseObjectEntity<BrandDTO>> {
 		let { name, icon, languageList, language } = params;
 		if (name) {

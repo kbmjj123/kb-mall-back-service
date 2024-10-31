@@ -287,6 +287,52 @@ export function setupSwagger(app: Express)
 ```
 :stars: 通过上述的方式，我们可以实现在生成的`swagger`文档中调试自动追加自己所需的逻辑
 
+#### 3. 关于`tsoa`的异常捕获与处理
+> 成功运行项目后，发现如果在`tsoa`中如果出现未处理的异常的时候，程序并不能按照统一的异常捕获中间件来全局捕获，因为我这边编写了一个全局的异常捕获，其代码如下：
+```typescript
+import { Request, Response, NextFunction } from 'express'
+import { errorLogger } from '../utils/Logger';
+
+export default function (err: any, req: Request, res: Response, next: NextFunction) {
+	errorLogger.error('[global error]')
+	errorLogger.error(err?.message)
+	errorLogger.error(err?.stack)
+	const statusCode = 200 === res.statusCode ? 500 : res.statusCode;
+	res.status(statusCode);
+	res.json({
+		status: 0,
+		message: err?.message,
+		stack: err?.stack
+	});
+}
+// 上述的中间件对应地在express的入口注册顺序如下：
+// 注册生成的路由
+RegisterRoutes(app);
+// 注册接口文档路由
+setupSwagger(app);
+// 处理请求404
+app.use(noFoundWM);
+// 全局参数校验
+app.use(globalParamsValidate);
+// 统一的异常处理
+app.use(serviceErrorMW);
+```
+:confounded: 按照上述的实现之后，发现当在controller发生未被捕获到的异常的时候，程序并不能正常的进入到全局的异常捕获中间件中，而是直接输出的html错误(即express的默认错误异常)，而且还是404错误，这是因为统一的异常处理被定义到404错误之前了，导致如果在全局的异常中间件出错之后，直接走到了404，因此这样子输出了，调整一下上述中间件注册的顺序
+
+```typescript
+// 注册生成的路由
+RegisterRoutes(app);
+// 注册接口文档路由
+setupSwagger(app);
+// 统一的异常处理
+app.use(serviceErrorMW); // 确保全局异常处理在404处理之前
+// 处理请求404
+app.use(noFoundWM);
+// 全局参数校验
+app.use(globalParamsValidate);
+```
+:100: 这样子即可实现异常的统一捕获并处理
+
 ## tsoa的相关知识补充
 > TSOA 是一个用于在 TypeScript 中自动生成 `Swagger` 文档和 `API` 路由的开源库。它简化了构建 `RESTful API` 的过程，并确保 `API` 的类型安全。`TSOA` 的全称是 `TypeScript OpenAPI`，它是基于 `TypeScript` 和 `Express`（或 `Koa` 等其他框架）构建的。
 > 它一般有如下几个方面的功能：
