@@ -41,7 +41,7 @@ export class TranslateService<T> {
 	 * 根据业务id来更新对应的语言数据
 	*/
 	updateTranslates(id: Types.ObjectId | string, language: string, updates: any, languageKeyArray: string[]) {
-		//TODO 执行相关的更新操作
+		// 执行相关的更新操作
 		if (updates && updates.languageList) {
 			const languageList = updates.languageList as Array<any>
 			infoLogger.info(languageList)
@@ -69,6 +69,32 @@ export class TranslateService<T> {
 				})
 			}
 		}
+	}
+
+	/**
+	 * 一次性获取批量翻译数据
+	 * @param ids 待关联查询的业务id集合
+	 * @param language 需要查询的语言
+	 * @param languageKeyArray 对应缓存的key
+	*/
+	async getBatchTranslate(ids: Array<Types.ObjectId | string>, language: string, languageKeyArray: string[]): Promise<Map<string, any>> {
+		// 根据ids进行批量查询操作
+		const translations = await this.translateModel.find({
+			businessId: { $in: ids },
+			language
+		}).exec()
+		// 将查询到的list结果转换为map对象集合
+		const translationMap = new Map();
+		translations.forEach((translateItem: any) => {
+			const id = translateItem.businessId.toString()
+			// 提取所需的翻译字段
+			const translatedData: Record<string, any> = {};
+			languageKeyArray.forEach(key => {
+				translatedData[key] = translateItem[key];
+			});
+			translationMap.set(id, translatedData)
+		})
+		return translationMap
 	}
 
 }

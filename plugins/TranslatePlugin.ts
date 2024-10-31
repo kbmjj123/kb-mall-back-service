@@ -49,9 +49,16 @@ export const TranslatePlugin = (schema: Schema, options: TranslatePluginOptions)
 			// 这里将通过service自动从对应的collection中获取到对应的翻译数据，然后追加覆盖到当前的对象类型中
 			const cachedLanguageKeys = cachedModelKeys[options.modelName]	// 获取注册插件时所定义的需要缓存的key对象
 			if(Array.isArray(doc)){
-				// 查询出来的是列表，则自动覆盖显耀覆盖的字段
-				doc.forEach(async docItem => {
-					docItem = await tService.getTranslate(docItem.id, language, docItem, cachedLanguageKeys)
+				//! 查询出来的是列表，则自动覆盖想要覆盖的字段
+				// 这里采用先聚合需要查询的语言ids集合
+				const ids = doc.map(item => item.id)
+				const filterLanguageMap = await tService.getBatchTranslate(ids, language, cachedLanguageKeys)
+				doc.forEach(docItem => {
+					//@ts-ignore
+					const targetLanguageItem = filterLanguageMap.get(docItem.id)
+					if(targetLanguageItem){
+						Object.assign(docItem, targetLanguageItem);
+					}
 				})
 			}else{
 				// 查询出来的是对象，则直接覆盖其属性
