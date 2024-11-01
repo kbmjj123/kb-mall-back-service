@@ -201,3 +201,33 @@ const query = {
 
 #### 当在调用collection的update操作时
 > 当我们在调用`Model.update()`操作的时候，需要传递`new=true`给到这个options对象，使其能够在方法调用后返回更新后的记录，而不是更新前的记录
+
+#### 关于批量更新的技巧
+> 一般情况下，如果我们需要对一个列表进行批量更新的操作的时候，需要先查询到所有的id集合，然后再去遍历每一个id，根据对应的id来进行对应的`findAndUpdate`操作，这意味着需要对db进行重复的查询动作，会大大增加数据库的压力，那么可以采用一种新的方式，来实现同样的功能，但仅需要进行一次简单的db操作即可，其过程对应的微代码描述如下：
+```typescript
+/**
+	 * 一次性获取批量翻译数据
+	 * @param ids 待关联查询的业务id集合
+	 * @param language 需要查询的语言
+	 * @param languageKeyArray 对应缓存的key
+	*/
+	async getBatchTranslate(ids: Array<Types.ObjectId | string>, language: string, languageKeyArray: string[]): Promise<Map<string, any>> {
+		// 根据ids进行批量查询操作
+		const translations = await this.translateModel.find({
+			businessId: { $in: ids },
+			language
+		}).exec()
+		// 将查询到的list结果转换为map对象集合
+		const translationMap = new Map();
+		translations.forEach((translateItem: any) => {
+			const id = translateItem.businessId.toString()
+			// 提取所需的翻译字段
+			const translatedData: Record<string, any> = {};
+			languageKeyArray.forEach(key => {
+				translatedData[key] = translateItem[key];
+			});
+			translationMap.set(id, translatedData)
+		})
+		return translationMap
+	}
+```

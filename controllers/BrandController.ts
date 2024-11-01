@@ -80,7 +80,7 @@ export class BrandController extends BaseController {
 	 * 编辑一品牌
 	*/
 	@Post('/{id}')
-	public async editABrand(@Request() req: ExpressRequest, @Path() id: string, @Body() params: BrandDTO): Promise<BaseObjectEntity<BrandDTO | null>> {
+	public async editABrand(@Request() req: ExpressRequest, @Path() id: string, @Body() params: EditBrandDTO): Promise<BaseObjectEntity<BrandDTO | null>> {
 		if (params.name) {
 			if(!params.language){
 				params.language = req.language
