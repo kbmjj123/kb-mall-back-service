@@ -65,8 +65,9 @@ export class BrandController extends BaseController {
 	public async getABrand(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<BrandDTO>>{
 		if(id){
 			const brandService = new BrandService(req)
-			const aBrand = await brandService.findById(id, req)
+			const aBrand = await brandService.findById(id, req, ['languageList'])
 			if(aBrand){
+				console.info(aBrand.languageList)
 				return this.successResponse(req, aBrand)
 			}else{
 				return this.failedResponse(req, req.t('brand.noExist'))

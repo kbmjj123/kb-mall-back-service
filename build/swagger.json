@@ -2290,7 +2290,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BrandDTO"
+                "$ref": "#/components/schemas/EditBrandDTO"
               }
             }
           }
