@@ -36,7 +36,7 @@ export class BaseController extends Controller{
 	protected successListResponse<T>(req: ExpressRequest, data: PageListType<T>, message: string = ''): BasePageListEntity<T> {
 		const result =  {
 			status: ResultCode.SUCCESS,
-			message: message || req.t('tip.failed'),
+			message: message || req.t('tip.success'),
 			data
 		}
 		this.logResponse(result)

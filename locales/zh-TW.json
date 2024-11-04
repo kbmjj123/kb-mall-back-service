@@ -15,7 +15,14 @@
     "permissionLimitTip": "目前使用者無權限",
     "emailAlreadyExist": "此郵箱已存在，請勿重複建立！",
     "emailNoExist": "郵箱不存在，請確認輸入是否有誤！",
-    "tokenInValidate": "連結已失效，請重新取得連結"
+    "tokenInValidate": "連結已失效，請重新取得連結",
+    "accountNoExist": "帳號不存在，請檢查對應參數",
+    "deliveryEmailFailed": "郵件發送失敗！",
+    "deliveryEmailSuccess": "郵件發送成功！",
+    "editAccountParamsTip": "請至少維護其中一個參數",
+    "needNewPwdTip": "請維護新密碼！",
+    "needOldPwdTip": "請維護舊密碼！",
+    "oldPwdNotMatchTip": "舊密碼錯誤，請檢查後重試！"
   },
   "code": {
     "codeError": "驗證碼錯誤，請檢查後重試！",
@@ -31,5 +38,18 @@
     "resetPwd": "尊敬的{{account}}用戶，您正在申請重設您的帳號密碼，請點擊以下連結進行前往重置",
     "resetPwdSubject": "重設密碼",
     "validateAccount": "尊敬的{{account}}用戶，您正在申請確認您目前的帳號，您的驗證碼是：{{code}}"
+  },
+  "brand": {
+    "exist": "品牌名稱：({name})已存在，請勿重複建立",
+    "inputTip": "請輸入品牌名稱",
+    "noExist": "品牌不存在"
+  },
+  "file": {
+    "exist": "文件已存在！",
+    "replace": "文件不一致，已完成替換！",
+    "success": "文件已上傳成功"
+  },
+  "system": {
+    "error": "系統異常，請稍後重試！"
   }
 }

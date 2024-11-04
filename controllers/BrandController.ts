@@ -93,14 +93,15 @@ export class BrandController extends BaseController {
 	@Delete('/{id}')
 	public async removeABrand(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<string>> {
 		if (id) {
-			const result = await BrandModel.findByIdAndDelete(id);
-			if (result && result._id) {
-				return this.successResponse(req, result._id as unknown as string)
+			const brandService = new BrandService(req)
+			const result = await brandService.sofeDeleteById(id, req)
+			if (result && result.id) {
+				return this.successResponse(req, result.id as unknown as string)
 			} else {
-				return this.failedResponse(req, '操作失败')
+				return this.failedResponse(req)
 			}
 		} else {
-			return this.failedResponse(req, '请传递品牌id')
+			return this.failedResponse(req, req.t('tip.paramsError'))
 		}
 	}
 

@@ -86,7 +86,7 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 			resultArrayPromise.push(this.model.find(query).skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
 		}else{
 			resultArrayPromise.push(this.model.estimatedDocumentCount())
-			resultArrayPromise.push(this.model.find().skip(pageIndex * pageSize).limit(pageSize))
+			resultArrayPromise.push(this.model.find().skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
 		}
 		let [total = 0, searchList = []] = await Promise.all(resultArrayPromise)
 		const result = {

@@ -19,7 +19,7 @@ export interface BrandDTO extends LanguageDTO{
 /**
  * 发布品牌所需的参数定义--多语言支持
 */
-export type EditBrandDTO = Pick<BrandDTO, 'name' | 'icon' | 'languageList'>
+export type EditBrandDTO = Pick<BrandDTO, 'name' | 'icon'> & Partial<Pick<BrandDTO, 'languageList'>>
 /**
  * 简版的品牌信息类型
 */

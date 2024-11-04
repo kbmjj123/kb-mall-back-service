@@ -15,7 +15,14 @@
     "permissionLimitTip": "The current user has no permissions",
     "emailAlreadyExist": "This email already exists, please do not create it again!",
     "emailNoExist": "The email address does not exist, please confirm whether the input is correct!",
-    "tokenInValidate": "The link has expired, please get the link again"
+    "tokenInValidate": "The link has expired, please get the link again",
+    "accountNoExist": "The account does not exist, please check the corresponding parameters.",
+    "deliveryEmailFailed": "Email sending failed!",
+    "deliveryEmailSuccess": "Email sent successfully!",
+    "editAccountParamsTip": "Please maintain at least one of the parameters",
+    "needNewPwdTip": "Please maintain a new password!",
+    "needOldPwdTip": "Please maintain your old password!",
+    "oldPwdNotMatchTip": "The old password is wrong, please check and try again!"
   },
   "code": {
     "codeError": "The verification code is wrong, please check and try again!",
@@ -31,5 +38,18 @@
     "resetPwd": "Dear {{account}} user, you are applying to reset your account password. Please click the link below to reset it.",
     "resetPwdSubject": "reset password",
     "validateAccount": "Dear {{account}} user, you are applying to confirm your current account. Your verification code is: {{code}}"
+  },
+  "brand": {
+    "exist": "Brand name: ({name}) already exists, please do not create it again",
+    "inputTip": "Please enter brand name",
+    "noExist": "Brand does not exist"
+  },
+  "file": {
+    "exist": "File already exists!",
+    "replace": "The files are inconsistent and the replacement has been completed!",
+    "success": "File uploaded successfully"
+  },
+  "system": {
+    "error": "System abnormality, please try again later!"
   }
 }
