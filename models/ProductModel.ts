@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 import { ProductDTO } from "../dto/ProductDTO";
-import { TranslatePlugin } from "../plugins/TranslatePlugin";
-import { T_PRODUCT_KEYS, TProductModel } from "./translate-models/TProductModel";
 const MODEL_NAME = 'productModel'
 const productSchema = new mongoose.Schema<ProductDTO>({
 	cates: {
@@ -64,11 +62,5 @@ const productSchema = new mongoose.Schema<ProductDTO>({
 	}
 });
 
-// 注册需要使用翻译服务的插件
-productSchema.plugin(TranslatePlugin, {
-	modelName: MODEL_NAME,
-	model: TProductModel,
-	keysInCollection: T_PRODUCT_KEYS
-})
 
 export const ProductModel = mongoose.model(MODEL_NAME, productSchema, 'products');

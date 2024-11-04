@@ -1,7 +1,7 @@
-import { ISoftDeleteDTO } from "./soft-delete-dto/ISoftDeleteDTO";
-import { TBrandDTO } from "./translate-dto/TBrandDTO";
+import { LanguageDTO, LanguageItemType } from "./LanguageDTO";
 
-export interface BrandDTO extends ISoftDeleteDTO{
+
+export interface BrandDTO extends LanguageDTO{
 	/**
 	 * id
 	*/
@@ -13,20 +13,13 @@ export interface BrandDTO extends ISoftDeleteDTO{
 	/**
 	 * 品牌图标
 	*/
-	icon?: string,
-	/**
-	 * 当前所使用的语言
-	*/
-	language?: string,
-	/**
-	 * 额外的语言列表
-	*/
-	languageList?: Array<Partial<TBrandDTO>>,
+	icon: string,
+
 }
 /**
  * 发布品牌所需的参数定义--多语言支持
 */
-export type EditBrandDTO = Partial<BrandDTO>
+export type EditBrandDTO = Pick<BrandDTO, 'name' | 'icon' | 'languageList'>
 /**
  * 简版的品牌信息类型
 */

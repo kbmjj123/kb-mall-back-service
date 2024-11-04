@@ -1,7 +1,5 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose from "mongoose";
 import { CateDTO } from "../dto/CateDTO";
-import { TranslatePlugin } from "../plugins/TranslatePlugin";
-import { T_CATE_KEYS, TCateModel } from "./translate-models/TCateModel";
 
 const MODEL_NAME = 'cateModel'
 const cateSchema = new mongoose.Schema<CateDTO>({
@@ -21,9 +19,5 @@ const cateSchema = new mongoose.Schema<CateDTO>({
     default: ''
   }
 });
-// cateSchema.plugin(TranslatePlugin, {
-// 	modelName: MODEL_NAME,
-// 	model: TCateModel,
-// 	keysInCollection: T_CATE_KEYS
-// })
+
 export const CateModel = mongoose.model(MODEL_NAME, cateSchema, 'cates')

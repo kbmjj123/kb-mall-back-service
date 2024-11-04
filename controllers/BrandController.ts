@@ -39,17 +39,14 @@ export class BrandController extends BaseController {
 	@Put('/')
 	@Middlewares([appendLanguage])
 	public async addABrand(@Request() req: ExpressRequest, @Body() params: EditBrandDTO): Promise<BaseObjectEntity<BrandDTO>> {
-		let { name, icon, languageList, language } = params;
+		let { name } = params;
 		if (name) {
-			if(!language){
-				language = req.language
-			}
 			const brandService = new BrandService(req)
 			const findABrand = await brandService.isExist({ name }, req);
 			if (findABrand) {
 				return this.failedResponse(req, req.t('brand.exist', { name }), ProductCode.BRAND_ALREADY_EXIST)
 			} else {
-				const createABrand = await brandService.create({ name, icon, languageList, language }, req);
+				const createABrand = await brandService.create(params, req);
 				return this.successResponse(req, createABrand)
 			}
 		} else {
@@ -67,7 +64,6 @@ export class BrandController extends BaseController {
 			const brandService = new BrandService(req)
 			const aBrand = await brandService.findById(id, req)
 			if(aBrand){
-				console.info(aBrand.languageList)
 				return this.successResponse(req, aBrand)
 			}else{
 				return this.failedResponse(req, req.t('brand.noExist'))
@@ -83,9 +79,6 @@ export class BrandController extends BaseController {
 	@Post('/{id}')
 	public async editABrand(@Request() req: ExpressRequest, @Path() id: string, @Body() params: EditBrandDTO): Promise<BaseObjectEntity<BrandDTO | null>> {
 		if (params.name) {
-			if(!params.language){
-				params.language = req.language
-			}
 			const brandService = new BrandService(req)
 			const updateABrand = await brandService.update(id, params, req);
 			return this.successResponse(req, updateABrand)

@@ -4,12 +4,11 @@
 
 import { ISoftDeleteDTO } from "./soft-delete-dto/ISoftDeleteDTO";
 
-type LanguageItemType = {
+export type LanguageItemType = {
 	language: string,
-	keyLanguageMap: Record<string, any>	// 存储的key对应的语言
+	languageMap: Record<string, any>	// 存储的key对应的语言
 }
 
 export interface LanguageDTO extends ISoftDeleteDTO{
-	setLanguage(language: string): void;
-	languageList?: LanguageItemType[];
+	languageList: Array<LanguageItemType>;
 }

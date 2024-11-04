@@ -189,7 +189,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "LanguageItemType": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"keyLanguageMap":{"ref":"Record_string.any_","required":true},"language":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"languageMap":{"ref":"Record_string.any_","required":true},"language":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ProductDTO": {
@@ -198,7 +198,7 @@ const models: TsoaRoute.Models = {
             "createTime": {"dataType":"datetime"},
             "modifyTime": {"dataType":"datetime"},
             "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
-            "languageList": {"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"}},
+            "languageList": {"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"},"required":true},
             "cates": {"dataType":"array","array":{"dataType":"refAlias","ref":"mongoose.Types.ObjectId"},"required":true},
             "productName": {"dataType":"string","required":true},
             "masterPicture": {"dataType":"string","required":true},
@@ -344,7 +344,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_BrandDTO.id-or-name-or-icon_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string","required":true},"name":{"dataType":"string","required":true},"icon":{"dataType":"string"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string","required":true},"name":{"dataType":"string","required":true},"icon":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "SingleBrandDTO": {
@@ -362,22 +362,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Partial_TBrandDTO_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string"},"id":{"ref":"mongoose.Types.ObjectId"},"businessId":{"ref":"mongoose.Types.ObjectId"},"language":{"dataType":"string"},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BrandDTO": {
         "dataType": "refObject",
         "properties": {
             "createTime": {"dataType":"datetime"},
             "modifyTime": {"dataType":"datetime"},
             "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+            "languageList": {"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"},"required":true},
             "id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
-            "icon": {"dataType":"string"},
-            "language": {"dataType":"string"},
-            "languageList": {"dataType":"array","array":{"dataType":"refAlias","ref":"Partial_TBrandDTO_"}},
+            "icon": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -407,14 +401,14 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Partial_BrandDTO_": {
+    "Pick_BrandDTO.name-or-icon-or-languageList_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string"},"name":{"dataType":"string"},"icon":{"dataType":"string"},"language":{"dataType":"string"},"languageList":{"dataType":"array","array":{"dataType":"refAlias","ref":"Partial_TBrandDTO_"}},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"languageList":{"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"},"required":true},"name":{"dataType":"string","required":true},"icon":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "EditBrandDTO": {
         "dataType": "refAlias",
-        "type": {"ref":"Partial_BrandDTO_","validators":{}},
+        "type": {"ref":"Pick_BrandDTO.name-or-icon-or-languageList_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BaseObjectEntity_BrandDTO-or-null_": {

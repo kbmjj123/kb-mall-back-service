@@ -381,14 +381,14 @@
       },
       "LanguageItemType": {
         "properties": {
-          "keyLanguageMap": {
+          "languageMap": {
             "$ref": "#/components/schemas/Record_string.any_"
           },
           "language": {
             "type": "string"
           }
         },
-        "required": ["keyLanguageMap", "language"],
+        "required": ["languageMap", "language"],
         "type": "object"
       },
       "ProductDTO": {
@@ -473,7 +473,7 @@
             "nullable": true
           }
         },
-        "required": ["cates", "productName", "masterPicture", "descPictures", "slug", "state"],
+        "required": ["languageList", "cates", "productName", "masterPicture", "descPictures", "slug", "state"],
         "type": "object",
         "additionalProperties": false
       },
@@ -859,7 +859,7 @@
             "description": "品牌图标"
           }
         },
-        "required": ["id", "name"],
+        "required": ["id", "name", "icon"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
@@ -888,39 +888,6 @@
         "type": "object",
         "additionalProperties": false
       },
-      "Partial_TBrandDTO_": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "id": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
-          },
-          "businessId": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
-          },
-          "language": {
-            "type": "string"
-          },
-          "createTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录创建时间"
-          },
-          "modifyTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录修改时间"
-          },
-          "deleteTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录删除时间"
-          }
-        },
-        "type": "object",
-        "description": "Make all properties in T optional"
-      },
       "BrandDTO": {
         "properties": {
           "createTime": {
@@ -939,6 +906,12 @@
             "nullable": true,
             "description": "记录删除时间"
           },
+          "languageList": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageItemType"
+            },
+            "type": "array"
+          },
           "id": {
             "type": "string",
             "description": "id"
@@ -950,20 +923,9 @@
           "icon": {
             "type": "string",
             "description": "品牌图标"
-          },
-          "language": {
-            "type": "string",
-            "description": "当前所使用的语言"
-          },
-          "languageList": {
-            "items": {
-              "$ref": "#/components/schemas/Partial_TBrandDTO_"
-            },
-            "type": "array",
-            "description": "额外的语言列表"
           }
         },
-        "required": ["id", "name"],
+        "required": ["languageList", "id", "name", "icon"],
         "type": "object",
         "additionalProperties": false
       },
@@ -1032,11 +994,13 @@
         "type": "object",
         "additionalProperties": false
       },
-      "Partial_BrandDTO_": {
+      "Pick_BrandDTO.name-or-icon-or-languageList_": {
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "id"
+          "languageList": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageItemType"
+            },
+            "type": "array"
           },
           "name": {
             "type": "string",
@@ -1045,39 +1009,14 @@
           "icon": {
             "type": "string",
             "description": "品牌图标"
-          },
-          "language": {
-            "type": "string",
-            "description": "当前所使用的语言"
-          },
-          "languageList": {
-            "items": {
-              "$ref": "#/components/schemas/Partial_TBrandDTO_"
-            },
-            "type": "array",
-            "description": "额外的语言列表"
-          },
-          "createTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录创建时间"
-          },
-          "modifyTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录修改时间"
-          },
-          "deleteTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录删除时间"
           }
         },
+        "required": ["languageList", "name", "icon"],
         "type": "object",
-        "description": "Make all properties in T optional"
+        "description": "From T, pick a set of properties whose keys are in the union K"
       },
       "EditBrandDTO": {
-        "$ref": "#/components/schemas/Partial_BrandDTO_",
+        "$ref": "#/components/schemas/Pick_BrandDTO.name-or-icon-or-languageList_",
         "description": "发布品牌所需的参数定义--多语言支持"
       },
       "BaseObjectEntity_BrandDTO-or-null_": {
