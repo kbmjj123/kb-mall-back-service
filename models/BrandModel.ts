@@ -15,8 +15,6 @@ const brandSchema = new mongoose.Schema<BrandDTO>({
 	language: String,
 	languageList: {
 		type: Array<LanguageDTO>,
-		hide: true,
-		select: true
 	}
 });
 
