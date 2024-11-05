@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { CateDTO } from "../dto/CateDTO";
 import { LanguageItemType } from "../dto/LanguageDTO";
 
@@ -16,8 +16,8 @@ const cateSchema = new mongoose.Schema<CateDTO>({
     }
   },
   parentId: {
-    type: [String, mongoose.SchemaTypes.ObjectId],
-    default: ''
+    type: Types.ObjectId,
+    default: null
   },
 	languageList: Array<LanguageItemType>
 });

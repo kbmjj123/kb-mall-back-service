@@ -308,8 +308,8 @@ const models: TsoaRoute.Models = {
             "languageList": {"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"},"required":true},
             "id": {"dataType":"string","required":true},
             "title": {"dataType":"string","required":true},
-            "parentId": {"dataType":"union","subSchemas":[{"ref":"mongoose.Types.ObjectId"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
-            "level": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}],"required":true},
+            "parentId": {"ref":"mongoose.Types.ObjectId"},
+            "level": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
@@ -334,9 +334,9 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_CateDTO.title-or-level_": {
+    "Pick_CateDTO.title-or-level-or-parentId_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"title":{"dataType":"string","required":true},"level":{"dataType":"double","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"title":{"dataType":"string","required":true},"level":{"dataType":"double"},"parentId":{"ref":"mongoose.Types.ObjectId"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Partial_Pick_CateDTO.id__": {
@@ -346,7 +346,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "EditCateDTO": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"Pick_CateDTO.title-or-level_"},{"ref":"Partial_Pick_CateDTO.id__"}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"Pick_CateDTO.title-or-level-or-parentId_"},{"ref":"Partial_Pick_CateDTO.id__"}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BaseObjectEntity_CateDTO-or-null_": {

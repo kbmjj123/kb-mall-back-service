@@ -779,17 +779,11 @@
             "type": "string"
           },
           "parentId": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/mongoose.Types.ObjectId"
-              }
-            ],
-            "nullable": true
+            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
           },
           "level": {
             "type": "number",
-            "format": "double",
-            "nullable": true
+            "format": "double"
           }
         },
         "required": ["languageList", "id", "title"],
@@ -835,7 +829,7 @@
         "type": "object",
         "additionalProperties": false
       },
-      "Pick_CateDTO.title-or-level_": {
+      "Pick_CateDTO.title-or-level-or-parentId_": {
         "properties": {
           "title": {
             "type": "string"
@@ -843,9 +837,12 @@
           "level": {
             "type": "number",
             "format": "double"
+          },
+          "parentId": {
+            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
           }
         },
-        "required": ["title", "level"],
+        "required": ["title"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
@@ -861,7 +858,7 @@
       "EditCateDTO": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/Pick_CateDTO.title-or-level_"
+            "$ref": "#/components/schemas/Pick_CateDTO.title-or-level-or-parentId_"
           },
           {
             "$ref": "#/components/schemas/Partial_Pick_CateDTO.id__"
