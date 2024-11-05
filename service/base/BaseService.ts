@@ -16,6 +16,13 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	constructor(model: Model<T>) {
 		this.model = model
 	}
+	findListWithQuery(query: FilterQuery<T> | undefined, req: ExpressRequest): Promise<T[]> {
+		if(query){
+			return this.model.find(query).setOptions(this.getLanguageOptions(req, {})).limit(0)
+		}else{
+			return this.findAll(req)
+		}
+	}
 
 	protected getModel() {
 		return this.model
@@ -27,6 +34,7 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	isExist(query: FilterQuery<T>, req: ExpressRequest): Promise<T | null> {
 		return this.findOne(query, req)
 	}
+	
 	findList(nameInCollection: string, pageInfo: PageDTO): Promise<PageResultDTO<T>> {
 		throw new Error("Method not implemented.");
 	}

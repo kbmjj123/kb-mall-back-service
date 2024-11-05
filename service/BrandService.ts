@@ -7,9 +7,7 @@ import { BrandModel } from "../models/BrandModel";
  * 品牌的db操作服务
  */
 export class BrandService extends BaseService<BrandDTO> {
-	private req: ExpressRequest
-	constructor(req: ExpressRequest) {
+	constructor() {
 		super(BrandModel)
-		this.req = req
 	}
 }

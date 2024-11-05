@@ -24,7 +24,11 @@
     "inputTip": "请输入品牌名称",
     "noExist": "品牌不存在"
   },
-  "cate": {},
+  "cate": {
+    "exist": "分类名：{{title}}已存在，请勿重复创建",
+    "inputTip": "请输入分类名称",
+    "noExist": "分类不存在"
+  },
   "file": {
     "exist": "文件已存在！",
     "replace": "文件不一致，已完成替换！",

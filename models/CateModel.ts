@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { CateDTO } from "../dto/CateDTO";
+import { LanguageItemType } from "../dto/LanguageDTO";
 
 const MODEL_NAME = 'cateModel'
 const cateSchema = new mongoose.Schema<CateDTO>({
@@ -15,9 +16,10 @@ const cateSchema = new mongoose.Schema<CateDTO>({
     }
   },
   parentId: {
-    type: mongoose.SchemaTypes.ObjectId,
+    type: [String, mongoose.SchemaTypes.ObjectId],
     default: ''
-  }
+  },
+	languageList: Array<LanguageItemType>
 });
 
 export const CateModel = mongoose.model(MODEL_NAME, cateSchema, 'cates')

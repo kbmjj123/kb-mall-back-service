@@ -21,4 +21,12 @@ export enum ProductCode{
 	BRAND_NO_EXIST = 200102,
 	
 	/************ 以下是分类的相关错误编码 **************/
+	/**
+	 * 分类名称已存在
+	*/
+	CATE_ALREADY_EXIST = 300101,
+	/**
+	 * 分类不存在
+	*/
+	CATE_NO_EXIST = 200102,
 }

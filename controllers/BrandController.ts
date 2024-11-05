@@ -18,7 +18,7 @@ export class BrandController extends BaseController {
 
 	@Get('/allList')
 	public async getAllBandList(@Request() req: ExpressRequest): Promise<BaseObjectEntity<Array<SingleBrandDTO>>> {
-		const brandService = new BrandService(req)
+		const brandService = new BrandService()
 		const result = await brandService.findAll(req)
 		return this.successResponse(req, result)
 	}
@@ -28,7 +28,7 @@ export class BrandController extends BaseController {
 	*/
 	@Get('/list')
 	public async getBrandList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<BrandDTO>> {
-		const brandService = new BrandService(req)
+		const brandService = new BrandService()
 		const result = await brandService.findListInPage('name', query)
 		return this.successListResponse(req, result)
 	}
@@ -41,7 +41,7 @@ export class BrandController extends BaseController {
 	public async addABrand(@Request() req: ExpressRequest, @Body() params: EditBrandDTO): Promise<BaseObjectEntity<BrandDTO>> {
 		let { name } = params;
 		if (name) {
-			const brandService = new BrandService(req)
+			const brandService = new BrandService()
 			const findABrand = await brandService.isExist({ name }, req);
 			if (findABrand) {
 				return this.failedResponse(req, req.t('brand.exist', { name }), ProductCode.BRAND_ALREADY_EXIST)
@@ -61,7 +61,7 @@ export class BrandController extends BaseController {
 	@Middlewares([appendLanguage])
 	public async getABrand(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<BrandDTO>>{
 		if(id){
-			const brandService = new BrandService(req)
+			const brandService = new BrandService()
 			const aBrand = await brandService.findById(id, req)
 			if(aBrand){
 				return this.successResponse(req, aBrand)
@@ -79,7 +79,7 @@ export class BrandController extends BaseController {
 	@Post('/{id}')
 	public async editABrand(@Request() req: ExpressRequest, @Path() id: string, @Body() params: EditBrandDTO): Promise<BaseObjectEntity<BrandDTO | null>> {
 		if (params.name) {
-			const brandService = new BrandService(req)
+			const brandService = new BrandService()
 			const updateABrand = await brandService.update(id, params, req);
 			return this.successResponse(req, updateABrand)
 		} else {
@@ -93,7 +93,7 @@ export class BrandController extends BaseController {
 	@Delete('/{id}')
 	public async removeABrand(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<string>> {
 		if (id) {
-			const brandService = new BrandService(req)
+			const brandService = new BrandService()
 			const result = await brandService.sofeDeleteById(id, req)
 			if (result && result.id) {
 				return this.successResponse(req, result.id as unknown as string)
