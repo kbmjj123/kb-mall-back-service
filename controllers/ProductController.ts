@@ -4,13 +4,10 @@ import { PageDTO } from "../dto/PageDTO";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import { BaseObjectEntity } from "../entity/BaseObjectEntity";
 import { EditProductParams, ProductDTO } from "../dto/ProductDTO";
-import { ProductModel } from "../models/ProductModel";
 import { BasePageListEntity } from "../entity/BasePageListEntity";
-import { ObjectId } from "mongodb";
 import { body } from 'express-validator'
 import ParamsValidateMW from "../middleware/ParamsValidateMW";
 import { CateModel } from "../models/CateModel";
-import { BrandModel } from "../models/BrandModel";
 import { checkLogin } from "../middleware/AuthMiddleware";
 import { ProductService } from "../service/ProductService";
 import { ProductCode } from "../enum/code/ProductCode";

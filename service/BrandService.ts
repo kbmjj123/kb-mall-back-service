@@ -1,6 +1,5 @@
 import { BrandDTO } from "../dto/BrandDTO";
 import { BaseService } from "./base/BaseService";
-import { Request as ExpressRequest } from "express";
 import { BrandModel } from "../models/BrandModel";
 
 /**

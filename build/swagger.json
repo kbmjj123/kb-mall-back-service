@@ -748,6 +748,53 @@
         "type": "object",
         "additionalProperties": false
       },
+      "PageListType_EvaluateDto_": {
+        "properties": {
+          "pages": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageIndex": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "list": {
+            "items": {
+              "$ref": "#/components/schemas/EvaluateDto"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["pages", "pageIndex", "pageSize", "total", "list"],
+        "type": "object"
+      },
+      "BasePageListEntity_EvaluateDto_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageListType_EvaluateDto_"
+          }
+        },
+        "required": ["data"],
+        "type": "object",
+        "additionalProperties": false
+      },
       "CateDTO": {
         "properties": {
           "createTime": {
@@ -1888,7 +1935,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                  "$ref": "#/components/schemas/BaseObjectEntity_ProductDTO_"
                 }
               }
             }
@@ -1949,8 +1996,15 @@
       "get": {
         "operationId": "GetEvaluateByProductId",
         "responses": {
-          "204": {
-            "description": "No content"
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasePageListEntity_EvaluateDto_"
+                }
+              }
+            }
           }
         },
         "description": "获取商品评价列表",
@@ -1984,30 +2038,6 @@
             }
           }
         ]
-      }
-    },
-    "/evaluate": {
-      "put": {
-        "operationId": "CreateAEvaluate",
-        "responses": {
-          "204": {
-            "description": "No content"
-          }
-        },
-        "description": "新增一商品评价",
-        "tags": ["商品评价模块"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EvaluateDto"
-              }
-            }
-          }
-        }
       }
     },
     "/cate/list": {
