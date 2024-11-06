@@ -1,4 +1,4 @@
-import { Body, Delete, Get, Path, Post, Put, Request, Route, Tags } from "tsoa";
+import { Body, Delete, Get, Middlewares, Path, Post, Put, Request, Route, Tags } from "tsoa";
 import { Request as ExpressRequest } from 'express'
 import { BaseController } from "./BaseController";
 import { CateModel } from "../models/CateModel";
@@ -7,9 +7,11 @@ import { CateDTO, EditCateDTO } from "../dto/CateDTO";
 import { CateService } from "../service/CateService";
 import { ProductCode } from "../enum/code/ProductCode";
 import { ResultCode } from "../enum/http";
+import { checkLogin } from "../middleware/AuthMiddleware";
 
 @Route('cate')
 @Tags('分类模块')
+@Middlewares([checkLogin])
 export class CateController extends BaseController {
 
 	@Get('list')

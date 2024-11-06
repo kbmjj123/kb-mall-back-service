@@ -35,7 +35,9 @@
     "success": "文件已上传成功"
   },
   "order": {},
-  "product": {},
+  "product": {
+    "noExist": "商品不存在"
+  },
   "code": {
     "generateError": "生成验证码错误，请稍后重试！",
     "codeError": "验证码错误，请检查后重试！"

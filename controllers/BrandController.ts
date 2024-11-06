@@ -10,10 +10,12 @@ import { BrandService } from "../service/BrandService";
 import { ProductCode } from "../enum/code/ProductCode";
 import { ResultCode } from "../enum/http";
 import { appendLanguage } from "../middleware/AddLanguageMW";
+import { checkLogin } from "../middleware/AuthMiddleware";
 
 
 @Route('brand')
 @Tags('品牌模块')
+@Middlewares([checkLogin])
 export class BrandController extends BaseController {
 
 	@Get('/allList')

@@ -10,6 +10,10 @@ export enum ProductCode{
 	 * 商品库存不足
 	*/
 	PRODUCT_NO_STOCK = 200002,
+	/**
+	 * 分类错误
+	*/
+	PRODUCT_CATE_ERROR = 200003,
 	/************ 以下是品牌的相关错误编码 **************/
 	/**
 	 * 品牌名称已存在
