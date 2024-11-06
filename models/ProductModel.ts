@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { ProductDTO } from "../dto/ProductDTO";
+import { LanguageItemType } from "../dto/LanguageDTO";
 const MODEL_NAME = 'productModel'
 const productSchema = new mongoose.Schema<ProductDTO>({
 	cates: {
@@ -59,7 +60,8 @@ const productSchema = new mongoose.Schema<ProductDTO>({
 		enum: ['online', 'offline'],
 		default: 'online',
 		required: [true, '请维护上架状态']
-	}
+	},
+	languageList: Array<LanguageItemType>
 });
 
 
