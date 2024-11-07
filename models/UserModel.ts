@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose, { InferSchemaType, Types } from "mongoose";
 import bcrypt from 'bcrypt'
 import { UserDTO } from "../dto/UserDTO";
 
@@ -33,8 +33,8 @@ const userSchema = new mongoose.Schema<UserDTO>({
 		default: ''
 	},
 	address: {
-		type: [String, mongoose.SchemaTypes.ObjectId],
-		default: ''
+		type: Types.ObjectId,
+		default: null
 	},
 	loginTime: {
 		type: Date,
