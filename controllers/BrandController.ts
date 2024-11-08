@@ -32,7 +32,7 @@ export class BrandController extends BaseController {
 	public async getBrandList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<BrandDTO>> {
 		const brandService = new BrandService()
 		const result = await brandService.findListInPage('name', query)
-		return this.successListResponse(req, result)
+		return this.successPageListResponse(req, result)
 	}
 
 	/**

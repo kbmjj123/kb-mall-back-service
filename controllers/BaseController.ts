@@ -1,3 +1,4 @@
+import { BaseListEntity } from "../entity/BaseListEntity";
 import { BaseObjectEntity } from "../entity/BaseObjectEntity";
 import { BasePageListEntity, PageListType } from "../entity/BasePageListEntity";
 import { ResultCode } from "../enum/http";
@@ -33,7 +34,18 @@ export class BaseController extends Controller{
 		return result
 	}
 
-	protected successListResponse<T>(req: ExpressRequest, data: PageListType<T>, message: string = ''): BasePageListEntity<T> {
+	protected successListResponse<T>(req: ExpressRequest, data: Array<T>, message: string = ''): BaseListEntity<T>{
+		const result = {
+			status: ResultCode.SUCCESS,
+			message: message || req.t('tip.success'),
+			data
+		}
+		this.logResponse(result)
+		return result
+	}
+
+
+	protected successPageListResponse<T>(req: ExpressRequest, data: PageListType<T>, message: string = ''): BasePageListEntity<T> {
 		const result =  {
 			status: ResultCode.SUCCESS,
 			message: message || req.t('tip.success'),

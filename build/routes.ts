@@ -6,6 +6,8 @@ import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../controllers/UserController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { StatisticsController } from './../controllers/StatisticsController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ResourceController } from './../controllers/ResourceController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ProductController } from './../controllers/ProductController';
@@ -158,6 +160,38 @@ const models: TsoaRoute.Models = {
             "status": {"dataType":"double","default":0},
             "message": {"dataType":"string","default":"操作成功"},
             "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"refreshToken":{"dataType":"string","required":true},"accessToken":{"dataType":"string","required":true}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StatisticsType": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["visits"]},{"dataType":"enum","enums":["sales"]},{"dataType":"enum","enums":["orders"]},{"dataType":"enum","enums":["deals"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StatisticsItemType": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"todayValue":{"dataType":"double","required":true},"statisticalDimensions":{"dataType":"string","required":true},"weekLifeingType":{"dataType":"double","required":true},"weekPercentage":{"dataType":"string","required":true},"dayLifeingType":{"dataType":"double","required":true},"dayPercentage":{"dataType":"string","required":true},"total":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StatisticsDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+            "key": {"ref":"StatisticsType","required":true},
+            "values": {"ref":"StatisticsItemType","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BaseListEntity_StatisticsDTO_": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"dataType":"double","default":0},
+            "message": {"dataType":"string","default":"操作成功"},
+            "data": {"dataType":"array","array":{"dataType":"refObject","ref":"StatisticsDTO"}},
         },
         "additionalProperties": false,
     },
@@ -922,6 +956,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'refreshToken',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/statistics/all',
+            ...(fetchMiddlewares<RequestHandler>(StatisticsController)),
+            ...(fetchMiddlewares<RequestHandler>(StatisticsController.prototype.getTotalStatistics)),
+
+            async function StatisticsController_getTotalStatistics(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new StatisticsController();
+
+              await templateService.apiHandler({
+                methodName: 'getTotalStatistics',
                 controller,
                 response,
                 next,

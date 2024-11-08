@@ -17,7 +17,7 @@ export class EvaluateController extends BaseController{
 	public async getEvaluateByProductId(@Request() req: ExpressRequest, @Queries() params: PageDTO): Promise<BasePageListEntity<EvaluateDto>>{
 		const evaludateService = new EvaluateService()
 		const listResult = await evaludateService.findListInPage('', params)
-		return this.successListResponse(req, listResult)
+		return this.successPageListResponse(req, listResult)
 	}
 
 }

@@ -336,6 +336,100 @@
         "type": "object",
         "additionalProperties": false
       },
+      "StatisticsType": {
+        "type": "string",
+        "enum": ["visits", "sales", "orders", "deals"]
+      },
+      "StatisticsItemType": {
+        "properties": {
+          "todayValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "statisticalDimensions": {
+            "type": "string"
+          },
+          "weekLifeingType": {
+            "type": "number",
+            "format": "double"
+          },
+          "weekPercentage": {
+            "type": "string"
+          },
+          "dayLifeingType": {
+            "type": "number",
+            "format": "double"
+          },
+          "dayPercentage": {
+            "type": "string"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "todayValue",
+          "statisticalDimensions",
+          "weekLifeingType",
+          "weekPercentage",
+          "dayLifeingType",
+          "dayPercentage",
+          "total"
+        ],
+        "type": "object"
+      },
+      "StatisticsDTO": {
+        "description": "统计相关的DTO",
+        "properties": {
+          "createTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录创建时间"
+          },
+          "modifyTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录修改时间"
+          },
+          "deleteTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "记录删除时间"
+          },
+          "key": {
+            "$ref": "#/components/schemas/StatisticsType"
+          },
+          "values": {
+            "$ref": "#/components/schemas/StatisticsItemType"
+          }
+        },
+        "required": ["key", "values"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseListEntity_StatisticsDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/StatisticsDTO"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
       "CountryDTO": {
         "properties": {
           "en": {
@@ -1731,6 +1825,26 @@
             }
           }
         }
+      }
+    },
+    "/statistics/all": {
+      "get": {
+        "operationId": "GetTotalStatistics",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseListEntity_StatisticsDTO_"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["统计"],
+        "security": [],
+        "parameters": []
       }
     },
     "/resource/countries": {

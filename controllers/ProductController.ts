@@ -52,7 +52,7 @@ export class ProductController extends BaseController {
 	public async getProductList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<ProductDTO>> {
 		const productService = new ProductService()
 		const listResult = await productService.findListInPage('name', query)
-		return this.successListResponse(req, listResult)
+		return this.successPageListResponse(req, listResult)
 	}
 
 	/**

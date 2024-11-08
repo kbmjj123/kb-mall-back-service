@@ -16,7 +16,7 @@ export class AddressController extends BaseController{
 	*/
 	@Get('list')
 	public async getAddressList(@Request() req: ExpressRequest, @Queries() params: PageDTO): Promise<BasePageListEntity<AddressDTO>> {
-		return this.successListResponse(req, {
+		return this.successPageListResponse(req, {
 			list: [],
 			total: 0,
 			pageSize: Number(20),

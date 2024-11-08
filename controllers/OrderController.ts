@@ -19,7 +19,7 @@ export class OrderController extends BaseController{
 	// public async getOrderList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<OrderDTO>>{
 	// 	const orderService = new OrderService()
 	// 	const listResult = await orderService.findListInPage('name', query)
-	// 	return this.successListResponse(req, listResult)
+	// 	return this.successPageListResponse(req, listResult)
 	// }
 
 	/**
