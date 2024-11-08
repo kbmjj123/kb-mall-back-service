@@ -1,3 +1,4 @@
+import md5 from 'md5'
 /**
  * 有效的账号
 */
@@ -22,9 +23,9 @@ export const generateNewEmailAccount = () => {
   return `${username}@${domain}`;
 }
 /**
- * 公共的新密码
+ * 公共的新密码--默认采用md5架米的方式
 */
-export const newPassword =  'abc123!@#$'
+export const newPassword =  md5('abc123!@#$')
 /**
  * 已被注销的账号信息
 */
