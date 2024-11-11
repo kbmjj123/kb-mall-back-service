@@ -1214,13 +1214,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/file/uploadFile',
+        app.put('/file/uploadFile',
             ...(fetchMiddlewares<RequestHandler>(FileController)),
             ...(fetchMiddlewares<RequestHandler>(FileController.prototype.wrapFile)),
 
             async function FileController_wrapFile(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    type: {"in":"query","name":"type","required":true,"dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1244,7 +1245,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/file/uploadFiles',
+        app.put('/file/uploadFiles',
             ...(fetchMiddlewares<RequestHandler>(FileController)),
             ...(fetchMiddlewares<RequestHandler>(FileController.prototype.wrapFiles)),
 

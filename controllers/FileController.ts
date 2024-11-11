@@ -1,4 +1,4 @@
-import { Post, Route, Request, Middlewares, Tags } from "tsoa";
+import { Post, Route, Request, Middlewares, Tags, Put, Query } from "tsoa";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest } from 'express'
 import { getFilePathFromReq, RESOURCES_DIR, upload } from '../config/UploaderGenerator';  // 获取文件上传的基础目录 
@@ -25,15 +25,15 @@ export class FileController extends BaseController {
 	/**
 	 * 上传单个文件
 	*/
-	@Post('uploadFile')
+	@Put('uploadFile')
 	@Middlewares([upload.single('file')])
-	public async wrapFile(@Request() req: ExpressRequest) {
+	public async wrapFile(@Request() req: ExpressRequest, @Query() type: string) {
 		const uploadedFilePath = path.join(getFilePathFromReq(req), req.file?.filename as string);  // 获取已上传的文件路径
 		infoLogger.info('刚上传的本地文件路径：' + uploadedFilePath)
-		if (!fs.existsSync(path.join(RESOURCES_DIR, req.query.path as string))) {
-			fs.mkdirSync(path.join(RESOURCES_DIR, req.query.path as string))
+		if (!fs.existsSync(path.join(RESOURCES_DIR, type))) {
+			fs.mkdirSync(path.join(RESOURCES_DIR, type))
 		}
-		const targetFilePath = path.join(RESOURCES_DIR, req.query.path as string, req.file?.originalname as string); // 本地最终文件存储路径
+		const targetFilePath = path.join(RESOURCES_DIR, type, req.file?.originalname as string); // 本地最终文件存储路径
 
 		if (fs.existsSync(targetFilePath)) {
 			// 文件同名，则计算现有文件和上传文件的hash值
@@ -61,6 +61,7 @@ export class FileController extends BaseController {
 	/**
 	 * 上传多个文件
 	*/
-	@Post('uploadFiles')
+	@Put('uploadFiles')
+	@Middlewares(upload.array('files', 9))
 	public async wrapFiles(@Request() req: ExpressRequest) { }
 }

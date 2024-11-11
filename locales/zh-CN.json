@@ -42,6 +42,11 @@
     "generateError": "生成验证码错误，请稍后重试！",
     "codeError": "验证码错误，请检查后重试！"
   },
+  "token": {
+    "accessTokenExpired": "accessToken过期了",
+    "accessTokenError": "错误的accessToken",
+    "accessTokenNoActive": "尚未激活的accessToken"
+  },
   "user": {
     "permissionLimitTip": "当前用户无权限",
     "accountNoExist": "账号不存在，请检查对应参数",

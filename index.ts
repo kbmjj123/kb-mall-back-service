@@ -8,7 +8,6 @@ import LanguageMW from './middleware/languageMW';
 import path from 'path'
 import { loadFromEnv } from './config/LoadConfig';
 import DbConnection from './config/DbConnection';// 引入数据库连接器
-
 import { RegisterRoutes } from './build/routes';
 import { setupSwagger } from './middleware/SwaggerDocMW';
 
@@ -18,8 +17,9 @@ import { loggerWrap } from './middleware/LogMiddleware';
 import { setUpEmailTemplateDebugger } from './middleware/EmailTemplateDebugger'
 import requestIp from 'request-ip'
 
-const app = express();
 loadFromEnv()
+const app = express();
+
 LanguageMW(app)	// 语言安装包中间件
 
 app.use(cors());

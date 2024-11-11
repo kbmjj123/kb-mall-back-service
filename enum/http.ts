@@ -26,7 +26,18 @@ export enum ResultCode {
 	 * 资源冲突
 	*/
 	CONFLICT = 409,
-	
+	/**
+	 * AccessToken已过期
+	*/
+	ACCESS_TOKEN_EXPIRED = 1001,
+	/**
+	 * 错误的AccessToken
+	*/
+	ACCESS_TOKEN_INVALID = 1002,
+	/**
+	 * 传递的尚未生效的token
+	*/
+	ACCESS_TOKEN_NOT_ACTIVE = 1003
 }
 /************ 业务逻辑错误编码(5位数字) **************/
 

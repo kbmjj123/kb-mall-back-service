@@ -2,7 +2,6 @@ import { Get, Route, Tags, Request, Body, Queries, Put, Post, Path, Delete, Midd
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest } from 'express'
 import { PageDTO } from "../dto/PageDTO";
-import { BrandModel } from "../models/BrandModel";
 import { BasePageListEntity } from "../entity/BasePageListEntity";
 import { BrandDTO, EditBrandDTO, SingleBrandDTO } from "../dto/BrandDTO";
 import { BaseObjectEntity } from "../entity/BaseObjectEntity";
@@ -31,7 +30,7 @@ export class BrandController extends BaseController {
 	@Get('/list')
 	public async getBrandList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<BrandDTO>> {
 		const brandService = new BrandService()
-		const result = await brandService.findListInPage('name', query)
+		const result = await brandService.findListInPage('', query)
 		return this.successPageListResponse(req, result)
 	}
 

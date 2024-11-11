@@ -2072,7 +2072,7 @@
       }
     },
     "/file/uploadFile": {
-      "post": {
+      "put": {
         "operationId": "WrapFile",
         "responses": {
           "200": {
@@ -2089,11 +2089,20 @@
         "description": "上传单个文件",
         "tags": ["文件模块"],
         "security": [],
-        "parameters": []
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/file/uploadFiles": {
-      "post": {
+      "put": {
         "operationId": "WrapFiles",
         "responses": {
           "204": {

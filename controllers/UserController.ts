@@ -340,7 +340,6 @@ export class UserController extends BaseController {
 	 * 刷新用户的accessToken以及refreshToken，即延长用户的在线有效性
 	*/
 	@Patch('/refreshToken')
-	@Middlewares(checkLogin)
 	public async refreshToken(@Request() req: ExpressRequest, @Body() requestBody: { refreshToken: string }): Promise<BaseObjectEntity<{ accessToken: string, refreshToken: string }>> {
 		let { refreshToken } = requestBody
 		if (refreshToken) {

@@ -16,5 +16,6 @@ declare namespace NodeJS {
 		MALL_LINK: string,					// 商城的链接地址
 		REGISTER_LINK: string,			// 注册用的链接地址
 		RESET_PWD_LINK: string,			// 重置密码用的链接地址
+		UPLOAD_FILE_SIZE: number,		// 上传文件大小限制，默认限制为10m
 	}
 }

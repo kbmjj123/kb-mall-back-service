@@ -85,6 +85,9 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	async findListInPage(nameInCollection: string, pageInfo: PageDTO): Promise<PageResultDTO<T>> {
 		let { keyword, pageIndex = 1, pageSize = PAGE_SIZE } = pageInfo
 		let resultArrayPromise = []
+		if(pageIndex < 1){
+			pageIndex = 1
+		}
 		if (keyword) {
 			const regex = new RegExp(keyword as string, 'i')
 			const query = {

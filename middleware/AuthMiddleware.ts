@@ -33,12 +33,33 @@ export const checkLogin = async (req: Request, res: Response, next: NextFunction
 				res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
 			}
 		} catch (error) {
+			responseJWTError(req, res, error as jwt.VerifyErrors)
 			res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
 		}
 	} else {
 		res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
 	}
 }
+/**
+ * 针对jwt解码异常的统一处理
+*/
+const responseJWTError = (req: Request, res: Response, error: jwt.VerifyErrors) => {
+	if(error){
+		if('TokenExpiredError' === error.name){
+			// token过期
+			return res.failed(ResultCode.ACCESS_TOKEN_EXPIRED, error, req.t('token.accessTokenExpired'))
+		}else if('JsonWebTokenError' === error.name){
+			// 错误的token
+			return res.failed(ResultCode.ACCESS_TOKEN_INVALID, error, req.t('token.accessTokenError'))
+		}else if('NotBeforeError' === error.name){
+			// 传递了未激活的token
+			return res.failed(ResultCode.ACCESS_TOKEN_NOT_ACTIVE, error, req.t('token.accessTokenNoActive'))
+		}
+	}else{
+		return res.failed(ResultCode.FAILED, null, req.t('tip.failed'))
+	}
+}
+
 // 默认的全局拦截判断逻辑
 export const checkRole = async (req: Request, res: Response, next: NextFunction) => {
 	// 获取客户端携带的token信息
