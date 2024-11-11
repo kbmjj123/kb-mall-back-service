@@ -37,7 +37,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //? 配置静态资源直接访问
-app.use(serveStatic(path.join(__dirname, 'resources')))
+app.use('/resources', serveStatic(path.join(__dirname, 'resources')))
 
 //? 配置邮件模版调试中间件
 setUpEmailTemplateDebugger(app)
