@@ -355,7 +355,7 @@ const models: TsoaRoute.Models = {
             "modifyTime": {"dataType":"datetime"},
             "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
             "languageList": {"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"},"required":true},
-            "id": {"dataType":"string","required":true},
+            "id": {"dataType":"string"},
             "title": {"dataType":"string","required":true},
             "parentId": {"ref":"mongoose.Types.ObjectId"},
             "level": {"dataType":"double"},

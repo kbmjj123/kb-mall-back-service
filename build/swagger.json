@@ -927,7 +927,7 @@
             "format": "double"
           }
         },
-        "required": ["languageList", "id", "title"],
+        "required": ["languageList", "title"],
         "type": "object",
         "additionalProperties": false
       },

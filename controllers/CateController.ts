@@ -3,7 +3,7 @@ import { Request as ExpressRequest } from 'express'
 import { BaseController } from "./BaseController";
 import { CateModel } from "../models/CateModel";
 import { BaseObjectEntity } from "../entity/BaseObjectEntity";
-import { CateDTO, EditCateDTO } from "../dto/CateDTO";
+import { CateDTO, CateParamsDTO, EditCateDTO } from "../dto/CateDTO";
 import { CateService } from "../service/CateService";
 import { ProductCode } from "../enum/code/ProductCode";
 import { ResultCode } from "../enum/http";
@@ -53,6 +53,14 @@ export class CateController extends BaseController {
 		} else {
 			return this.failedResponse(req, req.t('cate.inputTip'), ResultCode.PARAMS_ERROR)
 		}
+	}
+
+	/**
+	 * 获取分类下的属性
+	*/
+	@Get('/{id}/params')
+	public async getCateParams(): Promise<BaseObjectEntity<CateParamsDTO>>{
+
 	}
 
 	@Post('/{id}')

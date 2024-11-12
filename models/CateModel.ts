@@ -4,6 +4,7 @@ import { LanguageItemType } from "../dto/LanguageDTO";
 
 const MODEL_NAME = 'cateModel'
 const cateSchema = new mongoose.Schema<CateDTO>({
+
   title: {
     type: String,
     required: [true, '请维护分类名称']
