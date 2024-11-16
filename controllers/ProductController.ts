@@ -3,7 +3,7 @@ import { BaseController } from "./BaseController";
 import { PageDTO } from "../dto/PageDTO";
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import { BaseObjectEntity } from "../entity/BaseObjectEntity";
-import { EditProductParams, ProductDTO } from "../dto/ProductDTO";
+import { CheckSlugParams, EditProductParams, ProductDTO } from "../dto/ProductDTO";
 import { BasePageListEntity } from "../entity/BasePageListEntity";
 import { body } from 'express-validator'
 import ParamsValidateMW from "../middleware/ParamsValidateMW";
@@ -95,7 +95,7 @@ export class ProductController extends BaseController {
 	/**
 	 * 上/下架一款商品
 	*/
-	@Post('/{id}/onOrOff')
+	@Post('/{id}/upOrDownShelves')
 	public async upOrDownAProduct(@Request() req: ExpressRequest, @Path() id: string) {
 		const { state } = req.body;
 		if (id) {
@@ -111,6 +111,25 @@ export class ProductController extends BaseController {
 				}
 			}
 		} else {
+			return this.failedResponse(req, req.t('tip.paramsError'), ResultCode.PARAMS_ERROR)
+		}
+	}
+
+	/**
+	 * 检查slug的唯一性
+	*/
+	@Post('/slug/check')
+	public async checkSlugUnique(@Request() req: ExpressRequest, @Body() params: CheckSlugParams): Promise<BaseObjectEntity<Boolean>> {
+		const { slug } = params
+		if(slug){
+			const productService = new ProductService()
+			const findAProduct = await productService.findOne({ slug }, req)
+			if(!findAProduct){
+				return this.successResponse(req, true, req.t('product.slugCanUse', {slug}))
+			}else{
+				return this.failedResponse(req, req.t('product.slugExist'), ProductCode.SLUG_ALREADY_EXIST)
+			}
+		}else{
 			return this.failedResponse(req, req.t('tip.paramsError'), ResultCode.PARAMS_ERROR)
 		}
 	}

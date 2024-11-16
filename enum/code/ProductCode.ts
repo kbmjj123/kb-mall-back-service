@@ -23,6 +23,10 @@ export enum ProductCode{
 	 * 品牌不存在
 	*/
 	BRAND_NO_EXIST = 200102,
+	/**
+	 * Slug已存在
+	*/
+	SLUG_ALREADY_EXIST = 200103,
 	
 	/************ 以下是分类的相关错误编码 **************/
 	/**

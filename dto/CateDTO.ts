@@ -6,12 +6,12 @@ export interface CateDTO extends LanguageDTO{
 	title: string;
 	parentId?: Types.ObjectId;
 	level?: number;
-	
+	paramsList?: Array<{key: string, values: string[]}>
 }
 /**
  * 新增/编辑分类的参数
 */
-export type EditCateDTO = Pick<CateDTO, 'title' | 'level' | 'parentId'> & Partial<Pick<CateDTO, 'id'>>
+export type EditCateDTO = Pick<CateDTO, 'title' | 'level' | 'parentId' | 'paramsList'> & Partial<Pick<CateDTO, 'id'>>
 
 /**
  * 分类属性

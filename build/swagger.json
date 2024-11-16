@@ -655,6 +655,42 @@
         "type": "object",
         "additionalProperties": false
       },
+      "Boolean": {
+        "properties": {},
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_Boolean_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Pick_ProductDTO.slug_": {
+        "properties": {
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": ["slug"],
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "CheckSlugParams": {
+        "$ref": "#/components/schemas/Pick_ProductDTO.slug_"
+      },
       "Partial_ProductDTO_": {
         "properties": {
           "cates": {
@@ -925,6 +961,24 @@
           "level": {
             "type": "number",
             "format": "double"
+          },
+          "paramsList": {
+            "items": {
+              "properties": {
+                "values": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "key": {
+                  "type": "string"
+                }
+              },
+              "required": ["values", "key"],
+              "type": "object"
+            },
+            "type": "array"
           }
         },
         "required": ["languageList", "title"],
@@ -970,7 +1024,7 @@
         "type": "object",
         "additionalProperties": false
       },
-      "Pick_CateDTO.title-or-level-or-parentId_": {
+      "Pick_CateDTO.title-or-level-or-parentId-or-paramsList_": {
         "properties": {
           "title": {
             "type": "string"
@@ -981,6 +1035,24 @@
           },
           "parentId": {
             "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+          },
+          "paramsList": {
+            "items": {
+              "properties": {
+                "values": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "key": {
+                  "type": "string"
+                }
+              },
+              "required": ["values", "key"],
+              "type": "object"
+            },
+            "type": "array"
           }
         },
         "required": ["title"],
@@ -999,12 +1071,13 @@
       "EditCateDTO": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/Pick_CateDTO.title-or-level-or-parentId_"
+            "$ref": "#/components/schemas/Pick_CateDTO.title-or-level-or-parentId-or-paramsList_"
           },
           {
             "$ref": "#/components/schemas/Partial_Pick_CateDTO.id__"
           }
-        ]
+        ],
+        "description": "新增/编辑分类的参数"
       },
       "BaseObjectEntity_CateDTO-or-null_": {
         "properties": {
@@ -2010,7 +2083,7 @@
         }
       }
     },
-    "/product/{id}/onOrOff": {
+    "/product/{id}/upOrDownShelves": {
       "post": {
         "operationId": "UpOrDownAProduct",
         "responses": {
@@ -2038,6 +2111,37 @@
             }
           }
         ]
+      }
+    },
+    "/product/slug/check": {
+      "post": {
+        "operationId": "CheckSlugUnique",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_Boolean_"
+                }
+              }
+            }
+          }
+        },
+        "description": "检查slug的唯一性",
+        "tags": ["产品模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckSlugParams"
+              }
+            }
+          }
+        }
       }
     },
     "/product/publish": {
@@ -2228,6 +2332,7 @@
             }
           }
         },
+        "description": "编辑一分类信息",
         "tags": ["分类模块"],
         "security": [],
         "parameters": [
@@ -2259,12 +2364,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_any_"
+                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
                 }
               }
             }
           }
         },
+        "description": "删除一分类信息",
         "tags": ["分类模块"],
         "security": [],
         "parameters": [

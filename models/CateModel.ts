@@ -20,7 +20,8 @@ const cateSchema = new mongoose.Schema<CateDTO>({
     type: Types.ObjectId,
     default: null
   },
-	languageList: Array<LanguageItemType>
+	languageList: Array<LanguageItemType>,
+	paramsList: Array<{key: string, values: string[]}>
 });
 
 export const CateModel = mongoose.model(MODEL_NAME, cateSchema, 'cates')

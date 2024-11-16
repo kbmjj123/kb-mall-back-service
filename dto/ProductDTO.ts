@@ -17,3 +17,5 @@ export interface ProductDTO extends LanguageDTO{
 }
 
 export type EditProductParams = Partial<ProductDTO> & { brandId: string }
+
+export type CheckSlugParams = Pick<ProductDTO, 'slug'>

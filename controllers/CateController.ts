@@ -3,7 +3,7 @@ import { Request as ExpressRequest } from 'express'
 import { BaseController } from "./BaseController";
 import { CateModel } from "../models/CateModel";
 import { BaseObjectEntity } from "../entity/BaseObjectEntity";
-import { CateDTO, CateParamsDTO, EditCateDTO } from "../dto/CateDTO";
+import { CateDTO, EditCateDTO } from "../dto/CateDTO";
 import { CateService } from "../service/CateService";
 import { ProductCode } from "../enum/code/ProductCode";
 import { ResultCode } from "../enum/http";
@@ -56,13 +56,8 @@ export class CateController extends BaseController {
 	}
 
 	/**
-	 * 获取分类下的属性
+	 * 编辑一分类信息
 	*/
-	@Get('/{id}/params')
-	public async getCateParams(): Promise<BaseObjectEntity<CateParamsDTO>>{
-
-	}
-
 	@Post('/{id}')
 	public async editACate(@Request() req: ExpressRequest, @Path() id: string, @Body() params: CateDTO): Promise<BaseObjectEntity<CateDTO | null>> {
 		const { title } = params;
@@ -78,12 +73,16 @@ export class CateController extends BaseController {
 		}
 	}
 
+	/**
+	 * 删除一分类信息
+	*/
 	@Delete('/{id}')
 	public async removeACate(@Request() req: ExpressRequest, @Path() id: string) {
 		if (id) {
-			const result = await CateModel.findByIdAndDelete(id);
-			if (result && result._id) {
-				return this.successResponse(req, null)
+			const cateService = new CateService()
+			const result = await cateService.sofeDeleteById(id, req)
+			if (result) {
+				return this.successResponse(req, result.id)
 			} else {
 				return this.failedResponse(req, '操作失败')
 			}

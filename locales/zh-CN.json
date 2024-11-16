@@ -36,7 +36,9 @@
   },
   "order": {},
   "product": {
-    "noExist": "商品不存在"
+    "noExist": "商品不存在",
+    "slugExist": "商品slug已存在！",
+    "slugCanUse": "slug“{{slug}}”可以使用"
   },
   "code": {
     "generateError": "生成验证码错误，请稍后重试！",
