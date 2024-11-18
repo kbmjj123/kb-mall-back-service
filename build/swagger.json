@@ -7,25 +7,11 @@
     "requestBodies": {},
     "responses": {},
     "schemas": {
-      "BaseObjectEntity_string_": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {
-            "type": "string"
-          }
-        },
-        "type": "object",
-        "additionalProperties": false
-      },
       "mongoose.Types.ObjectId": {
+        "type": "string"
+      },
+      "AccountState": {
+        "enum": ["in-used", "forbidden"],
         "type": "string"
       },
       "UserDTO": {
@@ -46,9 +32,8 @@
             "nullable": true,
             "description": "记录删除时间"
           },
-          "_id": {
-            "type": "string",
-            "description": "用户id"
+          "id": {
+            "type": "string"
           },
           "password": {
             "type": "string",
@@ -110,9 +95,13 @@
             "type": "string",
             "nullable": true,
             "description": "用户账号"
+          },
+          "state": {
+            "$ref": "#/components/schemas/AccountState",
+            "description": "用户状态"
           }
         },
-        "required": ["_id", "password", "email", "role"],
+        "required": ["id", "password", "email", "role"],
         "type": "object",
         "additionalProperties": false
       },
@@ -134,108 +123,6 @@
         "type": "object",
         "additionalProperties": false
       },
-      "Pick_UserDTO.password_": {
-        "properties": {
-          "password": {
-            "type": "string",
-            "description": "用户密码",
-            "example": "abc123!@#$"
-          }
-        },
-        "required": ["password"],
-        "type": "object",
-        "description": "From T, pick a set of properties whose keys are in the union K"
-      },
-      "UserRegisterParams": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Pick_UserDTO.password_"
-          },
-          {
-            "properties": {
-              "token": {
-                "type": "string",
-                "description": "用户注册所使用的jwt token"
-              }
-            },
-            "required": ["token"],
-            "type": "object"
-          }
-        ]
-      },
-      "BaseObjectEntity_unknown_": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {}
-        },
-        "type": "object",
-        "additionalProperties": false
-      },
-      "Pick_UserDTO.email-or-password_": {
-        "properties": {
-          "password": {
-            "type": "string",
-            "description": "用户密码",
-            "example": "abc123!@#$"
-          },
-          "email": {
-            "type": "string",
-            "description": "用户邮箱",
-            "example": "kbmjj123@gmail.com"
-          }
-        },
-        "required": ["password", "email"],
-        "type": "object",
-        "description": "From T, pick a set of properties whose keys are in the union K"
-      },
-      "UserQuickRegisterParams": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Pick_UserDTO.email-or-password_"
-          },
-          {
-            "properties": {
-              "code": {
-                "type": "string",
-                "description": "邮箱验证码"
-              }
-            },
-            "required": ["code"],
-            "type": "object"
-          }
-        ],
-        "description": "携带验证码进行快速注册的实体"
-      },
-      "Pick_UserDTO.account-or-avatar-or-nickName_": {
-        "properties": {
-          "account": {
-            "type": "string",
-            "description": "用户账号"
-          },
-          "avatar": {
-            "type": "string",
-            "description": "用户头像"
-          },
-          "nickName": {
-            "type": "string",
-            "description": "用户昵称"
-          }
-        },
-        "type": "object",
-        "description": "From T, pick a set of properties whose keys are in the union K"
-      },
-      "EditUserParams": {
-        "$ref": "#/components/schemas/Pick_UserDTO.account-or-avatar-or-nickName_",
-        "description": "编辑用户信息需需要参数"
-      },
       "Pick_UserDTO.password-or-email_": {
         "properties": {
           "password": {
@@ -256,39 +143,6 @@
       "UserLoginParams": {
         "$ref": "#/components/schemas/Pick_UserDTO.password-or-email_",
         "description": "用户登录所需参数"
-      },
-      "BaseObjectEntity_String_": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {
-            "type": "string"
-          }
-        },
-        "type": "object",
-        "additionalProperties": false
-      },
-      "ModifyPwdParams": {
-        "properties": {
-          "newPassword": {
-            "type": "string",
-            "description": "新密码"
-          },
-          "oldPassword": {
-            "type": "string",
-            "description": "旧密码"
-          }
-        },
-        "required": ["newPassword", "oldPassword"],
-        "type": "object",
-        "description": "修改密码参数"
       },
       "BaseObjectEntity_String-or-null_": {
         "properties": {
@@ -467,6 +321,11 @@
         "type": "object",
         "additionalProperties": false
       },
+      "ProductState": {
+        "description": "************* 产品相关 ***************",
+        "enum": ["on-line", "off-line"],
+        "type": "string"
+      },
       "Record_string.any_": {
         "properties": {},
         "additionalProperties": {},
@@ -521,7 +380,7 @@
           "masterPicture": {
             "type": "string"
           },
-          "descPictures": {
+          "descPic": {
             "items": {
               "type": "string"
             },
@@ -531,8 +390,7 @@
             "type": "string"
           },
           "state": {
-            "type": "string",
-            "enum": ["online", "offline"]
+            "$ref": "#/components/schemas/ProductState"
           },
           "richText": {
             "type": "string",
@@ -567,7 +425,7 @@
             "nullable": true
           }
         },
-        "required": ["languageList", "cates", "productName", "masterPicture", "descPictures", "slug", "state"],
+        "required": ["languageList", "cates", "productName", "masterPicture", "descPic", "slug", "state"],
         "type": "object",
         "additionalProperties": false
       },
@@ -655,6 +513,40 @@
         "type": "object",
         "additionalProperties": false
       },
+      "BaseObjectEntity_string_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_unknown_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {}
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
       "Boolean": {
         "properties": {},
         "type": "object",
@@ -705,7 +597,7 @@
           "masterPicture": {
             "type": "string"
           },
-          "descPictures": {
+          "descPic": {
             "items": {
               "type": "string"
             },
@@ -715,8 +607,7 @@
             "type": "string"
           },
           "state": {
-            "type": "string",
-            "enum": ["online", "offline"]
+            "$ref": "#/components/schemas/ProductState"
           },
           "richText": {
             "type": "string"
@@ -1416,6 +1307,53 @@
         "type": "object",
         "additionalProperties": false
       },
+      "PageListType_UserDTO_": {
+        "properties": {
+          "pages": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageIndex": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "list": {
+            "items": {
+              "$ref": "#/components/schemas/UserDTO"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["pages", "pageIndex", "pageSize", "total", "list"],
+        "type": "object"
+      },
+      "BasePageListEntity_UserDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageListType_UserDTO_"
+          }
+        },
+        "required": ["data"],
+        "type": "object",
+        "additionalProperties": false
+      },
       "Pick_UserDTO.Exclude_keyofUserDTO.password-or-refreshToken-or-accessToken-or-logoutTime-or-isPasswordMatched__": {
         "properties": {
           "email": {
@@ -1423,17 +1361,9 @@
             "description": "用户邮箱",
             "example": "kbmjj123@gmail.com"
           },
-          "account": {
-            "type": "string",
-            "description": "用户账号"
-          },
-          "avatar": {
-            "type": "string",
-            "description": "用户头像"
-          },
-          "nickName": {
-            "type": "string",
-            "description": "用户昵称"
+          "state": {
+            "$ref": "#/components/schemas/AccountState",
+            "description": "用户状态"
           },
           "createTime": {
             "type": "string",
@@ -1450,14 +1380,21 @@
             "format": "date-time",
             "description": "记录删除时间"
           },
-          "_id": {
-            "type": "string",
-            "description": "用户id"
+          "id": {
+            "type": "string"
           },
           "role": {
             "type": "string",
             "enum": ["user", "admin"],
             "description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
+          },
+          "nickName": {
+            "type": "string",
+            "description": "用户昵称"
+          },
+          "avatar": {
+            "type": "string",
+            "description": "用户头像"
           },
           "address": {
             "$ref": "#/components/schemas/mongoose.Types.ObjectId",
@@ -1467,9 +1404,13 @@
             "type": "string",
             "format": "date-time",
             "description": "登录时间"
+          },
+          "account": {
+            "type": "string",
+            "description": "用户账号"
           }
         },
-        "required": ["email", "_id", "role"],
+        "required": ["email", "id", "role"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
@@ -1498,6 +1439,205 @@
         },
         "type": "object",
         "additionalProperties": false
+      },
+      "Pick_UserDTO.state_": {
+        "properties": {
+          "state": {
+            "$ref": "#/components/schemas/AccountState",
+            "description": "用户状态"
+          }
+        },
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "UserToggleEnabledParams": {
+        "$ref": "#/components/schemas/Pick_UserDTO.state_",
+        "description": "变更用户状态的参数"
+      },
+      "Pick_UserDTO.password_": {
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "用户密码",
+            "example": "abc123!@#$"
+          }
+        },
+        "required": ["password"],
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "UserRegisterParams": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pick_UserDTO.password_"
+          },
+          {
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "用户注册所使用的jwt token"
+              }
+            },
+            "required": ["token"],
+            "type": "object"
+          }
+        ]
+      },
+      "Pick_UserDTO.email-or-password_": {
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "用户密码",
+            "example": "abc123!@#$"
+          },
+          "email": {
+            "type": "string",
+            "description": "用户邮箱",
+            "example": "kbmjj123@gmail.com"
+          }
+        },
+        "required": ["password", "email"],
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "UserQuickRegisterParams": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pick_UserDTO.email-or-password_"
+          },
+          {
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "邮箱验证码"
+              }
+            },
+            "required": ["code"],
+            "type": "object"
+          }
+        ],
+        "description": "携带验证码进行快速注册的实体"
+      },
+      "Pick_UserDTO.account-or-avatar-or-nickName_": {
+        "properties": {
+          "nickName": {
+            "type": "string",
+            "description": "用户昵称"
+          },
+          "avatar": {
+            "type": "string",
+            "description": "用户头像"
+          },
+          "account": {
+            "type": "string",
+            "description": "用户账号"
+          }
+        },
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "EditUserParams": {
+        "$ref": "#/components/schemas/Pick_UserDTO.account-or-avatar-or-nickName_",
+        "description": "编辑用户信息需需要参数"
+      },
+      "BaseObjectEntity_String_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "ModifyPwdParams": {
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "description": "新密码"
+          },
+          "oldPassword": {
+            "type": "string",
+            "description": "旧密码"
+          }
+        },
+        "required": ["newPassword", "oldPassword"],
+        "type": "object",
+        "description": "修改密码参数"
+      },
+      "BaseObjectEntity__id-any--title-any--description-any--detail-any--link-string--bgImage-string--cover-string_-Array_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "items": {
+              "properties": {
+                "cover": {
+                  "type": "string"
+                },
+                "bgImage": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                },
+                "detail": {},
+                "description": {},
+                "title": {},
+                "id": {}
+              },
+              "required": ["cover", "bgImage", "link", "detail", "description", "title", "id"],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity__id-any--name-any--icon-string_-Array_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "items": {
+              "properties": {
+                "icon": {
+                  "type": "string"
+                },
+                "name": {},
+                "id": {}
+              },
+              "required": ["icon", "name", "id"],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
       }
     },
     "securitySchemes": {}
@@ -1515,229 +1655,6 @@
     }
   },
   "paths": {
-    "/user/getRegisterLink": {
-      "get": {
-        "operationId": "GetRegisterLink",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
-                }
-              }
-            }
-          }
-        },
-        "description": "根据邮箱获取注册的链接",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "email",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/user/register": {
-      "post": {
-        "operationId": "RegisterNewAccount",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
-                }
-              }
-            }
-          }
-        },
-        "description": "新用户通过邮件链接进行注册",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserRegisterParams"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/resetPwd": {
-      "post": {
-        "operationId": "ResetPwd",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
-                }
-              }
-            }
-          }
-        },
-        "description": "重置密码",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "password": {
-                    "type": "string"
-                  },
-                  "token": {
-                    "type": "string"
-                  }
-                },
-                "required": ["password", "token"],
-                "type": "object"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/getResetPwdLink": {
-      "get": {
-        "operationId": "GetResetPwdLink",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
-                }
-              }
-            }
-          }
-        },
-        "description": "根据邮箱获取重置密码的链接",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "email",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/user/quickRegisterCode": {
-      "get": {
-        "operationId": "GetQuickRegisterCode",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
-                }
-              }
-            }
-          }
-        },
-        "description": "快速注册获取验证码邮件",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "email",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/user/registerWithCode": {
-      "post": {
-        "operationId": "RegisterWithCode",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
-                }
-              }
-            }
-          }
-        },
-        "description": "通过邮件验证码进行快速注册",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserQuickRegisterParams"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/edit": {
-      "post": {
-        "operationId": "ModifyAUser",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
-                }
-              }
-            }
-          }
-        },
-        "description": "修改用户信息，主要为用户自主修改",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditUserParams"
-              }
-            }
-          }
-        }
-      }
-    },
     "/user/login": {
       "post": {
         "operationId": "CheckUser",
@@ -1790,37 +1707,6 @@
         "parameters": []
       }
     },
-    "/user/modifyPwd": {
-      "post": {
-        "operationId": "ModifyPwd",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_String_"
-                }
-              }
-            }
-          }
-        },
-        "description": "根据旧密码修改新密码",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ModifyPwdParams"
-              }
-            }
-          }
-        }
-      }
-    },
     "/user/logout": {
       "post": {
         "operationId": "Logout",
@@ -1837,27 +1723,6 @@
           }
         },
         "description": "退出登录",
-        "tags": ["用户模块"],
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/user/delete": {
-      "delete": {
-        "operationId": "DeleteAccount",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
-                }
-              }
-            }
-          }
-        },
-        "description": "用户注销(删除账号)",
         "tags": ["用户模块"],
         "security": [],
         "parameters": []
@@ -2110,7 +1975,23 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "state": {
+                    "$ref": "#/components/schemas/ProductState"
+                  }
+                },
+                "required": ["state"],
+                "type": "object"
+              }
+            }
+          }
+        }
       }
     },
     "/product/slug/check": {
@@ -2170,6 +2051,44 @@
               "schema": {
                 "$ref": "#/components/schemas/EditProductParams"
               }
+            }
+          }
+        }
+      }
+    },
+    "/product/{id}/quickEditPrice": {
+      "post": {
+        "operationId": "QuickEditPrice",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_ProductDTO-or-null_"
+                }
+              }
+            }
+          }
+        },
+        "description": "快速编辑商品价格",
+        "tags": ["产品模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {}
             }
           }
         }
@@ -2385,7 +2304,7 @@
         ]
       }
     },
-    "/brand/allList": {
+    "/brand/allBrand": {
       "get": {
         "operationId": "GetAllBandList",
         "responses": {
@@ -2400,6 +2319,7 @@
             }
           }
         },
+        "description": "获取所有的品牌列表数据",
         "tags": ["品牌模块"],
         "security": [],
         "parameters": []
@@ -2740,43 +2660,19 @@
         ]
       }
     },
-    "/account/{id}": {
+    "/account/list": {
       "get": {
-        "operationId": "GetAUser",
+        "operationId": "GetUserList",
         "responses": {
           "200": {
             "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_UserWithoutToken_"
+                  "$ref": "#/components/schemas/BasePageListEntity_UserDTO_"
                 }
               }
             }
-          }
-        },
-        "description": "根据id获取用户信息",
-        "tags": ["账号模块"],
-        "security": [],
-        "parameters": [
-          {
-            "description": "用户id",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/account/list": {
-      "get": {
-        "operationId": "GetUserList",
-        "responses": {
-          "204": {
-            "description": "No content"
           }
         },
         "description": "获取用户列表",
@@ -2810,6 +2706,582 @@
             }
           }
         ]
+      }
+    },
+    "/account/info/{id}": {
+      "get": {
+        "operationId": "GetAUser",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserWithoutToken_"
+                }
+              }
+            }
+          }
+        },
+        "description": "根据id获取用户信息",
+        "tags": ["账号模块"],
+        "security": [],
+        "parameters": [
+          {
+            "description": "用户id",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/account/{id}/toggleAccountState": {
+      "post": {
+        "operationId": "ToggleAccountState",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "启用/禁用一账号",
+        "tags": ["账号模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserToggleEnabledParams"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "operationId": "Login",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "用户登录",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginParams"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/getRegisterLink": {
+      "get": {
+        "operationId": "GetRegisterLink",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
+          }
+        },
+        "description": "根据邮箱获取注册的链接",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/user/register": {
+      "post": {
+        "operationId": "RegisterNewAccount",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "新用户通过邮件链接进行注册",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegisterParams"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/resetPwd": {
+      "post": {
+        "operationId": "ResetPwd",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
+          }
+        },
+        "description": "重置密码",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  },
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": ["password", "token"],
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/getResetPwdLink": {
+      "get": {
+        "operationId": "GetResetPwdLink",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
+          }
+        },
+        "description": "根据邮箱获取重置密码的链接",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/user/quickRegisterCode": {
+      "get": {
+        "operationId": "GetQuickRegisterCode",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
+                }
+              }
+            }
+          }
+        },
+        "description": "快速注册获取验证码邮件",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/user/registerWithCode": {
+      "post": {
+        "operationId": "RegisterWithCode",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "通过邮件验证码进行快速注册",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserQuickRegisterParams"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/edit": {
+      "post": {
+        "operationId": "ModifyAUser",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "修改用户信息，主要为用户自主修改",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditUserParams"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/modifyPwd": {
+      "post": {
+        "operationId": "ModifyPwd",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_String_"
+                }
+              }
+            }
+          }
+        },
+        "description": "根据旧密码修改新密码",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyPwdParams"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/delete": {
+      "delete": {
+        "operationId": "DeleteAccount",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "用户注销(删除账号)",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/user/refreshToken": {
+      "patch": {
+        "operationId": "RefreshToken",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity__accessToken-string--refreshToken-string__"
+                }
+              }
+            }
+          }
+        },
+        "description": "刷新用户的accessToken以及refreshToken，即延长用户的在线有效性",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "refreshToken": {
+                    "type": "string"
+                  }
+                },
+                "required": ["refreshToken"],
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/allBrand": {
+      "get": {
+        "operationId": "GetAllBandList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_Array_SingleBrandDTO__"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取所有的品牌列表数据",
+        "tags": ["商城/商品模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/product/allCate": {
+      "get": {
+        "operationId": "GetCateList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_Array_CateDTO__"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取整颗分类数",
+        "tags": ["商城/商品模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/product/list": {
+      "get": {
+        "operationId": "GetProductList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasePageListEntity_ProductDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取商品列表",
+        "tags": ["商城/商品模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageIndex",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/product/{id}": {
+      "get": {
+        "operationId": "GetProductDetail",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取商品详情信息",
+        "tags": ["商城/商品模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/decorate/carousel/list": {
+      "get": {
+        "operationId": "GetCarouselList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity__id-any--title-any--description-any--detail-any--link-string--bgImage-string--cover-string_-Array_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取轮播图",
+        "tags": ["装修模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/decorate/brand/list": {
+      "get": {
+        "operationId": "GetRecommendBrandList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity__id-any--name-any--icon-string_-Array_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取推荐的品牌列表",
+        "tags": ["装修模块"],
+        "security": [],
+        "parameters": []
       }
     }
   },

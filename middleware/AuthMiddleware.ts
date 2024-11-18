@@ -16,7 +16,7 @@ export const checkLogin = async (req: Request, res: Response, next: NextFunction
 	if (token) {
 		token = token.split(' ')[1];
 		try {
-			const userService: UserService = new UserService(req)
+			const userService: UserService = new UserService()
 			const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
 			// decodeInfo.id 存在，则是一个有效的用户id，说明是一个正常的登录状态
 			const findUser = await UserModel.findById(decodeInfo.id);

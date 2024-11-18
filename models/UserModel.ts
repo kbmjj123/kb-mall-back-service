@@ -1,6 +1,7 @@
 import mongoose, { InferSchemaType, Types } from "mongoose";
 import bcrypt from 'bcrypt'
 import { UserDTO } from "../dto/UserDTO";
+import { AccountState } from "../enum/business";
 
 const userSchema = new mongoose.Schema<UserDTO>({
 	account: {
@@ -39,6 +40,11 @@ const userSchema = new mongoose.Schema<UserDTO>({
 	loginTime: {
 		type: Date,
 		hide: true
+	},
+	state: {
+		type: String,
+		enum: Object.values(AccountState),
+		default: AccountState.IN_USED
 	},
 	logoutTime: Date
 })

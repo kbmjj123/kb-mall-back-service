@@ -1,23 +1,35 @@
-import { Get, Path, Route, Tags, Request, Queries } from "tsoa";
+import { Get, Path, Route, Tags, Request, Queries, Post, Query, Body } from "tsoa";
 import { BaseController } from "./BaseController";
 import { Request as ExpressRequest } from 'express'
 import { BaseObjectEntity } from "../entity/BaseObjectEntity";
-import { UserWithoutToken } from "../dto/UserDTO";
+import { UserDTO, UserToggleEnabledParams, UserWithoutToken } from "../dto/UserDTO";
 import { UserService } from "../service/UserService";
 import { PageDTO } from "../dto/PageDTO";
+import { BasePageListEntity } from "../entity/BasePageListEntity";
 
 @Route('account')
 @Tags('账号模块')
 export class AccountController extends BaseController{
 
 	/**
+	 * 获取用户列表
+	 */
+	@Get('/list')
+	public async getUserList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<UserDTO>> {
+		const userService = new UserService()
+		const result = await userService.findListInPage('account', query)
+		return this.successPageListResponse(req, result)
+	}
+
+
+	/**
 	 * 根据id获取用户信息
 	 * @param id 用户id
 	*/
-	@Get('{id}')
-	public async getAUser(@Path() id: string, @Request() req: ExpressRequest): Promise<BaseObjectEntity<UserWithoutToken>> {
+	@Get('/info/{id}')
+	public async getAUser(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<UserWithoutToken>> {
 		if (id) {
-			const userService = new UserService(req)
+			const userService = new UserService()
 			const findUser = await userService.findById(id, req)
 			if (!findUser) {
 				return this.failedResponse(req, '用户不存在，请传递正确的id')
@@ -28,18 +40,28 @@ export class AccountController extends BaseController{
 			return this.failedResponse(req, '请传递有效的用户id')
 		}
 	}
-
 	/**
-	 * 获取用户列表
-	 */
-	@Get('/list')
-	public async getUserList(@Request() req: ExpressRequest, @Queries() query: PageDTO) {
-		let { keyword, pageIndex = 1, pageSize = 20 } = query
-		pageIndex = pageIndex as number - 1
-		pageSize = Number(pageSize)
-		let searchList = []
-		let total = 0
-		
+	 * 启用/禁用一账号
+	*/
+	@Post('/{id}/toggleAccountState')
+	public async toggleAccountState(@Request() req: ExpressRequest, @Path() id: string, @Body() params: UserToggleEnabledParams): Promise<BaseObjectEntity<UserDTO>>{
+		if(id){
+			const userService = new UserService()
+			const findAnAccount = await userService.findById(id, req)
+			if(findAnAccount){
+				const { state } = params
+				const updateAnAccount = await userService.update(id, { state }, req)
+				if(updateAnAccount){
+					return this.successResponse(req, updateAnAccount)
+				}else{
+					return this.failedResponse(req)
+				}
+			}else{
+				return this.failedResponse(req, req.t('account.idBelogAccountNoExist'))
+			}
+		}else{
+			return this.failedResponse(req, req.t('account.idNeed'))
+		}
 	}
 
 }

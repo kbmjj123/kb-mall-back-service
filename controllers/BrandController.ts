@@ -17,7 +17,10 @@ import { checkLogin } from "../middleware/AuthMiddleware";
 @Middlewares([checkLogin])
 export class BrandController extends BaseController {
 
-	@Get('/allList')
+	/**
+	 * 获取所有的品牌列表数据
+	*/
+	@Get('/allBrand')
 	public async getAllBandList(@Request() req: ExpressRequest): Promise<BaseObjectEntity<Array<SingleBrandDTO>>> {
 		const brandService = new BrandService()
 		const result = await brandService.findAll(req)

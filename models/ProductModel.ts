@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { ProductDTO } from "../dto/ProductDTO";
 import { LanguageItemType } from "../dto/LanguageDTO";
+import { ProductState } from "../enum/business";
 const MODEL_NAME = 'productModel'
 const productSchema = new mongoose.Schema<ProductDTO>({
 	cates: {
@@ -19,7 +20,7 @@ const productSchema = new mongoose.Schema<ProductDTO>({
 		type: String,
 		required: [true, '请维护商品主图']
 	},
-	descPictures: {
+	descPic: {
 		type: [String],
 		required: [true, '请维护商品图片']
 	},
@@ -57,8 +58,8 @@ const productSchema = new mongoose.Schema<ProductDTO>({
 	richText: String,
 	state: {
 		type: String,
-		enum: ['online', 'offline'],
-		default: 'online',
+		enum: Object.values(ProductState),
+		default: ProductState.ON_LINE,
 		required: [true, '请维护上架状态']
 	},
 	languageList: Array<LanguageItemType>

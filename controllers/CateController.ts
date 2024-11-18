@@ -14,7 +14,7 @@ import { checkLogin } from "../middleware/AuthMiddleware";
 @Middlewares([checkLogin])
 export class CateController extends BaseController {
 
-	@Get('list')
+	@Get('/list')
 	public async getCateList(@Request() req: ExpressRequest): Promise<BaseObjectEntity<Array<CateDTO>>> {
 		//? 获取一级列表-->由于有异步嵌套，采用将一个异步查询转换为等待执行的promise
 		const cateService = new CateService()

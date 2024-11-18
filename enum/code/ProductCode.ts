@@ -27,6 +27,10 @@ export enum ProductCode{
 	 * Slug已存在
 	*/
 	SLUG_ALREADY_EXIST = 200103,
+	/**
+	 * 需传递有效的商品价格
+	*/
+	PRODUCT_NEED_PRICE = 200104,
 	
 	/************ 以下是分类的相关错误编码 **************/
 	/**

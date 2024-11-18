@@ -49,14 +49,12 @@ app.get('/', (req, res) => {
 RegisterRoutes(app);
 // 注册接口文档路由
 setupSwagger(app);
-// 统一的异常处理
-app.use(serviceErrorMW);
-
-// 处理请求404
-app.use(noFoundWM);
 // 全局参数校验
 app.use(globalParamsValidate)
-
+// 处理请求404
+app.use(noFoundWM);
+// 统一的异常处理
+app.use(serviceErrorMW);
 
 
 //? 对外提供的手动启动服务方法，主要供单元测试所使用

@@ -13,6 +13,7 @@ import { ProductService } from "../service/ProductService";
 import { ProductCode } from "../enum/code/ProductCode";
 import { ResultCode } from "../enum/http";
 import { BrandService } from "../service/BrandService";
+import { ProductState } from "../enum/business";
 
 /**
  * 商品字段自定义校验
@@ -21,7 +22,7 @@ const validateProductMW = [
 	body('cates').notEmpty().isArray(),
 	body('productName', '请维护商品名称').notEmpty().trim().isLength({ max: 60 }),
 	body('masterPicture').notEmpty(),
-	body('descPictures').notEmpty().isArray({ max: 5 }),
+	body('descPic').notEmpty().isArray({ max: 5 }),
 	body('slug').notEmpty().isSlug(),
 	body('price').notEmpty().isNumeric(),
 	body('activityPrice').isNumeric(),
@@ -41,7 +42,7 @@ const validateProductMW = [
 ]
 
 @Route('product')
-// @Middlewares([checkLogin])
+@Middlewares([checkLogin])
 @Tags('产品模块')
 export class ProductController extends BaseController {
 
@@ -96,8 +97,8 @@ export class ProductController extends BaseController {
 	 * 上/下架一款商品
 	*/
 	@Post('/{id}/upOrDownShelves')
-	public async upOrDownAProduct(@Request() req: ExpressRequest, @Path() id: string) {
-		const { state } = req.body;
+	public async upOrDownAProduct(@Request() req: ExpressRequest, @Path() id: string, @Body() params: { state: ProductState }) {
+		const { state } = params;
 		if (id) {
 			if (state) {
 				try {
@@ -144,7 +145,7 @@ export class ProductController extends BaseController {
 			// 默认初始化商品相关属性
 			params['sales'] = 0;
 			params['score'] = 0;
-			params['state'] = 'online';
+			params['state'] = ProductState.ON_LINE;
 			const { brandId } = params;
 			if (brandId) {
 				const brandService = new BrandService()
@@ -178,6 +179,29 @@ export class ProductController extends BaseController {
 			const updateAProduct = await productService.findOneAndUpdate(req, { id }, params, { runValidators: true })
 			return this.successResponse(req, updateAProduct)
 		} else {
+			return this.failedResponse(req, req.t('tip.paramsError'), ResultCode.PARAMS_ERROR)
+		}
+	}
+
+	/**
+	 * 快速编辑商品价格
+	*/
+	@Post('/{id}/quickEditPrice')
+	public async quickEditPrice(@Request() req: ExpressRequest, @Path() id: string, @Body() params: any): Promise<BaseObjectEntity<ProductDTO | null>>{
+		if(id){
+			const { price } = params
+			if(price){
+				const productService = new ProductService()
+				const updateAProductPrice = await productService.findOneAndUpdate(req, { id }, { price }, { runValidators: true })
+				if(updateAProductPrice){
+					return this.successResponse(req, updateAProductPrice)
+				}else{
+					return this.failedResponse(req)
+				}
+			}else{
+				return this.failedResponse(req, req.t('product.needPrice'), ProductCode.PRODUCT_NEED_PRICE)
+			}
+		}else{
 			return this.failedResponse(req, req.t('tip.paramsError'), ResultCode.PARAMS_ERROR)
 		}
 	}

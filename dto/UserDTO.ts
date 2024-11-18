@@ -1,12 +1,10 @@
 import { Types } from "mongoose";
 import { ISoftDeleteDTO } from "./soft-delete-dto/ISoftDeleteDTO";
+import { AccountState } from "../enum/business";
 
 export interface UserDTO extends ISoftDeleteDTO{
 
-	/**
-	 * 用户id
-	*/
-	_id: string;
+	id:string;
 	/**
 	 * 用户密码
 	 * @example "abc123!@#$"
@@ -56,6 +54,10 @@ export interface UserDTO extends ISoftDeleteDTO{
 	 * @example 账号
 	*/
 	account?: string | null | undefined;
+	/**
+	 * 用户状态
+	*/
+	state?: AccountState;
 
 	isPasswordMatched(newPwd: string): Promise<boolean>;
 
@@ -103,3 +105,7 @@ export type UserQuickRegisterParams = Pick<UserDTO, 'email' | 'password'> & {
 	*/
 	code: string
 }
+/**
+ * 变更用户状态的参数
+*/
+export type UserToggleEnabledParams = Pick<UserDTO, 'state'>

@@ -1,13 +1,14 @@
 import { Types } from "mongoose";
 import { LanguageDTO } from './LanguageDTO'
+import { ProductState } from "../enum/business";
 
 export interface ProductDTO extends LanguageDTO{
 	cates: Types.ObjectId[];
 	productName: string;
 	masterPicture: string;
-	descPictures: string[];
+	descPic: string[];
 	slug: string;
-	state: "online" | "offline";
+	state: ProductState;
 	richText?: string | null | undefined;
 	brand?: Types.ObjectId | null | undefined;
 	price?: number | null | undefined;

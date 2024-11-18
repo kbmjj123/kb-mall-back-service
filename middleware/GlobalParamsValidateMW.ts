@@ -7,7 +7,7 @@ import { ValidateError } from 'tsoa';
 export default function globalParamsValidate(err: unknown, req: Request, res: Response, next: NextFunction) {
   if (err instanceof ValidateError) {
     // 捕获tsoa的参数验证错误
-		res.failed(ResultCode.PARAMS_ERROR, {}, req.t('tip.paramsError'))
+		return res.failed(ResultCode.PARAMS_ERROR, err.fields, req.t('tip.paramsError'))
   }
-  next();
+  next(err);
 }
