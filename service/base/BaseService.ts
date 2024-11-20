@@ -82,7 +82,7 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	 * @param pageInfo 分页信息
 	 * @returns 
 	 */
-	async findListInPage(nameInCollection: string, pageInfo: PageDTO): Promise<PageResultDTO<T>> {
+	async findListInPage(nameInCollection: string, pageInfo: PageDTO, selectArray?: string[]): Promise<PageResultDTO<T>> {
 		let { keyword, pageIndex = 1, pageSize = PAGE_SIZE } = pageInfo
 		let resultArrayPromise = []
 		if(pageIndex < 1){
@@ -94,10 +94,20 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 				[nameInCollection]: { $regex: regex }
 			} as FilterQuery<T>
 			resultArrayPromise.push(this.model.countDocuments())
-			resultArrayPromise.push(this.model.find(query).skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
+			if(selectArray && selectArray.length > 0){
+				const selectTarget = selectArray.map(item => `+${item}`).join(' ')
+				resultArrayPromise.push(this.model.find(query).select(selectTarget).skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
+			}else{
+				resultArrayPromise.push(this.model.find(query).skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
+			}
 		}else{
 			resultArrayPromise.push(this.model.estimatedDocumentCount())
-			resultArrayPromise.push(this.model.find().skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
+			if(selectArray && selectArray.length > 0){
+				const selectTarget = selectArray.map(item => `+${item}`).join(' ')
+				resultArrayPromise.push(this.model.find().select(selectTarget).skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
+			}else{
+				resultArrayPromise.push(this.model.find().skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
+			}
 		}
 		let [total = 0, searchList = []] = await Promise.all(resultArrayPromise)
 		const result = {
@@ -109,6 +119,7 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 		} as PageResultDTO<T>
 		return Promise.resolve(result)
 	}
+	
 	findOneAndUpdate(req: ExpressRequest, filter?: FilterQuery<T> | undefined, update?: UpdateQuery<T> | undefined, options?: QueryOptions<T> | null | undefined): Promise<T | null> {
 		return this.model.findOneAndUpdate(filter, update, options).setOptions(this.getLanguageOptions(req))
 	}

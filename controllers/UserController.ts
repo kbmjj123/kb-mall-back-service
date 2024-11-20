@@ -31,7 +31,7 @@ export class UserController extends BaseController {
 				const accessToken = TokenGenerator.generateAccessToken(findUser.id);
 				const refreshToken = TokenGenerator.generateRefreshToken(findUser.id);
 				// 针对找到的用户信息追加token
-				const updateUser = await userService.findOneAndUpdate(req, { id: findUser.id }, { $set: { accessToken, refreshToken, loginTime: new Date() } }, { new: true, select: '-password' })
+				const updateUser = await userService.findOneAndUpdate(req, { _id: findUser.id }, { $set: { accessToken, refreshToken, loginTime: new Date() } }, { new: true, select: '-password' })
 				if (updateUser) {
 					res?.cookie("accessToken", accessToken, {
 						httpOnly: true,

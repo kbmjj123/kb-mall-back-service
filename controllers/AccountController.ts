@@ -17,10 +17,9 @@ export class AccountController extends BaseController{
 	@Get('/list')
 	public async getUserList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<UserDTO>> {
 		const userService = new UserService()
-		const result = await userService.findListInPage('account', query)
+		const result = await userService.findListInPage('account', query, ['createTime'])
 		return this.successPageListResponse(req, result)
 	}
-
 
 	/**
 	 * 根据id获取用户信息

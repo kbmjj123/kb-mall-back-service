@@ -38,14 +38,14 @@ const userSchema = new mongoose.Schema<UserDTO>({
 		default: null
 	},
 	loginTime: {
-		type: Date,
-		hide: true
+		type: Date
 	},
 	state: {
 		type: String,
 		enum: Object.values(AccountState),
 		default: AccountState.IN_USED
 	},
+	createTime: Date,
 	logoutTime: Date
 })
 

@@ -2,6 +2,7 @@ import { UserDTO } from "../dto/UserDTO";
 import { BaseService } from "./base/BaseService";
 import { UserModel } from "../models/UserModel";
 import { RANDOM_USER_AVATAR_HOST } from "../config/ConstantValues";
+import { Document } from "mongoose";
 
 export class UserService extends BaseService<UserDTO> {
 
@@ -16,5 +17,6 @@ export class UserService extends BaseService<UserDTO> {
 		const account = email.substring(0, email.indexOf('@'))
 		return `${RANDOM_USER_AVATAR_HOST}${account}.png`
 	}
+
 
 }

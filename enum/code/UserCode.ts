@@ -31,6 +31,10 @@ export enum UserCode{
 	*/
 	REGISTER_LINK_INVALID = 100007,
 	/**
+	 * 账号已禁用
+	*/
+	ACCOUNT_REJECTED = 100008,
+	/**
 	 * 登录超时
 	*/
 	LOGIN_TIMEOUT = 100999

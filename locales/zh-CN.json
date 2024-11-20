@@ -71,6 +71,7 @@
   },
   "account": {
     "idNeed": "请传递有效的用户id",
-    "idBelogAccountNoExist": "id对应的用户信息不存在！"
+    "idBelogAccountNoExist": "id对应的用户信息不存在！",
+    "accountRejected": "账号已被禁用，请联系客服！"
   }
 }
