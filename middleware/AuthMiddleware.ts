@@ -15,26 +15,30 @@ export const checkLogin = async (req: Request, res: Response, next: NextFunction
 	let token = req?.headers?.authorization;
 	if (token) {
 		token = token.split(' ')[1];
-		try {
-			const userService: UserService = new UserService()
-			const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
-			// decodeInfo.id 存在，则是一个有效的用户id，说明是一个正常的登录状态
-			const findUser = await userService.findById(decodeInfo.id, req);
-			if (findUser) {
-				//// 这里针对需要鉴权登录的相关接口，追加一个自动延活token的逻辑
-				// const refreshToken = TokenGenerator.generateRefreshToken(decodeInfo.id)
-				// const accessToken = TokenGenerator.generateAccessToken(decodeInfo.id)
-				// const updateUser = await userService.findOneAndUpdate(req, {_id: decodeInfo.id}, { $set: { accessToken, refreshToken } })
-				// 将已经验证通过的账号信息追加到req.user中，并传递给下一个中间件
-				req.user = findUser
-				// 直接在中间件这里做一个拦截
-				next();
-			} else {
-				res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
+		if(token && 'undefined' !== token && 'null' !== token){
+			try {
+				const userService: UserService = new UserService()
+				const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
+				// decodeInfo.id 存在，则是一个有效的用户id，说明是一个正常的登录状态
+				const findUser = await userService.findById(decodeInfo.id, req);
+				if (findUser) {
+					//// 这里针对需要鉴权登录的相关接口，追加一个自动延活token的逻辑
+					// const refreshToken = TokenGenerator.generateRefreshToken(decodeInfo.id)
+					// const accessToken = TokenGenerator.generateAccessToken(decodeInfo.id)
+					// const updateUser = await userService.findOneAndUpdate(req, {_id: decodeInfo.id}, { $set: { accessToken, refreshToken } })
+					// 将已经验证通过的账号信息追加到req.user中，并传递给下一个中间件
+					req.user = findUser
+					// 直接在中间件这里做一个拦截
+					next();
+				} else {
+					res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))
+				}
+			} catch (error) {
+				responseJWTError(req, res, error as jwt.VerifyErrors)
+				res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
 			}
-		} catch (error) {
-			responseJWTError(req, res, error as jwt.VerifyErrors)
-			res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
+		}else{
+			res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('token.accessTokenError'))
 		}
 	} else {
 		res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('user.loginTimeOut'))

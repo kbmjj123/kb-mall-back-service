@@ -45,6 +45,8 @@ const userSchema = new mongoose.Schema<UserDTO>({
 		enum: Object.values(AccountState),
 		default: AccountState.IN_USED
 	},
+	firstName: String,
+	lastName: String,
 	createTime: Date,
 	logoutTime: Date
 })

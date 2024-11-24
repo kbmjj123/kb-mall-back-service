@@ -58,6 +58,14 @@ export interface UserDTO extends ISoftDeleteDTO{
 	 * 用户状态
 	*/
 	state?: AccountState;
+	/**
+	 * 名字
+	*/
+	firstName: string,
+	/**
+	 * 姓
+	*/
+	lastName: string,
 
 	isPasswordMatched(newPwd: string): Promise<boolean>;
 

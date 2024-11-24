@@ -3002,7 +3002,7 @@
         }
       }
     },
-    "/api/user/edit": {
+    "/api/user/info/modify": {
       "post": {
         "operationId": "ModifyAUser",
         "responses": {
@@ -3120,6 +3120,48 @@
             }
           }
         }
+      }
+    },
+    "/api/user/info": {
+      "get": {
+        "operationId": "GetUserInfo",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_UserDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取当前登录用户信息",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/user/logout": {
+      "post": {
+        "operationId": "Logout",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_String-or-null_"
+                }
+              }
+            }
+          }
+        },
+        "description": "退出登录",
+        "tags": ["商城/用户模块"],
+        "security": [],
+        "parameters": []
       }
     },
     "/api/product/allBrand": {

@@ -1,7 +1,7 @@
 import { Body, Delete, Get, Middlewares, Patch, Post, Queries, Request, Route, Tags } from "tsoa";
 import { BaseController } from "../BaseController";
 import { Request as ExpressRequest, Response as ExpressResponse, NextFunction } from 'express'
-import { body } from 'express-validator'
+import { body, query } from 'express-validator'
 import ParamsValidateMW from "../../middleware/ParamsValidateMW";
 import { BaseObjectEntity } from "../../entity/BaseObjectEntity";
 import { EditUserParams, ModifyPwdParams, UserDTO, UserLoginParams, UserQuickRegisterParams, UserRegisterParams } from "../../dto/UserDTO";
@@ -14,9 +14,20 @@ import { ResultCode } from "../../enum/http";
 import { checkLogin } from "../../middleware/AuthMiddleware";
 import { CodeService } from "../../service/CodeService";
 
+/**
+ * 验证密码是否正确
+*/
 const validateEditPwdMW = (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => [
 	body('oldPassword').notEmpty().withMessage(req.t('user.needOldPwdTip')),
 	body('newPassword').notEmpty().withMessage(req.t('user.needNewPwdTip')),
+	ParamsValidateMW
+].forEach(mw => mw(req, res, next))
+
+/**
+ * 验证是否有效的邮箱
+*/
+const validateEmailMW = (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => [
+	query('email').notEmpty().isEmail().withMessage(req.t('user.inputValidateEmailTip')),
 	ParamsValidateMW
 ].forEach(mw => mw(req, res, next))
 
@@ -63,6 +74,7 @@ export class MallUserController extends BaseController {
 	 * 根据邮箱获取注册的链接
 	*/
 	@Get('/getRegisterLink')
+	// @Middlewares([validateEmailMW])
 	public async getRegisterLink(@Request() req: ExpressRequest, @Queries() query: { email: string }): Promise<BaseObjectEntity<string>> {
 		const userServie = new UserService()
 		const { email } = query
@@ -90,6 +102,7 @@ export class MallUserController extends BaseController {
 			try {
 				const decodeInfo = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload
 				if (decodeInfo && decodeInfo.email) {
+					//? 从token中获取注册用的邮箱账号
 					const email = decodeInfo.email
 					const account = email.substring(0, email.indexOf('@'))
 					const findUser = await userService.isExist({ email }, req)
@@ -220,7 +233,7 @@ export class MallUserController extends BaseController {
 	/**
 	 * 修改用户信息，主要为用户自主修改
 	*/
-	@Post('/edit')
+	@Post('/info/modify')
 	@Middlewares([checkLogin])
 	public async modifyAUser(@Request() req: ExpressRequest, @Body() requestBody: EditUserParams): Promise<BaseObjectEntity<UserDTO>> {
 		const { account, avatar, nickName } = requestBody
@@ -305,6 +318,7 @@ export class MallUserController extends BaseController {
 	 * 刷新用户的accessToken以及refreshToken，即延长用户的在线有效性
 	*/
 	@Patch('/refreshToken')
+	@Middlewares([checkLogin])
 	public async refreshToken(@Request() req: ExpressRequest, @Body() requestBody: { refreshToken: string }): Promise<BaseObjectEntity<{ accessToken: string, refreshToken: string }>> {
 		let { refreshToken } = requestBody
 		if (refreshToken) {
@@ -331,6 +345,40 @@ export class MallUserController extends BaseController {
 			}
 		} else {
 			return this.failedResponse(req, req.t('user.needValidateToken'), ResultCode.PARAMS_ERROR)
+		}
+	}
+
+	/**
+	 * 获取当前登录用户信息
+	*/
+	@Get('/info')
+	@Middlewares([checkLogin])
+	public async getUserInfo(@Request() req: ExpressRequest): Promise<BaseObjectEntity<UserDTO>> {
+		const findUser = req.user
+		if (findUser) {
+			return this.successResponse(req, findUser)
+		} else {
+			return this.failedResponse(req, req.t('user.loginTimeOut'))
+		}
+	}
+
+	/**
+	 * 退出登录
+	*/
+	@Post('/logout')
+	@Middlewares([checkLogin])
+	public async logout(@Request() req: ExpressRequest): Promise<BaseObjectEntity<String | null>> {
+		const user = req.user
+		if (user) {
+			const userService = new UserService()
+			const updateUser = await userService.update(user._id, { logoutTime: new Date(), accessToken: null, refreshToken: null }, req)
+			if (updateUser) {
+				return this.successResponse(req, updateUser.id)
+			} else {
+				return this.failedResponse(req, req.t('system.error'))
+			}
+		} else {
+			return this.failedResponse(req, req.t('user.accountNoExist'))
 		}
 	}
 

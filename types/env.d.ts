@@ -17,5 +17,9 @@ declare namespace NodeJS {
 		REGISTER_LINK: string,			// 注册用的链接地址
 		RESET_PWD_LINK: string,			// 重置密码用的链接地址
 		UPLOAD_FILE_SIZE: number,		// 上传文件大小限制，默认限制为10m
+		SKIP_SENDING_EMAIL: boolean,	// 是否跳过邮箱发送操作
+		QQ_EMAIL_ACCOUNT: string,		// 用来发送邮件的QQ邮箱
+		QQ_EMAIL_AUTH_CODE: string,	// 用来发送邮件的QQ邮箱授权码
+		QQ_FULL_EMAIL_ACCOUNT: string,// 完整的QQ邮箱账号
 	}
 }
