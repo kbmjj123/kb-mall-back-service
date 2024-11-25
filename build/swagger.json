@@ -99,9 +99,17 @@
           "state": {
             "$ref": "#/components/schemas/AccountState",
             "description": "用户状态"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "名字"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "姓"
           }
         },
-        "required": ["id", "password", "email", "role"],
+        "required": ["id", "password", "email", "role", "firstName", "lastName"],
         "type": "object",
         "additionalProperties": false
       },
@@ -321,11 +329,6 @@
         "type": "object",
         "additionalProperties": false
       },
-      "ProductState": {
-        "description": "************* 产品相关 ***************",
-        "enum": ["on-line", "off-line"],
-        "type": "string"
-      },
       "Record_string.any_": {
         "properties": {},
         "additionalProperties": {},
@@ -343,6 +346,71 @@
         },
         "required": ["languageMap", "language"],
         "type": "object"
+      },
+      "CateDTO": {
+        "properties": {
+          "createTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录创建时间"
+          },
+          "modifyTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录修改时间"
+          },
+          "deleteTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "记录删除时间"
+          },
+          "languageList": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageItemType"
+            },
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "parentId": {
+            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+          },
+          "level": {
+            "type": "number",
+            "format": "double"
+          },
+          "paramsList": {
+            "items": {
+              "properties": {
+                "values": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "key": {
+                  "type": "string"
+                }
+              },
+              "required": ["values", "key"],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["languageList", "title"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "ProductState": {
+        "description": "************* 产品相关 ***************",
+        "enum": ["on-line", "off-line"],
+        "type": "string"
       },
       "ProductDTO": {
         "properties": {
@@ -369,10 +437,20 @@
             "type": "array"
           },
           "cates": {
-            "items": {
-              "$ref": "#/components/schemas/mongoose.Types.ObjectId"
-            },
-            "type": "array"
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+                },
+                "type": "array"
+              },
+              {
+                "items": {
+                  "$ref": "#/components/schemas/CateDTO"
+                },
+                "type": "array"
+              }
+            ]
           },
           "productName": {
             "type": "string"
@@ -581,15 +659,26 @@
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
       "CheckSlugParams": {
-        "$ref": "#/components/schemas/Pick_ProductDTO.slug_"
+        "$ref": "#/components/schemas/Pick_ProductDTO.slug_",
+        "description": "slug参数"
       },
       "Partial_ProductDTO_": {
         "properties": {
           "cates": {
-            "items": {
-              "$ref": "#/components/schemas/mongoose.Types.ObjectId"
-            },
-            "type": "array"
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+                },
+                "type": "array"
+              },
+              {
+                "items": {
+                  "$ref": "#/components/schemas/CateDTO"
+                },
+                "type": "array"
+              }
+            ]
           },
           "productName": {
             "type": "string"
@@ -670,7 +759,8 @@
             "required": ["brandId"],
             "type": "object"
           }
-        ]
+        ],
+        "description": "品牌"
       },
       "BaseObjectEntity_ProductDTO-or-null_": {
         "properties": {
@@ -813,66 +903,6 @@
           }
         },
         "required": ["data"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "CateDTO": {
-        "properties": {
-          "createTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录创建时间"
-          },
-          "modifyTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录修改时间"
-          },
-          "deleteTime": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true,
-            "description": "记录删除时间"
-          },
-          "languageList": {
-            "items": {
-              "$ref": "#/components/schemas/LanguageItemType"
-            },
-            "type": "array"
-          },
-          "id": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "parentId": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
-          },
-          "level": {
-            "type": "number",
-            "format": "double"
-          },
-          "paramsList": {
-            "items": {
-              "properties": {
-                "values": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                },
-                "key": {
-                  "type": "string"
-                }
-              },
-              "required": ["values", "key"],
-              "type": "object"
-            },
-            "type": "array"
-          }
-        },
-        "required": ["languageList", "title"],
         "type": "object",
         "additionalProperties": false
       },
@@ -1408,9 +1438,17 @@
           "account": {
             "type": "string",
             "description": "用户账号"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "名字"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "姓"
           }
         },
-        "required": ["email", "id", "role"],
+        "required": ["email", "id", "role", "firstName", "lastName"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
@@ -3276,6 +3314,36 @@
           {
             "in": "path",
             "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/product/slug/{slug}": {
+      "get": {
+        "operationId": "GetProductDetailBySlug",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_ProductDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "通过slug获取商品信息",
+        "tags": ["商城/商品模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
             "required": true,
             "schema": {
               "type": "string"

@@ -31,6 +31,10 @@ export enum ProductCode{
 	 * 需传递有效的商品价格
 	*/
 	PRODUCT_NEED_PRICE = 200104,
+	/**
+	 * 需传递有效的商品slug
+	*/
+	PRODUCT_NEED_SLUG = 200105,
 	
 	/************ 以下是分类的相关错误编码 **************/
 	/**

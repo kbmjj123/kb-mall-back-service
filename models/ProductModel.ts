@@ -2,13 +2,22 @@ import mongoose from "mongoose";
 import { ProductDTO } from "../dto/ProductDTO";
 import { LanguageItemType } from "../dto/LanguageDTO";
 import { ProductState } from "../enum/business";
+import { CATE_MODEL_NAME } from "./CateModel";
 const MODEL_NAME = 'productModel'
 const productSchema = new mongoose.Schema<ProductDTO>({
-	cates: {
-		type: [{ type: mongoose.SchemaTypes.ObjectId }],
-		default: [],
-		required: [true, '请维护分类id']
-	},
+	// cates: {
+	// 	type: [{ type: mongoose.SchemaTypes.ObjectId }],
+	// 	ref: CATE_MODEL_NAME,
+	// 	default: [],
+	// 	required: [true, '请维护分类id']
+	// },
+	cates: [
+		{
+			type: mongoose.SchemaTypes.ObjectId,
+			ref: CATE_MODEL_NAME,
+			required: [true, '请维护分类id']
+		}
+	],
 	brand: {
 		type: mongoose.SchemaTypes.ObjectId,
 	},

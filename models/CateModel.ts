@@ -2,7 +2,7 @@ import mongoose, { Types } from "mongoose";
 import { CateDTO } from "../dto/CateDTO";
 import { LanguageItemType } from "../dto/LanguageDTO";
 
-const MODEL_NAME = 'cateModel'
+export const CATE_MODEL_NAME = 'cateModel'
 const cateSchema = new mongoose.Schema<CateDTO>({
 
   title: {
@@ -24,4 +24,4 @@ const cateSchema = new mongoose.Schema<CateDTO>({
 	paramsList: Array<{key: string, values: string[]}>
 });
 
-export const CateModel = mongoose.model(MODEL_NAME, cateSchema, 'cates')
+export const CateModel = mongoose.model(CATE_MODEL_NAME, cateSchema, 'cates')

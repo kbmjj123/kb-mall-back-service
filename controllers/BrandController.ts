@@ -23,7 +23,7 @@ export class BrandController extends BaseController {
 	@Get('/allBrand')
 	public async getAllBandList(@Request() req: ExpressRequest): Promise<BaseObjectEntity<Array<SingleBrandDTO>>> {
 		const brandService = new BrandService()
-		const result = await brandService.findAll(req)
+		const result = await brandService.findAll(null, req)
 		return this.successResponse(req, result)
 	}
 

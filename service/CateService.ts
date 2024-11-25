@@ -9,16 +9,4 @@ export class CateService extends BaseService<CateDTO> {
 		super(CateModel)
 	}
 
-	/**
-	 * 根据查询条件来获取列表
-	 * @param query: 查询条件
-	 * @param req 接口请求
-	*/
-	findListWithQuery(query: FilterQuery<CateDTO> | undefined, req: ExpressRequest): Promise<any> {
-		if(query){
-			return this.getModel().find(query).setOptions(this.getLanguageOptions(req, {})).limit(0)
-		}else{
-			return this.findAll(req)
-		}
-	}
 }

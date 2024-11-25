@@ -10,6 +10,7 @@ import { PageDTO } from "../../dto/PageDTO";
 import { ProductService } from "../../service/ProductService";
 import { ProductCode } from "../../enum/code/ProductCode";
 import { ResultCode } from "../../enum/http";
+import { ProductDetailDTO, ProductDTO } from "../../dto/ProductDTO";
 
 @Route('/api/product')
 @Tags('商城/商品模块')
@@ -21,7 +22,7 @@ export class MallProductController extends BaseController{
 	@Get('/allBrand')
 	public async getAllBandList(@Request() req: ExpressRequest): Promise<BaseObjectEntity<Array<SingleBrandDTO>>> {
 		const brandService = new BrandService()
-		const result = await brandService.findAll(req)
+		const result = await brandService.findAll(null, req)
 		return this.successResponse(req, result)
 	}
 
@@ -32,11 +33,11 @@ export class MallProductController extends BaseController{
 	public async getCateList(@Request() req: ExpressRequest): Promise<BaseObjectEntity<Array<CateDTO>>> {
 		//? 获取一级列表-->由于有异步嵌套，采用将一个异步查询转换为等待执行的promise
 		const cateService = new CateService()
-		const cateList1 = await cateService.findListWithQuery({ level: 0 }, req)
+		const cateList1 = await cateService.findAll({ level: 0 }, req)
 		const cateListPromises = cateList1.map(async (cate1: any) => {
-			const cateList2 = await cateService.findListWithQuery({ parentId: cate1.id }, req)
+			const cateList2 = await cateService.findAll({ parentId: cate1.id }, req)
 			const childCateListPromise = cateList2.map(async (cate2: any) => {
-				const cateList3 = await cateService.findListWithQuery({ parentId: cate2.id }, req)
+				const cateList3 = await cateService.findAll({ parentId: cate2.id }, req)
 				return {
 					...cate2.toObject(),
 					children: cateList3
@@ -69,7 +70,7 @@ export class MallProductController extends BaseController{
 	public async getProductDetail(@Request() req: ExpressRequest, @Path() id: string) {
 		if (id) {
 			const productService = new ProductService()
-			const findAProduct = await productService.findById(id, req);
+			const findAProduct = await productService.findById(id, req, [], 'cates');
 			if (findAProduct) {
 				return this.successResponse(req, findAProduct)
 			} else {
@@ -77,6 +78,24 @@ export class MallProductController extends BaseController{
 			}
 		} else {
 			return this.failedResponse(req, req.t('tip.paramsError'), ResultCode.PARAMS_ERROR)
+		}
+	}
+
+	/**
+	 * 通过slug获取商品信息
+	*/
+	@Get('/slug/{slug}')
+	public async getProductDetailBySlug(@Request() req: ExpressRequest, @Path() slug: string): Promise<BaseObjectEntity<ProductDTO>>{
+		if(slug){
+			const productService = new ProductService()
+			const findAProduct = await productService.findOne({slug}, req, [], 'cates')
+			if(findAProduct){
+				return this.successResponse(req, findAProduct)
+			}else{
+				return this.failedResponse(req, req.t('product.noExist'), ProductCode.PRODUCT_NO_EXIST)
+			}
+		}else{
+			return this.failedResponse(req, req.t('product.slugNeeded'), ProductCode.PRODUCT_NEED_SLUG)
 		}
 	}
 	

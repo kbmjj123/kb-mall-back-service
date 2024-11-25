@@ -1,9 +1,10 @@
 import { Types } from "mongoose";
 import { LanguageDTO } from './LanguageDTO'
 import { ProductState } from "../enum/business";
+import { CateDTO } from "./CateDTO";
 
 export interface ProductDTO extends LanguageDTO{
-	cates: Types.ObjectId[];
+	cates: Types.ObjectId[] | CateDTO[];
 	productName: string;
 	masterPicture: string;
 	descPic: string[];
@@ -17,6 +18,19 @@ export interface ProductDTO extends LanguageDTO{
 	score?: number | null | undefined;
 }
 
+/**
+ * 品牌
+*/
 export type EditProductParams = Partial<ProductDTO> & { brandId: string }
 
+/**
+ * slug参数
+*/
 export type CheckSlugParams = Pick<ProductDTO, 'slug'>
+
+/**
+ * 商城端获取的商品信息
+*/
+export type ProductDetailDTO = ProductDTO & {
+	cates: Pick<CateDTO, 'id' | 'title' | 'level'>[]
+}

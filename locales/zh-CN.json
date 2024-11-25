@@ -39,6 +39,7 @@
     "noExist": "商品不存在",
     "slugExist": "商品slug已存在！",
     "slugCanUse": "slug“{{slug}}”可以使用",
+    "slugNeeded": "请传递有效的slug",
     "needPrice": "请传递有效的商品价格"
   },
   "code": {
