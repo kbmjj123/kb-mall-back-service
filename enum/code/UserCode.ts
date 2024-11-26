@@ -35,6 +35,12 @@ export enum UserCode{
 	*/
 	ACCOUNT_REJECTED = 100008,
 	/**
+	 * 非法的用户id
+	*/
+	INVALIDATE_USER_ID = 100009,
+
+
+	/**
 	 * 登录超时
 	*/
 	LOGIN_TIMEOUT = 100999

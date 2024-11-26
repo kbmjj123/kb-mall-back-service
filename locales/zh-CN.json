@@ -42,6 +42,7 @@
     "slugNeeded": "请传递有效的slug",
     "needPrice": "请传递有效的商品价格"
   },
+  "shoppingCar": {},
   "code": {
     "generateError": "生成验证码错误，请稍后重试！",
     "codeError": "验证码错误，请检查后重试！"
@@ -69,7 +70,8 @@
     "deliveryEmailFailed": "邮件发送失败！",
     "needOldPwdTip": "请维护旧密码！",
     "needNewPwdTip": "请维护新密码！",
-    "oldPwdNotMatchTip": "旧密码错误，请检查后重试！"
+    "oldPwdNotMatchTip": "旧密码错误，请检查后重试！",
+    "invalidateUserId": "非法的用户id"
   },
   "account": {
     "idNeed": "请传递有效的用户id",

@@ -1611,6 +1611,122 @@
         "type": "object",
         "description": "修改密码参数"
       },
+      "CarDTO": {
+        "description": "购物车DTO",
+        "properties": {
+          "createTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录创建时间"
+          },
+          "modifyTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录修改时间"
+          },
+          "deleteTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "记录删除时间"
+          },
+          "carId": {
+            "$ref": "#/components/schemas/mongoose.Types.ObjectId",
+            "description": "购物车id"
+          }
+        },
+        "required": ["carId"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseListEntity_CarDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/CarDTO"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_number_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Pick_CarDTO.carId_": {
+        "properties": {
+          "carId": {
+            "$ref": "#/components/schemas/mongoose.Types.ObjectId",
+            "description": "购物车id"
+          }
+        },
+        "required": ["carId"],
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "AddToCarParams": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pick_CarDTO.carId_"
+          },
+          {
+            "properties": {
+              "quantity": {
+                "type": "number",
+                "format": "double",
+                "description": "添加的数量"
+              }
+            },
+            "required": ["quantity"],
+            "type": "object"
+          }
+        ],
+        "description": "加入购车的参数"
+      },
+      "BaseObjectEntity_boolean_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "type": "boolean"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
       "BaseObjectEntity__id-any--title-any--description-any--detail-any--link-string--bgImage-string--cover-string_-Array_": {
         "properties": {
           "status": {
@@ -1672,6 +1788,26 @@
               "type": "object"
             },
             "type": "array"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_null_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "type": "number",
+            "enum": [null],
+            "nullable": true
           }
         },
         "type": "object",
@@ -3202,6 +3338,202 @@
         "parameters": []
       }
     },
+    "/api/shoppingcar/list": {
+      "get": {
+        "operationId": "GetShoppingCarList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseListEntity_CarDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取购物车列表",
+        "tags": ["购物车模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/shoppingcar/add": {
+      "patch": {
+        "operationId": "AddToShoppingCar",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_number_"
+                }
+              }
+            }
+          }
+        },
+        "description": "将商品加入到购物车",
+        "tags": ["购物车模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddToCarParams"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/shoppingcar/modify": {
+      "post": {
+        "operationId": "ModifyShoppingCar",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
+          }
+        },
+        "description": "同时编辑多个购物车中的商品数量",
+        "tags": ["购物车模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/AddToCarParams"
+                },
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/shoppingcar/remove": {
+      "delete": {
+        "operationId": "RemoveFromShoppingCar",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
+          }
+        },
+        "description": "将商品从购物车中移出",
+        "tags": ["购物车模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/shoppingcar/clean": {
+      "post": {
+        "operationId": "CleanShoppingCar",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_boolean_"
+                }
+              }
+            }
+          }
+        },
+        "description": "清空购物车",
+        "tags": ["购物车模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/shoppingcar/removeLoseEfficacy": {
+      "delete": {
+        "operationId": "RemoteLoseEfficacy",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_boolean_"
+                }
+              }
+            }
+          }
+        },
+        "description": "清空失效商品",
+        "tags": ["购物车模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/shoppingcar/share": {
+      "post": {
+        "operationId": "ShareShoppingCar",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                }
+              }
+            }
+          }
+        },
+        "description": "分享购物车商品",
+        "tags": ["购物车模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/product/allBrand": {
       "get": {
         "operationId": "GetAllBandList",
@@ -3392,6 +3724,112 @@
         "tags": ["装修模块"],
         "security": [],
         "parameters": []
+      }
+    },
+    "/api/collection/list": {
+      "get": {
+        "operationId": "GetCollectionList",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "description": "获取我的收藏列表",
+        "tags": ["我的收藏模块"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/collection/add": {
+      "patch": {
+        "operationId": "AddToCollection",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_null_"
+                }
+              }
+            }
+          }
+        },
+        "description": "将商品加入到我的收藏列表中",
+        "tags": ["我的收藏模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/collection/remove": {
+      "delete": {
+        "operationId": "RemoveFromCollection",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_null_"
+                }
+              }
+            }
+          }
+        },
+        "description": "将商品从我的收藏列表中移除",
+        "tags": ["我的收藏模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/collection/inCollection": {
+      "get": {
+        "operationId": "CheckIfInCollection",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_boolean_"
+                }
+              }
+            }
+          }
+        },
+        "description": "查询商品是否在我的收藏中",
+        "tags": ["我的收藏模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "productId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     }
   },

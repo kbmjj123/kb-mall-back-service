@@ -60,6 +60,18 @@ export const checkAccountAvailable = (req: Request, res: Response, next: NextFun
 }
 
 /**
+ * 从请求头中获取用户id，并做对应的检测
+*/
+export const getAvailableUserId = (req: Request, res: Response, next: NextFunction) => {
+	const { id } = req.user
+	if(id){
+		next()
+	}else{
+		res.failed(UserCode.INVALIDATE_USER_ID, null, req.t('user.invalidateUserId'))
+	}
+}
+
+/**
  * 针对jwt解码异常的统一处理
 */
 const responseJWTError = (req: Request, res: Response, error: jwt.VerifyErrors) => {
