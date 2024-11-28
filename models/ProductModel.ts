@@ -3,7 +3,7 @@ import { ProductDTO } from "../dto/ProductDTO";
 import { LanguageItemType } from "../dto/LanguageDTO";
 import { ProductState } from "../enum/business";
 import { CATE_MODEL_NAME } from "./CateModel";
-const MODEL_NAME = 'productModel'
+export const PRODUCT_MODEL_NAME = 'productModel'
 const productSchema = new mongoose.Schema<ProductDTO>({
 	// cates: {
 	// 	type: [{ type: mongoose.SchemaTypes.ObjectId }],
@@ -75,4 +75,4 @@ const productSchema = new mongoose.Schema<ProductDTO>({
 });
 
 
-export const ProductModel = mongoose.model(MODEL_NAME, productSchema, 'products');
+export const ProductModel = mongoose.model(PRODUCT_MODEL_NAME, productSchema, 'products');

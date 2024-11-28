@@ -1234,109 +1234,6 @@
         "type": "object",
         "additionalProperties": false
       },
-      "AddressDTO": {
-        "properties": {
-          "createTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录创建时间"
-          },
-          "modifyTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录修改时间"
-          },
-          "deleteTime": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true,
-            "description": "记录删除时间"
-          },
-          "isDefault": {
-            "type": "boolean"
-          },
-          "provinceCode": {
-            "type": "string"
-          },
-          "provinceName": {
-            "type": "string"
-          },
-          "cityCode": {
-            "type": "string"
-          },
-          "cityName": {
-            "type": "string"
-          },
-          "areaName": {
-            "type": "string"
-          },
-          "areaCode": {
-            "type": "string"
-          },
-          "detailAddress": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "isDefault",
-          "provinceCode",
-          "provinceName",
-          "cityCode",
-          "cityName",
-          "areaName",
-          "areaCode",
-          "detailAddress"
-        ],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "PageListType_AddressDTO_": {
-        "properties": {
-          "pages": {
-            "type": "number",
-            "format": "double"
-          },
-          "pageIndex": {
-            "type": "number",
-            "format": "double"
-          },
-          "pageSize": {
-            "type": "number",
-            "format": "double"
-          },
-          "total": {
-            "type": "number",
-            "format": "double"
-          },
-          "list": {
-            "items": {
-              "$ref": "#/components/schemas/AddressDTO"
-            },
-            "type": "array"
-          }
-        },
-        "required": ["pages", "pageIndex", "pageSize", "total", "list"],
-        "type": "object"
-      },
-      "BasePageListEntity_AddressDTO_": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PageListType_AddressDTO_"
-          }
-        },
-        "required": ["data"],
-        "type": "object",
-        "additionalProperties": false
-      },
       "PageListType_UserDTO_": {
         "properties": {
           "pages": {
@@ -1793,7 +1690,73 @@
         "type": "object",
         "additionalProperties": false
       },
-      "BaseObjectEntity_null_": {
+      "CollectionDTO": {
+        "description": "收藏DTO",
+        "properties": {
+          "createTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录创建时间"
+          },
+          "modifyTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录修改时间"
+          },
+          "deleteTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "记录删除时间"
+          },
+          "userId": {
+            "$ref": "#/components/schemas/mongoose.Types.ObjectId",
+            "description": "用户唯一id"
+          },
+          "productId": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "商品id"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PageListType_CollectionDTO_": {
+        "properties": {
+          "pages": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageIndex": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "list": {
+            "items": {
+              "$ref": "#/components/schemas/CollectionDTO"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["pages", "pageIndex", "pageSize", "total", "list"],
+        "type": "object"
+      },
+      "BasePageListEntity_CollectionDTO_": {
         "properties": {
           "status": {
             "type": "number",
@@ -1805,9 +1768,26 @@
             "default": "操作成功"
           },
           "data": {
+            "$ref": "#/components/schemas/PageListType_CollectionDTO_"
+          }
+        },
+        "required": ["data"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_CollectionDTO_": {
+        "properties": {
+          "status": {
             "type": "number",
-            "enum": [null],
-            "nullable": true
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CollectionDTO"
           }
         },
         "type": "object",
@@ -2661,166 +2641,6 @@
         },
         "description": "删除品牌",
         "tags": ["品牌模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/address/list": {
-      "get": {
-        "operationId": "GetAddressList",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BasePageListEntity_AddressDTO_"
-                }
-              }
-            }
-          }
-        },
-        "description": "获取用户地址列表",
-        "tags": ["地址模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "pageIndex",
-            "required": true,
-            "schema": {
-              "format": "double",
-              "type": "number"
-            }
-          },
-          {
-            "in": "query",
-            "name": "pageSize",
-            "required": true,
-            "schema": {
-              "format": "double",
-              "type": "number"
-            }
-          },
-          {
-            "in": "query",
-            "name": "keyword",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/address": {
-      "put": {
-        "operationId": "CreateAddress",
-        "responses": {
-          "204": {
-            "description": "No content"
-          }
-        },
-        "description": "新增一用户地址",
-        "tags": ["地址模块"],
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/address/{id}": {
-      "post": {
-        "operationId": "ModifyAddress",
-        "responses": {
-          "204": {
-            "description": "No content"
-          }
-        },
-        "description": "编辑用户地址",
-        "tags": ["地址模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddressDTO"
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "operationId": "DeleteAddress",
-        "responses": {
-          "204": {
-            "description": "No content"
-          }
-        },
-        "description": "删除一用户地址",
-        "tags": ["地址模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      },
-      "get": {
-        "operationId": "GetAddressInfo",
-        "responses": {
-          "204": {
-            "description": "No content"
-          }
-        },
-        "description": "根据用户id获取用户地址信息",
-        "tags": ["地址模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/address/{id}/default": {
-      "post": {
-        "operationId": "SetDefaultAddress",
-        "responses": {
-          "204": {
-            "description": "No content"
-          }
-        },
-        "description": "设置用户默认的收货地址",
-        "tags": ["地址模块"],
         "security": [],
         "parameters": [
           {
@@ -3730,14 +3550,48 @@
       "get": {
         "operationId": "GetCollectionList",
         "responses": {
-          "204": {
-            "description": "No content"
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasePageListEntity_CollectionDTO_"
+                }
+              }
+            }
           }
         },
         "description": "获取我的收藏列表",
         "tags": ["我的收藏模块"],
         "security": [],
-        "parameters": []
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageIndex",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/collection/add": {
@@ -3749,7 +3603,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_null_"
+                  "$ref": "#/components/schemas/BaseObjectEntity_CollectionDTO_"
                 }
               }
             }
@@ -3780,13 +3634,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_null_"
+                  "$ref": "#/components/schemas/BaseObjectEntity_boolean_"
                 }
               }
             }
           }
         },
-        "description": "将商品从我的收藏列表中移除",
+        "description": "根据收藏id将商品从我的收藏列表中移除",
         "tags": ["我的收藏模块"],
         "security": [],
         "parameters": [],

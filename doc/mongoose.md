@@ -231,3 +231,6 @@ const query = {
 		return translationMap
 	}
 ```
+
+### 采用引用类型还是文档嵌套
+[https://chatgpt.com/c/674451e2-6cd0-8005-a32c-04e0cd8d3037](https://chatgpt.com/c/674451e2-6cd0-8005-a32c-04e0cd8d3037)

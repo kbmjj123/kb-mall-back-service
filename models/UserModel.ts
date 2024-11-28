@@ -3,6 +3,47 @@ import bcrypt from 'bcrypt'
 import { UserDTO } from "../dto/UserDTO";
 import { AccountState } from "../enum/business";
 
+const addressSchema = new mongoose.Schema({
+	country: {
+		type: String,
+		required: [true, '国家/地区代码，建议使用 ISO 3166-1 标准（如 US、CN）']
+	},
+	state: {
+		type: String,
+		minLength: 1,
+		maxLength: 100,
+		required: [true, '省/州/地区名称，长度限制一般为 1-100 字符']
+	},
+	city: {
+		type: String,
+		minLength: 1,
+		maxLength: 100,
+		required: [true, '城市名称，长度限制一般为 1-100 字符']
+	},
+	district: {
+		type: String,
+		minLength: 1,
+		maxLength: 100,
+	},
+	streetAddressLine1: {
+		type: String,
+		minLength: 10,
+		maxLength: 255,
+	},
+	streetAddressLine2: {
+		type: String,
+		minLength: 10,
+		maxLength: 255,
+	},
+	postalCode: {
+		type: String,
+		minLength: 3,
+		maxLength: 20,
+	} 
+})
+
+export const AddressModel = mongoose.model('addressModel', addressSchema)
+
 const userSchema = new mongoose.Schema<UserDTO>({
 	account: {
 		type: String,
@@ -35,6 +76,7 @@ const userSchema = new mongoose.Schema<UserDTO>({
 	},
 	address: {
 		type: Types.ObjectId,
+		ref: 'addressModel',
 		default: null
 	},
 	loginTime: {
@@ -50,7 +92,7 @@ const userSchema = new mongoose.Schema<UserDTO>({
 	createTime: Date,
 	logoutTime: Date
 })
-
+export const USER_MODEL_NAME = 'userModal'
 type UserScheType = InferSchemaType<typeof userSchema>
 
 
@@ -67,4 +109,4 @@ userSchema.method('isPasswordMatched', async function (newPwd: string) {
 	return await bcrypt.compare(newPwd, this.password)
 })
 
-export const UserModel = mongoose.model<UserScheType>('userModal', userSchema, "users");
+export const UserModel = mongoose.model<UserScheType>(USER_MODEL_NAME, userSchema, "users");

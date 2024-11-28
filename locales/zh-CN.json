@@ -40,6 +40,7 @@
     "slugExist": "商品slug已存在！",
     "slugCanUse": "slug“{{slug}}”可以使用",
     "slugNeeded": "请传递有效的slug",
+    "invalidateProductId": "请传递有效的商品id",
     "needPrice": "请传递有效的商品价格"
   },
   "shoppingCar": {},
