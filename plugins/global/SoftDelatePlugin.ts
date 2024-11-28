@@ -1,5 +1,5 @@
 import { ISoftDeleteDTO } from '../../dto/soft-delete-dto/ISoftDeleteDTO'
-import { Query, Schema } from 'mongoose'
+import { Model, Query, Schema } from 'mongoose'
 
 export type SoftDeleteOptions = {}
 

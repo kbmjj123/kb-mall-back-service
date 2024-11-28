@@ -10,6 +10,9 @@ export enum UserRole{
 	ADMIN = "admin"
 }
 
+/**
+ * 用户状态
+*/
 export enum AccountState{
 	/**
 	 * 启用中
@@ -46,4 +49,16 @@ export enum ProductState{
 	 * 下架中
 	*/
 	OFF_LINE = 'off-line'
+}
+
+/*************** 愿望清单相关 ****************/
+export enum WishlistType {
+	/**
+	 * 共享清单
+	*/
+	SHARE = 'share',
+	/**
+	 * 私人清单
+	*/
+	PRIVACY = 'privacy'
 }

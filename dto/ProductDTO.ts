@@ -4,6 +4,7 @@ import { ProductState } from "../enum/business";
 import { CateDTO } from "./CateDTO";
 
 export interface ProductDTO extends LanguageDTO{
+	id: string,
 	cates: Types.ObjectId[] | CateDTO[];
 	productName: string;
 	masterPicture: string;

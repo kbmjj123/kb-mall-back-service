@@ -24,6 +24,8 @@ import { BrandController } from './../controllers/BrandController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AccountController } from './../controllers/AccountController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MallWishListController } from './../controllers/mall/MallWishListController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MallUserController } from './../controllers/mall/MallUserController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MallShoppingCarController } from './../controllers/mall/MallShoppingCarController';
@@ -209,6 +211,7 @@ const models: TsoaRoute.Models = {
             "modifyTime": {"dataType":"datetime"},
             "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
             "languageList": {"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"},"required":true},
+            "id": {"dataType":"string","required":true},
             "cates": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refAlias","ref":"mongoose.Types.ObjectId"}},{"dataType":"array","array":{"dataType":"refObject","ref":"CateDTO"}}],"required":true},
             "productName": {"dataType":"string","required":true},
             "masterPicture": {"dataType":"string","required":true},
@@ -309,7 +312,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Partial_ProductDTO_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"cates":{"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refAlias","ref":"mongoose.Types.ObjectId"}},{"dataType":"array","array":{"dataType":"refObject","ref":"CateDTO"}}]},"productName":{"dataType":"string"},"masterPicture":{"dataType":"string"},"descPic":{"dataType":"array","array":{"dataType":"string"}},"slug":{"dataType":"string"},"state":{"ref":"ProductState"},"richText":{"dataType":"string"},"brand":{"ref":"mongoose.Types.ObjectId"},"price":{"dataType":"double"},"activityPrice":{"dataType":"double"},"sales":{"dataType":"double"},"score":{"dataType":"double"},"languageList":{"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"}},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string"},"cates":{"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refAlias","ref":"mongoose.Types.ObjectId"}},{"dataType":"array","array":{"dataType":"refObject","ref":"CateDTO"}}]},"productName":{"dataType":"string"},"masterPicture":{"dataType":"string"},"descPic":{"dataType":"array","array":{"dataType":"string"}},"slug":{"dataType":"string"},"state":{"ref":"ProductState"},"richText":{"dataType":"string"},"brand":{"ref":"mongoose.Types.ObjectId"},"price":{"dataType":"double"},"activityPrice":{"dataType":"double"},"sales":{"dataType":"double"},"score":{"dataType":"double"},"languageList":{"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"}},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "EditProductParams": {
@@ -517,7 +520,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_UserDTO.Exclude_keyofUserDTO.password-or-refreshToken-or-accessToken-or-logoutTime-or-isPasswordMatched__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string","required":true},"state":{"ref":"AccountState"},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"},"id":{"dataType":"string","required":true},"role":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["admin"]}],"required":true},"nickName":{"dataType":"string"},"avatar":{"dataType":"string"},"address":{"ref":"mongoose.Types.ObjectId"},"loginTime":{"dataType":"datetime"},"account":{"dataType":"string"},"firstName":{"dataType":"string","required":true},"lastName":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string","required":true},"id":{"dataType":"string","required":true},"state":{"ref":"AccountState"},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"},"role":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["admin"]}],"required":true},"nickName":{"dataType":"string"},"avatar":{"dataType":"string"},"address":{"ref":"mongoose.Types.ObjectId"},"loginTime":{"dataType":"datetime"},"account":{"dataType":"string"},"firstName":{"dataType":"string","required":true},"lastName":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Omit_UserDTO.password-or-refreshToken-or-accessToken-or-logoutTime-or-isPasswordMatched_": {
@@ -548,6 +551,92 @@ const models: TsoaRoute.Models = {
     "UserToggleEnabledParams": {
         "dataType": "refAlias",
         "type": {"ref":"Pick_UserDTO.state_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WishlistType": {
+        "dataType": "refEnum",
+        "enums": ["share","privacy"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_WishlistDTO.type-or-shareLink_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"type":{"ref":"WishlistType","required":true},"shareLink":{"dataType":"string"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SharedWishListDTO": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_WishlistDTO.type-or-shareLink_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BaseObjectEntity_SharedWishListDTO_": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"dataType":"double","default":0},
+            "message": {"dataType":"string","default":"操作成功"},
+            "data": {"ref":"SharedWishListDTO"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_ProductDTO.id-or-productName-or-price-or-masterPicture-or-slug_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"slug":{"dataType":"string","required":true},"id":{"dataType":"string","required":true},"productName":{"dataType":"string","required":true},"masterPicture":{"dataType":"string","required":true},"price":{"dataType":"double"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WishlistItemDTO": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_ProductDTO.id-or-productName-or-price-or-masterPicture-or-slug_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WishlistDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+            "userId": {"dataType":"union","subSchemas":[{"ref":"mongoose.Types.ObjectId"},{"dataType":"undefined"}],"required":true},
+            "name": {"dataType":"string","required":true},
+            "description": {"dataType":"string"},
+            "type": {"ref":"WishlistType","required":true},
+            "shareLink": {"dataType":"string"},
+            "items": {"dataType":"array","array":{"dataType":"refAlias","ref":"WishlistItemDTO"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BaseObjectEntity_WishlistDTO_": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"dataType":"double","default":0},
+            "message": {"dataType":"string","default":"操作成功"},
+            "data": {"ref":"WishlistDTO"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PageListType_WishlistDTO_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"pages":{"dataType":"double","required":true},"pageIndex":{"dataType":"double","required":true},"pageSize":{"dataType":"double","required":true},"total":{"dataType":"double","required":true},"list":{"dataType":"array","array":{"dataType":"refObject","ref":"WishlistDTO"},"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BasePageListEntity_WishlistDTO_": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"dataType":"double","default":0},
+            "message": {"dataType":"string","default":"操作成功"},
+            "data": {"ref":"PageListType_WishlistDTO_","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AddItemsParamsDTO": {
+        "dataType": "refAlias",
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"WishlistItemDTO"},{"dataType":"nestedObjectLiteral","nestedProperties":{"wishlistId":{"dataType":"string","required":true}}}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RemoteItemParamsDTO": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"productId":{"dataType":"string","required":true},"id":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_UserDTO.password_": {
@@ -1638,6 +1727,284 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'toggleAccountState',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/api/wishlist/share',
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController)),
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController.prototype.generateShareWishlist)),
+
+            async function MallWishListController_generateShareWishlist(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    id: {"in":"query","name":"id","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallWishListController();
+
+              await templateService.apiHandler({
+                methodName: 'generateShareWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/wishlist/info/$:token',
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController)),
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController.prototype.getWishlistInfoById)),
+
+            async function MallWishListController_getWishlistInfoById(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    token: {"in":"path","name":"token","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallWishListController();
+
+              await templateService.apiHandler({
+                methodName: 'getWishlistInfoById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/wishlist/personal',
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController)),
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController.prototype.getMyWishlist)),
+
+            async function MallWishListController_getMyWishlist(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"queries","name":"params","required":true,"ref":"PageDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallWishListController();
+
+              await templateService.apiHandler({
+                methodName: 'getMyWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/api/wishlist/create',
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController)),
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController.prototype.createWishlist)),
+
+            async function MallWishListController_createWishlist(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"body","name":"params","required":true,"ref":"WishlistDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallWishListController();
+
+              await templateService.apiHandler({
+                methodName: 'createWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/api/wishlist/delete',
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController)),
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController.prototype.removeWishlist)),
+
+            async function MallWishListController_removeWishlist(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    id: {"in":"query","name":"id","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallWishListController();
+
+              await templateService.apiHandler({
+                methodName: 'removeWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/api/wishlist/addItems',
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController)),
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController.prototype.addItemsToWishlist)),
+
+            async function MallWishListController_addItemsToWishlist(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"body","name":"params","required":true,"ref":"AddItemsParamsDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallWishListController();
+
+              await templateService.apiHandler({
+                methodName: 'addItemsToWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/api/wishlist/removeItems',
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController)),
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController.prototype.removeItemsFromWishlist)),
+
+            async function MallWishListController_removeItemsFromWishlist(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"body","name":"params","required":true,"ref":"RemoteItemParamsDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallWishListController();
+
+              await templateService.apiHandler({
+                methodName: 'removeItemsFromWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/wishlist/clean',
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController)),
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController.prototype.cleanWishlist)),
+
+            async function MallWishListController_cleanWishlist(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallWishListController();
+
+              await templateService.apiHandler({
+                methodName: 'cleanWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/wishlist/isInWishlist',
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController)),
+            ...(fetchMiddlewares<RequestHandler>(MallWishListController.prototype.isItemInWishlist)),
+
+            async function MallWishListController_isItemInWishlist(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    id: {"in":"query","name":"id","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallWishListController();
+
+              await templateService.apiHandler({
+                methodName: 'isItemInWishlist',
                 controller,
                 response,
                 next,

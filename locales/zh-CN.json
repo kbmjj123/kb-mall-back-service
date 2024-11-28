@@ -44,6 +44,10 @@
     "needPrice": "请传递有效的商品价格"
   },
   "shoppingCar": {},
+  "wishlist": {
+    "noExist": "愿望清单不存在",
+    "noValidate": "没有可用的愿望清单"
+  },
   "code": {
     "generateError": "生成验证码错误，请稍后重试！",
     "codeError": "验证码错误，请检查后重试！"
