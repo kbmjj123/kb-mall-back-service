@@ -234,3 +234,7 @@ const query = {
 
 ### 采用引用类型还是文档嵌套
 [https://chatgpt.com/c/674451e2-6cd0-8005-a32c-04e0cd8d3037](https://chatgpt.com/c/674451e2-6cd0-8005-a32c-04e0cd8d3037)
+
+### 关于数据表中的id定义
+1. 一般情况下，我们无需显示地在`mongoose`的`schema`中定义记录的`id`或者是`_id`属性，因为`mongoose`会自动地为每一个doc记录创建`ObjectId`类型的`_id`，而我们则可以抽象一个`getter`函数，对于`_id`的保护，然后返回`id`来作为doc的对外`id`，而当我们需要手动挡地方式来更新`doc`数据时，需要直接使用`_id`来作为对应的查询条件；
+2. 关于id的类型定义，一般在`DTO`层定义的id数据类型是**字符串数据类型**的，而在`Model.Schema`层定义的是**ObjectId类型**的，因为在`DTO`应用层一般用于做字符串相关的操作，而且，在使用的过程中，如果传递了对应的字符串给到`mongoose`作为id来使用的时候，`mongoose`将会自动转换这个`String`类型为对应的`ObjectId`类型，无需我们手动去显示地转换！
