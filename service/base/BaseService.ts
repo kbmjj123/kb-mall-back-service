@@ -33,7 +33,7 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	 * @param populate 
 	 */
 	// @ts-ignore
-	private buildQuery(query: Query, req: ExpressRequest, select?: string[], populate?: PopulateOptionType): Query {
+	public buildQuery(query: Query, req: ExpressRequest, select?: string[], populate?: PopulateOptionType): Query {
 		if(select && select.length > 0){
 			query.select(select.map(item => `+${item}`).join(' '))
 		}

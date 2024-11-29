@@ -17,7 +17,7 @@ const cateSchema = new mongoose.Schema<CateDTO>({
     }
   },
   parentId: {
-    type: Types.ObjectId,
+    type: String,
     default: null
   },
 	languageList: Array<LanguageItemType>,

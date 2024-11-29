@@ -3881,7 +3881,7 @@
             }
           }
         },
-        "description": "获取整颗分类数",
+        "description": "获取整颗分类🌲",
         "tags": ["商城/商品模块"],
         "security": [],
         "parameters": []

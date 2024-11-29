@@ -4,7 +4,7 @@ import { LanguageDTO } from "./LanguageDTO";
 export interface CateDTO extends LanguageDTO{
 	id?: string;
 	title: string;
-	parentId?: Types.ObjectId;
+	parentId?: string;
 	level?: number;
 	paramsList?: Array<{key: string, values: string[]}>
 }
