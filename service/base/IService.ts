@@ -7,8 +7,8 @@ export type PopulateOptionType = string | string[] | PopulateOptions | PopulateO
 
 export interface IService<T extends ISoftDeleteDTO> {
 	create(data: Partial<T>, req: ExpressRequest): Promise<T>;
-	update(id: string, data: UpdateQuery<T>, req: ExpressRequest): Promise<T | null>;
-	updateMany(filter: FilterQuery<T> | undefined, update: UpdateQuery<T> | UpdateWithAggregationPipeline, req: ExpressRequest): Promise<UpdateWriteOpResult | null>;
+	update(id: string, data: UpdateQuery<T>, req: ExpressRequest, options?: QueryOptions<T> | null | undefined): Promise<T | null>;
+	updateMany(filter: FilterQuery<T> | undefined, update: UpdateQuery<T> | UpdateWithAggregationPipeline, req: ExpressRequest, options?: QueryOptions<T> | null | undefined): Promise<UpdateWriteOpResult | null>;
 	findOneAndUpdate(req: ExpressRequest, filter?: FilterQuery<T> | undefined, update?: UpdateQuery<T> | undefined, options?: QueryOptions<T> | null | undefined, select?: string[], populate?: PopulateOptionType): Promise<T | null>;
 	sofeDeleteById(id: string, req: ExpressRequest): Promise<T | null>;
 	findById(id: string, req: ExpressRequest, select?: string[], populate?: PopulateOptionType): Promise<T | null>;

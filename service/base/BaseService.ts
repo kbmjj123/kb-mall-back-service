@@ -84,8 +84,11 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 		return this.model.create(data)
 	}
 	/************ 以下是更新的操作 ************/
-	async update(id: string, data: UpdateQuery<T>, req: ExpressRequest): Promise<T | null> {
-		const options = this.getLanguageOptions(req, {new: true})
+	/**
+	 * 根据id来更新文档
+	*/
+	async update(id: string, data: UpdateQuery<T>, req: ExpressRequest, options?: QueryOptions<T> | null | undefined): Promise<T | null> {
+		options = this.getLanguageOptions(req, {new: true})
 		try{
 			return await this.model.findByIdAndUpdate(id, data).setOptions(options)
 		}catch(error){
@@ -94,6 +97,9 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 			throw new Error(`数据库update异常`)
 		}
 	}
+	/**
+	 * 根据条件过滤一个文档并进行更新操作
+	*/
 	async findOneAndUpdate(req: ExpressRequest, filter?: FilterQuery<T> | undefined, update?: UpdateQuery<T> | undefined, options?: QueryOptions<T> | null | undefined, select?: string[], populate?: PopulateOptionType): Promise<T | null> {
 		const query = this.buildQuery(this.model.findOneAndUpdate(filter, update, options), req, select, populate)
 		try{
@@ -104,8 +110,11 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 			throw new Error(`数据库findOneAndUpdate查询异常`)
 		}
 	}
-	updateMany(filter: FilterQuery<T> | undefined, update: UpdateWithAggregationPipeline | UpdateQuery<T>, req: ExpressRequest): Promise<UpdateWriteOpResult | null> {
-		const options = this.getLanguageOptions(req, {new: true})
+	/**
+	 * 一次性更新多个文档
+	*/
+	async updateMany(filter: FilterQuery<T> | undefined, update: UpdateWithAggregationPipeline | UpdateQuery<T>, req: ExpressRequest, options?: QueryOptions<T> | null | undefined): Promise<UpdateWriteOpResult | null> {
+		options = this.getLanguageOptions(req, {new: true})
 		return this.model.updateMany(filter, update, options)
 	}
 	/************ 以下是单个查询的操作 ************/

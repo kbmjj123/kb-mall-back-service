@@ -6,6 +6,8 @@ import { PageDTO } from "../../dto/PageDTO";
 import { AddressDTO } from "../../dto/AddressDTO";
 import { AddressService } from "../../service/AddressService";
 import { ResultCode } from "../../enum/http";
+import mongoose from "mongoose";
+import { errorLogger } from "../../utils/Logger";
 
 @Route('/api/address')
 @Tags('商城/用户收货地址模块')
@@ -67,7 +69,7 @@ export class MallAddressController extends BaseController{
 		}
 	}
 	/**
-	 * 根据地址id删除一收获地址
+	 * 根据地址id删除一收货地址
 	*/
 	@Delete('/${id}')
 	public async removeById(@Request() req: ExpressRequest, @Path() id: string){
@@ -84,9 +86,35 @@ export class MallAddressController extends BaseController{
 	*/
 	@Patch('/${id}/setDefault')
 	public async setDefaultAddress(@Request() req: ExpressRequest, @Path() id: string){
-		const setADefaultAddress = await this.addressService.update(id, {
-			isDefault: true
-		}, req)
+		const { id: userId } = req.user
+		const myAddress = await this.addressService.findOne({userId, _id: id}, req)
+		if(!myAddress){
+			return this.failedResponse(req, req.t('tip.noExistError'), ResultCode.NO_FOUND)
+		}
+		const session = await mongoose.startSession()
+		session.startTransaction()
+		try{
+			// 将非目标id给设置isDefault为false
+			await this.addressService.updateMany({
+				userId,
+			}, { isDefault: false }, req, { session })
+			const setADefaultAddress = await this.addressService.update(id, {
+				isDefault: true,
+			}, req, { session })
+			await session.commitTransaction()
+			session.endSession()
+			if(setADefaultAddress){
+				return this.successResponse(req, setADefaultAddress)
+			}else{
+				return this.failedResponse(req)
+			}
+		}catch(error){
+			await session.abortTransaction()
+			session.endSession()
+			errorLogger.error(`[setDefaultAddress]异常`)
+			errorLogger.error(error)
+			throw new Error(`数据库setDefaultAddress操作异常`)
+		}
 	}
 
 }

@@ -202,6 +202,26 @@ const query = {
 #### 当在调用collection的update操作时
 > 当我们在调用`Model.update()`操作的时候，需要传递`new=true`给到这个options对象，使其能够在方法调用后返回更新后的记录，而不是更新前的记录
 
+#### 关于事务的支持
+> 在实际的db操作过程中，在一次场景处理中，可能需要处理多次db操作才能够满足需场景需求，因此，需要引入“事务”的机制，在`mongoose`中可以采用`startSession` + `endSession`组合的方式来实现，比如有 :point_down: 这样子的一个场景，需要设置用户的默认收货地址，要先将该用户下的地址列表都设置`isDefault=false`，然后再将目标收货地址设置为true，实现代码如下：
+```typescript
+// 创建一事务会话
+const session = await mongoose.startSession()
+session.startTransation()
+try{
+	await AddressModel.updateMany({ userId }, { isDefault: false }, { session });
+	const updatedAddress = await AddressModel.findByIdAndUpdate(
+    addressId,
+    { isDefault: true },
+    { new: true, session }
+  );
+  await session.commitTransaction();
+  session.endSession();
+}catch(error){
+
+}
+```
+
 #### 关于批量更新的技巧
 > 一般情况下，如果我们需要对一个列表进行批量更新的操作的时候，需要先查询到所有的id集合，然后再去遍历每一个id，根据对应的id来进行对应的`findAndUpdate`操作，这意味着需要对db进行重复的查询动作，会大大增加数据库的压力，那么可以采用一种新的方式，来实现同样的功能，但仅需要进行一次简单的db操作即可，其过程对应的微代码描述如下：
 ```typescript
