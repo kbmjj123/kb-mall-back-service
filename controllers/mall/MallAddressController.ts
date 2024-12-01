@@ -1,0 +1,92 @@
+import { Middlewares, Request,  Queries, Route, Tags, Get, Body, Put, Post, Path, Delete, Patch } from "tsoa";
+import { BaseController } from "../BaseController";
+import { checkLogin } from "../../middleware/AuthMiddleware";
+import { Request as ExpressRequest } from 'express'
+import { PageDTO } from "../../dto/PageDTO";
+import { AddressDTO } from "../../dto/AddressDTO";
+import { AddressService } from "../../service/AddressService";
+import { ResultCode } from "../../enum/http";
+
+@Route('/api/address')
+@Tags('商城/用户收货地址模块')
+@Middlewares([checkLogin])
+export class MallAddressController extends BaseController{
+
+	private addressService : AddressService
+	constructor(){
+		super()
+		this.addressService = new AddressService()
+	}
+
+	/**
+	 * 获取当前登录用户的收获地址列表
+	*/
+	@Get('/list')
+	public async getAddressList(@Request() req: ExpressRequest, @Queries() params: PageDTO) {
+		const { id: userId } = req.user
+		const addressList = await this.addressService.findList({ userId }, req, params)
+		return this.successPageListResponse(req, addressList)
+	}
+
+	/**
+	 * 新增一用户售后地址
+	*/
+	@Put('/add')
+	public async addAddress(@Request() req: ExpressRequest, @Body() params: AddressDTO) {
+		const createAAddress = await this.addressService.create(params, req)
+		if(createAAddress){
+			return this.successResponse(req, createAAddress)
+		}else{
+			return this.failedResponse(req)
+		}
+	}
+	/**
+	 * 编辑用户地址信息
+	 * @param params 
+	*/
+	@Post('/${id}/edit')
+	public async editAddress(@Request() req: ExpressRequest, @Path() id: string, @Body() params: AddressDTO){
+		const updateAAddress = await this.addressService.update(id, params, req)
+		if(updateAAddress){
+			return this.successResponse(req, updateAAddress)
+		}else{
+			return this.failedResponse(req)
+		}
+	}
+	/**
+	 * 根据地址id查询地址信息
+	 * @param id 待查询的地址id
+	 */
+	@Get('/${id}')
+	public async getAddressInfo(@Request() req: ExpressRequest, @Path() id: string) {
+		const findAAddress = await this.addressService.findById(id, req)
+		if(findAAddress){
+			return this.successResponse(req, findAAddress)
+		}else{
+			return this.failedResponse(req, req.t('tip.noExistError'), ResultCode.NO_FOUND)
+		}
+	}
+	/**
+	 * 根据地址id删除一收获地址
+	*/
+	@Delete('/${id}')
+	public async removeById(@Request() req: ExpressRequest, @Path() id: string){
+		const deleteAAddress = await this.addressService.sofeDeleteById(id, req)
+		if(deleteAAddress){
+			return this.successResponse(req, !!deleteAAddress)
+		}else{
+			return this.failedResponse(req)
+		}
+	}
+
+	/**
+	 * 设置默认的收货地址
+	*/
+	@Patch('/${id}/setDefault')
+	public async setDefaultAddress(@Request() req: ExpressRequest, @Path() id: string){
+		const setADefaultAddress = await this.addressService.update(id, {
+			isDefault: true
+		}, req)
+	}
+
+}

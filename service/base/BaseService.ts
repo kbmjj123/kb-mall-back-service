@@ -1,5 +1,5 @@
 import { IService, PopulateOptionType } from "./IService";
-import { Document, FilterQuery, Model, PopulateOptions, Query, QueryOptions, UpdateQuery } from "mongoose";
+import { Document, FilterQuery, Model, PopulateOptions, Query, QueryOptions, UpdateQuery, UpdateWithAggregationPipeline, UpdateWriteOpResult } from "mongoose";
 import { Request as ExpressRequest } from "express";
 import { PageDTO, PageResultDTO } from "../../dto/PageDTO";
 import { PAGE_SIZE } from "../../config/ConstantValues";
@@ -83,12 +83,18 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 		this.appendLanguageToDoc(req, data)
 		return this.model.create(data)
 	}
-	update(id: string, data: UpdateQuery<T>, req: ExpressRequest): Promise<T | null> {
+	/************ 以下是更新的操作 ************/
+	async update(id: string, data: UpdateQuery<T>, req: ExpressRequest): Promise<T | null> {
 		const options = this.getLanguageOptions(req, {new: true})
-		return this.model.findByIdAndUpdate(id, data).setOptions(options)
+		try{
+			return await this.model.findByIdAndUpdate(id, data).setOptions(options)
+		}catch(error){
+			errorLogger.error(`[update]异常`)
+			errorLogger.error(error)
+			throw new Error(`数据库update异常`)
+		}
 	}
 	async findOneAndUpdate(req: ExpressRequest, filter?: FilterQuery<T> | undefined, update?: UpdateQuery<T> | undefined, options?: QueryOptions<T> | null | undefined, select?: string[], populate?: PopulateOptionType): Promise<T | null> {
-		// return this.model.findOneAndUpdate(filter, update, options).setOptions(this.getLanguageOptions(req))
 		const query = this.buildQuery(this.model.findOneAndUpdate(filter, update, options), req, select, populate)
 		try{
 			return await query.exec()
@@ -97,6 +103,10 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 			errorLogger.error(error)
 			throw new Error(`数据库findOneAndUpdate查询异常`)
 		}
+	}
+	updateMany(filter: FilterQuery<T> | undefined, update: UpdateWithAggregationPipeline | UpdateQuery<T>, req: ExpressRequest): Promise<UpdateWriteOpResult | null> {
+		const options = this.getLanguageOptions(req, {new: true})
+		return this.model.updateMany(filter, update, options)
 	}
 	/************ 以下是单个查询的操作 ************/
 	/**
