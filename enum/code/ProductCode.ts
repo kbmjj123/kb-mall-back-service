@@ -14,6 +14,11 @@ export enum ProductCode{
 	 * 分类错误
 	*/
 	PRODUCT_CATE_ERROR = 200003,
+	/**
+	 * 商品已下架
+	*/
+	PRODUCT_OFF_STATE = 200004,
+	
 	/************ 以下是品牌的相关错误编码 **************/
 	/**
 	 * 品牌名称已存在

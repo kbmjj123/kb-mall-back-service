@@ -7,11 +7,11 @@ import { ProductDTO } from "./ProductDTO";
  * 愿望清单实体类
 */
 export interface WishlistDTO extends ISoftDeleteDTO {
-
+	id: string,
 	/**
 	 * 用户id
 	*/
-	userId: mongoose.Types.ObjectId | undefined,
+	userId: string,
 	/**
 	 * 清单名称
 	*/

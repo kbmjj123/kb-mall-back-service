@@ -21,7 +21,7 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	/**
 	 * 将结果转为DTO对象
 	*/
-	private toDTO(doc: Document) {
+	protected toDTO(doc: any) {
 		return doc && doc.toObject()
 	}
 
@@ -215,6 +215,18 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 			errorLogger.error(error)
 			throw new Error(`数据库findAll查询异常`)
 		}
+	}
+	/**
+	 * 覆盖的全量查询数据操作，主要针对查询出来的doc进行二次加工
+	 * @param filter - 查询的过滤筛选条件
+	 * @param req - Express请求对象
+	 * @param select - 查询时需要选择的字段
+	 * @param populate - 填充选项，使用 Mongoose 的 PopulateOptions 类型
+	 * @returns 全量的文档记录
+	 */
+	async findAllObject(filter: FilterQuery<T> | undefined | null, req: ExpressRequest, select?: string[], populate?: PopulateOptionType): Promise<T[]> {
+		const resultList = await this.findAll(filter, req, select, populate)
+		return resultList.map((item) => this.toDTO(item))
 	}
 	/**
 	 * 公共的分页查询列表动作

@@ -51,6 +51,19 @@ export enum ProductState{
 	*/
 	OFF_LINE = 'off-line'
 }
+/**
+ * 购物车商品状态
+*/
+export enum CarItemState{
+	/**
+	 * 已失效
+	*/
+	IN_VALIDATE = 'in-validate',
+	/**
+	 * 正常状态
+	*/
+	NORMAL = 'normal',
+}
 
 /*************** 愿望清单相关 ****************/
 export enum WishlistType {

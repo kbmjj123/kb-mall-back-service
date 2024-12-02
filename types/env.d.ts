@@ -9,6 +9,8 @@ declare namespace NodeJS {
 		JWT_REFRESH_EXPIRES_IN_TIME: number,
 		JWT_WISHLIST_SECRET: string,// 愿望清单的密钥
 		JWT_WISHLIST_EXPIRES_IN_TIME: number,// 愿望清单的过期时长
+		JWT_SHOPPING_CAR_SECRET: string,// 购物车分享token生成的密钥
+		JWT_SHOPPING_CAR_EXPIRES_IN_TIME: number,	// 购物车生成的token的有效时长=1小时
 		PREVIEW_EMAIL_TEMPLATE: boolean,	// 是否开启预览邮件模版的标识
 		GMAIL_ACCOUNT: string,			// 用来发送邮件的邮箱账号
 		GMAIL_CLIENT_ID: string,		// 用来发送邮件的clientID
@@ -19,6 +21,7 @@ declare namespace NodeJS {
 		REGISTER_LINK: string,			// 注册用的链接地址
 		RESET_PWD_LINK: string,			// 重置密码用的链接地址
 		SHARE_WISHLIST_LINK: string,// 分享的愿望清单链接地址
+		SHARE_SHOPPING_CAR_LINK: string,// 分享的购物车链接地址
 		UPLOAD_FILE_SIZE: number,		// 上传文件大小限制，默认限制为10m
 		SKIP_SENDING_EMAIL: boolean,	// 是否跳过邮箱发送操作
 		QQ_EMAIL_ACCOUNT: string,		// 用来发送邮件的QQ邮箱

@@ -23,7 +23,6 @@ export class MallWishListController extends BaseController {
 	@Middlewares([checkLogin])
 	public async generateShareWishlist(@Request() req: ExpressRequest, @Query() id: string): Promise<BaseObjectEntity<SharedWishListDTO>> {
 		if (id) {
-			const { id: userId } = req.user
 			const wishlistService = new WishlistService()
 			const findAWishlist = await wishlistService.findOne({ id }, req)
 			if (findAWishlist) {
