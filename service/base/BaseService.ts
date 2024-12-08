@@ -156,49 +156,6 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	}
 	/************ 以下是集合的查询操作 ************/
 	/**
-	 * 公共的分页查询方法
-	 * @param nameInCollection 在collection中name的名称
-	 * @param pageInfo 分页信息
-	 * @returns 结构化的文档分页列表集合
-	 */
-	async findListInPage(nameInCollection: string, pageInfo: PageDTO, selectArray?: string[]): Promise<PageResultDTO<T>> {
-		let { keyword, pageIndex = 1, pageSize = PAGE_SIZE } = pageInfo
-		let resultArrayPromise = []
-		if(pageIndex < 1){
-			pageIndex = 1
-		}
-		if (keyword) {
-			const regex = new RegExp(keyword as string, 'i')
-			const query = {
-				[nameInCollection]: { $regex: regex }
-			} as FilterQuery<T>
-			resultArrayPromise.push(this.model.countDocuments())
-			if(selectArray && selectArray.length > 0){
-				const selectTarget = selectArray.map(item => `+${item}`).join(' ')
-				resultArrayPromise.push(this.model.find(query).select(selectTarget).skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
-			}else{
-				resultArrayPromise.push(this.model.find(query).skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
-			}
-		}else{
-			resultArrayPromise.push(this.model.estimatedDocumentCount())
-			if(selectArray && selectArray.length > 0){
-				const selectTarget = selectArray.map(item => `+${item}`).join(' ')
-				resultArrayPromise.push(this.model.find().select(selectTarget).skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
-			}else{
-				resultArrayPromise.push(this.model.find().skip((Number(pageIndex - 1)) * Number(pageSize)).limit(Number(pageSize)))
-			}
-		}
-		let [total = 0, searchList = []] = await Promise.all(resultArrayPromise)
-		const result = {
-			list: searchList,
-			total: total as number,
-			pageSize,
-			pageIndex,
-			pages: Math.ceil(total as number / pageSize)
-		} as PageResultDTO<T>
-		return Promise.resolve(result)
-	}
-	/**
 	 * 根据条件查询全量记录
 	 * @param filter - 查询的过滤筛选条件
 	 * @param req - Express请求对象

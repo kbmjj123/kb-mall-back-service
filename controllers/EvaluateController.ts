@@ -22,7 +22,7 @@ export class EvaluateController extends BaseController{
 	*/
 	@Get('list')
 	public async getEvaluateByProductId(@Request() req: ExpressRequest, @Queries() params: PageDTO): Promise<BasePageListEntity<EvaluateDto>>{
-		const listResult = await this.evaludateService.findListInPage('', params)
+		const listResult = await this.evaludateService.findList({}, req, params)
 		return this.successPageListResponse(req, listResult)
 	}
 

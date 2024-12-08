@@ -7,37 +7,42 @@ import { BasePageListEntity } from "../entity/BasePageListEntity";
 import { OrderDTO } from "../dto/OrderDTO";
 import { BaseObjectEntity } from "../entity/BaseObjectEntity";
 import { ResultCode } from "../enum/http";
+import { OrderService } from "../service/OrderService";
 
 @Route('order')
 @Tags('订单模块')
 export class OrderController extends BaseController{
 
+	private orderService: OrderService
+	constructor() {
+		super()
+		this.orderService = new OrderService()
+	}
+
 	/**
 	 * 获取订单列表功能
 	*/
-	// @Get('/list')
-	// public async getOrderList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<OrderDTO>>{
-	// 	const orderService = new OrderService()
-	// 	const listResult = await orderService.findListInPage('name', query)
-	// 	return this.successPageListResponse(req, listResult)
-	// }
+	@Get('/list')
+	public async getOrderList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<OrderDTO>>{
+		const listResult = await this.orderService.findList({}, req, query)
+		return this.successPageListResponse(req, listResult)
+	}
 
 	/**
 	 * 获取订单详情
 	*/
 	// @Get('/{id}')
-	// public async getOrderDetail(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<OrderDTO>> {
-	// 	if(id){
-	// 		const orderService = new OrderService()
-	// 		const findAOrder = await orderService.findById(id, req)
-	// 		if(findAOrder){
-	// 			return this.successResponse(req, findAOrder)
-	// 		}else{
-	// 			return this.failedResponse(req)
-	// 		}
-	// 	}else{
-	// 		return this.failedResponse(req, req.t('tip.paramsError'), ResultCode.PARAMS_ERROR)
-	// 	}
-	// }
+	public async getOrderDetail(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<OrderDTO>> {
+		if(id){
+			const findAOrder = await this.orderService.findById(id, req)
+			if(findAOrder){
+				return this.successResponse(req, findAOrder)
+			}else{
+				return this.failedResponse(req)
+			}
+		}else{
+			return this.failedResponse(req, req.t('tip.paramsError'), ResultCode.PARAMS_ERROR)
+		}
+	}
 
 }

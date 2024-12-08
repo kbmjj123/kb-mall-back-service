@@ -58,7 +58,7 @@ export class ProductController extends BaseController {
 	*/
 	@Get('/list')
 	public async getProductList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<ProductDTO>> {
-		const listResult = await this.productService.findListInPage('name', query)
+		const listResult = await this.productService.findList({}, req, query)
 		return this.successPageListResponse(req, listResult)
 	}
 

@@ -55,7 +55,7 @@ export class MallProductController extends BaseController{
 	@Get('/list')
 	public async getProductList(@Request() req: ExpressRequest, @Queries() query: PageDTO) {
 		const productService = new ProductService()
-		const listResult = await productService.findListInPage('name', query)
+		const listResult = await productService.findList({} ,req,  query)
 		return this.successPageListResponse(req, listResult)
 	}
 

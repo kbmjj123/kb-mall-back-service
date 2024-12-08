@@ -23,7 +23,7 @@ export class AccountController extends BaseController{
 	 */
 	@Get('/list')
 	public async getUserList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<UserDTO>> {
-		const result = await this.userService.findListInPage('account', query, ['createTime'])
+		const result = await this.userService.findList({}, req, query, ['createTime'])
 		return this.successPageListResponse(req, result)
 	}
 
