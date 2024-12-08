@@ -18,14 +18,20 @@ import { ResultCode } from "../../enum/http";
 @Tags('我的收藏模块')
 export class MallCollectionController extends BaseController {
 
+	private collectionService: CollectionService
+
+	constructor() {
+		super()
+		this.collectionService = new CollectionService()
+	}
+
 	/**
 	 * 获取我的收藏列表
 	 */
 	@Get('/list')
 	public async getCollectionList(@Request() req: ExpressRequest, @Queries() params: PageDTO): Promise<BasePageListEntity<CollectionDTO>> {
 		const { id } = req.user
-		const collectionService = new CollectionService()
-		const resultList = await collectionService.findList({ userId: id }, req, params, ['createTime'], '')
+		const resultList = await this.collectionService.findList({ userId: id }, req, params, ['createTime'], '')
 		return this.successPageListResponse(req, resultList)
 	}
 
@@ -36,8 +42,7 @@ export class MallCollectionController extends BaseController {
 	public async addToCollection(@Request() req: ExpressRequest, @Body() productId: string): Promise<BaseObjectEntity<CollectionDTO>> {
 		if(productId){
 			const { userId } = req.user
-			const collectionService = new CollectionService()
-			const createACollection = await collectionService.create({
+			const createACollection = await this.collectionService.create({
 				userId, productId
 			}, req)
 			if(createACollection){
@@ -56,8 +61,7 @@ export class MallCollectionController extends BaseController {
 	@Delete('/remove')
 	public async removeFromCollection(@Request() req: ExpressRequest, @Body() id: string): Promise<BaseObjectEntity<boolean>> {
 		if(id){
-			const collectionService = new CollectionService()
-			const deleteACollection = await collectionService.sofeDeleteById(id, req)
+			const deleteACollection = await this.collectionService.sofeDeleteById(id, req)
 			return this.successResponse(req, !!deleteACollection)
 		}else{
 			return this.failedResponse(req, req.t('tip.paramsError'))
@@ -70,8 +74,7 @@ export class MallCollectionController extends BaseController {
 	@Get('/inCollection')
 	public async checkIfInCollection(@Request() req: ExpressRequest, @Query() productId: string): Promise<BaseObjectEntity<boolean>> {
 		if(productId){
-			const collectionService = new CollectionService()
-			const findAProductInCollection = await collectionService.findOne({productId}, req)
+			const findAProductInCollection = await this.collectionService.findOne({productId}, req)
 			return this.successResponse(req, !!findAProductInCollection)
 		}else{
 			return this.failedResponse(req, req.t('product.invalidateProductId'), ProductCode.PRODUCT_NEED_ID)

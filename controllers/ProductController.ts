@@ -46,13 +46,19 @@ const validateProductMW = [
 @Tags('产品模块')
 export class ProductController extends BaseController {
 
+	private productService: ProductService
+
+	constructor() {
+		super()
+		this.productService = new ProductService()
+	}
+
 	/**
 	 * 获取商品列表
 	*/
 	@Get('/list')
 	public async getProductList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<ProductDTO>> {
-		const productService = new ProductService()
-		const listResult = await productService.findListInPage('name', query)
+		const listResult = await this.productService.findListInPage('name', query)
 		return this.successPageListResponse(req, listResult)
 	}
 
@@ -62,8 +68,7 @@ export class ProductController extends BaseController {
 	@Get('/{id}')
 	public async getAProduct(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<ProductDTO>> {
 		if (id) {
-			const productService = new ProductService()
-			const findAProduct = await productService.findById(id, req);
+			const findAProduct = await this.productService.findById(id, req);
 			if (findAProduct) {
 				return this.successResponse(req, findAProduct)
 			} else {
@@ -80,8 +85,7 @@ export class ProductController extends BaseController {
 	@Delete('/{id}')
 	public async removeAProduct(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<string>> {
 		if (id) {
-			const productService = new ProductService()
-			const deleteAProduct = await productService.sofeDeleteById(id, req)
+			const deleteAProduct = await this.productService.sofeDeleteById(id, req)
 			if (deleteAProduct) {
 				// 删除成功
 				return this.successResponse(req, id)
@@ -102,8 +106,7 @@ export class ProductController extends BaseController {
 		if (id) {
 			if (state) {
 				try {
-					const productService = new ProductService()
-					const updateAProduct = await productService.findOneAndUpdate(req, { id }, {
+					const updateAProduct = await this.productService.findOneAndUpdate(req, { id }, {
 						$set: { state }
 					}, { runValidators: true, lauguage: req.language })
 					return this.successResponse(req, updateAProduct)
@@ -123,8 +126,7 @@ export class ProductController extends BaseController {
 	public async checkSlugUnique(@Request() req: ExpressRequest, @Body() params: CheckSlugParams): Promise<BaseObjectEntity<Boolean>> {
 		const { slug } = params
 		if(slug){
-			const productService = new ProductService()
-			const findAProduct = await productService.findOne({ slug }, req)
+			const findAProduct = await this.productService.findOne({ slug }, req)
 			if(!findAProduct){
 				return this.successResponse(req, true, req.t('product.slugCanUse', {slug}))
 			}else{
@@ -152,8 +154,8 @@ export class ProductController extends BaseController {
 				const findABrand = await brandService.findById(brandId, req)
 				if (findABrand) {
 					//? 有效的品牌信息
-					const productService = new ProductService()
-					const createAProduct = await productService.create(params, req)
+					
+					const createAProduct = await this.productService.create(params, req)
 					if (createAProduct) {
 						return this.successResponse(req, createAProduct)
 					} else {
@@ -175,8 +177,7 @@ export class ProductController extends BaseController {
 	@Middlewares(validateProductMW)
 	public async editProduct(@Request() req: ExpressRequest, @Path() id: string, @Body() params: any): Promise<BaseObjectEntity<ProductDTO | null>> {
 		if (id) {
-			const productService = new ProductService()
-			const updateAProduct = await productService.findOneAndUpdate(req, { id }, params, { runValidators: true })
+			const updateAProduct = await this.productService.findOneAndUpdate(req, { id }, params, { runValidators: true })
 			return this.successResponse(req, updateAProduct)
 		} else {
 			return this.failedResponse(req, req.t('tip.paramsError'), ResultCode.PARAMS_ERROR)
@@ -191,8 +192,7 @@ export class ProductController extends BaseController {
 		if(id){
 			const { price } = params
 			if(price){
-				const productService = new ProductService()
-				const updateAProductPrice = await productService.findOneAndUpdate(req, { id }, { price }, { runValidators: true })
+				const updateAProductPrice = await this.productService.findOneAndUpdate(req, { id }, { price }, { runValidators: true })
 				if(updateAProductPrice){
 					return this.successResponse(req, updateAProductPrice)
 				}else{

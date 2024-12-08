@@ -10,13 +10,19 @@ import { EvaluateService } from "../service/EvaluateService";
 @Tags('商品评价模块')
 export class EvaluateController extends BaseController{
 
+	private evaludateService: EvaluateService
+
+	constructor(){
+		super()
+		this.evaludateService = new EvaluateService()
+	}
+
 	/**
 	 * 获取商品评价列表
 	*/
 	@Get('list')
 	public async getEvaluateByProductId(@Request() req: ExpressRequest, @Queries() params: PageDTO): Promise<BasePageListEntity<EvaluateDto>>{
-		const evaludateService = new EvaluateService()
-		const listResult = await evaludateService.findListInPage('', params)
+		const listResult = await this.evaludateService.findListInPage('', params)
 		return this.successPageListResponse(req, listResult)
 	}
 

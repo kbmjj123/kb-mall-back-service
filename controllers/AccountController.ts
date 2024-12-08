@@ -11,13 +11,19 @@ import { BasePageListEntity } from "../entity/BasePageListEntity";
 @Tags('账号模块')
 export class AccountController extends BaseController{
 
+	private userService: UserService
+
+	constructor() {
+		super()
+		this.userService = new UserService()
+	}
+
 	/**
 	 * 获取用户列表
 	 */
 	@Get('/list')
 	public async getUserList(@Request() req: ExpressRequest, @Queries() query: PageDTO): Promise<BasePageListEntity<UserDTO>> {
-		const userService = new UserService()
-		const result = await userService.findListInPage('account', query, ['createTime'])
+		const result = await this.userService.findListInPage('account', query, ['createTime'])
 		return this.successPageListResponse(req, result)
 	}
 
@@ -28,8 +34,7 @@ export class AccountController extends BaseController{
 	@Get('/info/{id}')
 	public async getAUser(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<UserWithoutToken>> {
 		if (id) {
-			const userService = new UserService()
-			const findUser = await userService.findById(id, req)
+			const findUser = await this.userService.findById(id, req)
 			if (!findUser) {
 				return this.failedResponse(req, '用户不存在，请传递正确的id')
 			} else {
@@ -45,11 +50,10 @@ export class AccountController extends BaseController{
 	@Post('/{id}/toggleAccountState')
 	public async toggleAccountState(@Request() req: ExpressRequest, @Path() id: string, @Body() params: UserToggleEnabledParams): Promise<BaseObjectEntity<UserDTO>>{
 		if(id){
-			const userService = new UserService()
-			const findAnAccount = await userService.findById(id, req)
+			const findAnAccount = await this.userService.findById(id, req)
 			if(findAnAccount){
 				const { state } = params
-				const updateAnAccount = await userService.update(id, { state }, req)
+				const updateAnAccount = await this.userService.update(id, { state }, req)
 				if(updateAnAccount){
 					return this.successResponse(req, updateAnAccount)
 				}else{
