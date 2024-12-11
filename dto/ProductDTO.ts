@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { LanguageDTO } from './LanguageDTO'
 import { ProductState } from "../enum/business";
 import { CateDTO } from "./CateDTO";
+import { EvaluateDto } from "./EvaluateDTO";
 
 export interface ProductDTO extends LanguageDTO{
 	id: string,
@@ -17,6 +18,7 @@ export interface ProductDTO extends LanguageDTO{
 	activityPrice?: number | null | undefined;
 	sales?: number | null | undefined;
 	score?: number | null | undefined;
+	evaluateList: EvaluateDto[]
 }
 
 /**

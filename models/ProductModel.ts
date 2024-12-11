@@ -3,14 +3,9 @@ import { ProductDTO } from "../dto/ProductDTO";
 import { LanguageItemType } from "../dto/LanguageDTO";
 import { ProductState } from "../enum/business";
 import { CATE_MODEL_NAME } from "./CateModel";
+import { EvaluateDto } from "../dto/EvaluateDTO";
 export const PRODUCT_MODEL_NAME = 'productModel'
 const productSchema = new mongoose.Schema<ProductDTO>({
-	// cates: {
-	// 	type: [{ type: mongoose.SchemaTypes.ObjectId }],
-	// 	ref: CATE_MODEL_NAME,
-	// 	default: [],
-	// 	required: [true, '请维护分类id']
-	// },
 	cates: [
 		{
 			type: mongoose.SchemaTypes.ObjectId,
@@ -71,6 +66,7 @@ const productSchema = new mongoose.Schema<ProductDTO>({
 		default: ProductState.ON_LINE,
 		required: [true, '请维护上架状态']
 	},
+	evaluateList: Array<EvaluateDto>,
 	languageList: Array<LanguageItemType>
 });
 

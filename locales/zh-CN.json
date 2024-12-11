@@ -43,7 +43,8 @@
     "slugNeeded": "请传递有效的slug",
     "invalidateProductId": "请传递有效的商品id",
     "needPrice": "请传递有效的商品价格",
-    "offState": "商品已下架！"
+    "offState": "商品已下架！",
+    "evaluateCreateError": "评价创建失败！"
   },
   "shoppingCar": {},
   "wishlist": {

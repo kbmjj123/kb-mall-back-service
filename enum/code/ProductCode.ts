@@ -49,11 +49,15 @@ export enum ProductCode{
 	/**
 	 * 分类名称已存在
 	*/
-	CATE_ALREADY_EXIST = 300101,
+	CATE_ALREADY_EXIST = 200201,
 	/**
 	 * 分类不存在
 	*/
 	CATE_NO_EXIST = 200102,
 
 	/************ 以下是评价的相关错误编码 **************/
+	/**
+	 * 评价创建失败
+	*/
+	EVALUATE_CREATE_ERROR = 200301
 }

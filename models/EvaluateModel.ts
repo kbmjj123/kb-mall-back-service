@@ -2,10 +2,7 @@ import mongoose from "mongoose";
 import { EvaluateDto } from "../dto/EvaluateDTO";
 
 const evaluateSchema = new mongoose.Schema<EvaluateDto>({
-  userId: {
-    type: mongoose.SchemaTypes.ObjectId,
-    required: true
-  },
+  userId: mongoose.SchemaTypes.ObjectId,
   userNick: {
     type: String,
     required: [true, '请维护评价人昵称']
@@ -13,10 +10,7 @@ const evaluateSchema = new mongoose.Schema<EvaluateDto>({
   userAvatar: {
     type: String
   },
-  productId: {
-    type: mongoose.SchemaTypes.ObjectId,
-    required: [true, '请赋值评价的商品id']
-  },
+  productId: mongoose.SchemaTypes.ObjectId,
   score: {
     type: Number,
     min: 1,
