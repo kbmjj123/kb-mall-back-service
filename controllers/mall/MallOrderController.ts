@@ -1,4 +1,4 @@
-import { Body, Get, Middlewares, Path, Post, Put, Request, Route, Tags } from "tsoa";
+import { Body, Get, Middlewares, Path, Post, Put, Queries, Request, Route, Tags } from "tsoa";
 import { BaseController } from "../BaseController";
 import { checkLogin } from "../../middleware/AuthMiddleware";
 import { Request as ExpressReqeust } from "express";
@@ -13,7 +13,7 @@ export class MallOrderController extends BaseController{
 	 * 获取我的订单列表
 	*/
 	@Get('/list')
-	public async getMyOrderList(@Request() req: ExpressReqeust, params: PageDTO) {}
+	public async getMyOrderList(@Request() req: ExpressReqeust, @Queries() params: PageDTO) {}
 
 	/**
 	 * 根据id获取对应的订单详情

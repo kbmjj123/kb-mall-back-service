@@ -12,10 +12,7 @@ const wishlistItemSchema = new mongoose.Schema<WishlistItemDTO>({
 })
 
 const wishlistSchema = new mongoose.Schema<WishlistDTO>({
-	userId: {
-		type: mongoose.Types.ObjectId,
-		required: [true, '请维护用户id']
-	},
+	userId: String,
 	name: String,
 	description: String,
 	type: {

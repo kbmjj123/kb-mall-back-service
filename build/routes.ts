@@ -39,6 +39,8 @@ import { MallOrderController } from './../controllers/mall/MallOrderController';
 import { MallDecorateController } from './../controllers/mall/MallDecorateController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MallCollectionController } from './../controllers/mall/MallCollectionController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MallAddressController } from './../controllers/mall/MallAddressController';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
 
@@ -192,7 +194,7 @@ const models: TsoaRoute.Models = {
             "languageList": {"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"},"required":true},
             "id": {"dataType":"string"},
             "title": {"dataType":"string","required":true},
-            "parentId": {"ref":"mongoose.Types.ObjectId"},
+            "parentId": {"dataType":"string"},
             "level": {"dataType":"double"},
             "paramsList": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"values":{"dataType":"array","array":{"dataType":"string"},"required":true},"key":{"dataType":"string","required":true}}}},
         },
@@ -202,6 +204,25 @@ const models: TsoaRoute.Models = {
     "ProductState": {
         "dataType": "refEnum",
         "enums": ["on-line","off-line"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EvaluateDto": {
+        "dataType": "refObject",
+        "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+            "userId": {"dataType":"string","required":true},
+            "userNick": {"dataType":"string","required":true},
+            "userAvatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
+            "productId": {"dataType":"string","required":true},
+            "score": {"dataType":"double","required":true},
+            "title": {"dataType":"string","required":true},
+            "content": {"dataType":"string","required":true},
+            "evaluateTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
+            "pictures": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"string"}},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ProductDTO": {
@@ -224,6 +245,7 @@ const models: TsoaRoute.Models = {
             "activityPrice": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
             "sales": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
             "score": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
+            "evaluateList": {"dataType":"array","array":{"dataType":"refObject","ref":"EvaluateDto"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -312,7 +334,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Partial_ProductDTO_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string"},"cates":{"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refAlias","ref":"mongoose.Types.ObjectId"}},{"dataType":"array","array":{"dataType":"refObject","ref":"CateDTO"}}]},"productName":{"dataType":"string"},"masterPicture":{"dataType":"string"},"descPic":{"dataType":"array","array":{"dataType":"string"}},"slug":{"dataType":"string"},"state":{"ref":"ProductState"},"richText":{"dataType":"string"},"brand":{"ref":"mongoose.Types.ObjectId"},"price":{"dataType":"double"},"activityPrice":{"dataType":"double"},"sales":{"dataType":"double"},"score":{"dataType":"double"},"languageList":{"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"}},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string"},"cates":{"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refAlias","ref":"mongoose.Types.ObjectId"}},{"dataType":"array","array":{"dataType":"refObject","ref":"CateDTO"}}]},"productName":{"dataType":"string"},"masterPicture":{"dataType":"string"},"descPic":{"dataType":"array","array":{"dataType":"string"}},"slug":{"dataType":"string"},"state":{"ref":"ProductState"},"richText":{"dataType":"string"},"brand":{"ref":"mongoose.Types.ObjectId"},"price":{"dataType":"double"},"activityPrice":{"dataType":"double"},"sales":{"dataType":"double"},"score":{"dataType":"double"},"evaluateList":{"dataType":"array","array":{"dataType":"refObject","ref":"EvaluateDto"}},"languageList":{"dataType":"array","array":{"dataType":"refAlias","ref":"LanguageItemType"}},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "EditProductParams": {
@@ -330,31 +352,45 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+            "amount": {"dataType":"double","required":true},
+            "beneficAmount": {"dataType":"double","required":true},
+            "payAmount": {"dataType":"double","required":true},
+            "payTime": {"dataType":"datetime","required":true},
+            "cancelTime": {"dataType":"datetime","required":true},
+            "finishTime": {"dataType":"datetime","required":true},
+            "deliveryTime": {"dataType":"datetime","required":true},
+            "remark": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PageListType_OrderDTO_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"pages":{"dataType":"double","required":true},"pageIndex":{"dataType":"double","required":true},"pageSize":{"dataType":"double","required":true},"total":{"dataType":"double","required":true},"list":{"dataType":"array","array":{"dataType":"refObject","ref":"OrderDTO"},"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BasePageListEntity_OrderDTO_": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"dataType":"double","default":0},
+            "message": {"dataType":"string","default":"操作成功"},
+            "data": {"ref":"PageListType_OrderDTO_","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BaseObjectEntity_any_": {
         "dataType": "refObject",
         "properties": {
             "status": {"dataType":"double","default":0},
             "message": {"dataType":"string","default":"操作成功"},
             "data": {"dataType":"any"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "EvaluateDto": {
-        "dataType": "refObject",
-        "properties": {
-            "createTime": {"dataType":"datetime"},
-            "modifyTime": {"dataType":"datetime"},
-            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
-            "userId": {"ref":"mongoose.Types.ObjectId","required":true},
-            "userNick": {"dataType":"string","required":true},
-            "productId": {"ref":"mongoose.Types.ObjectId","required":true},
-            "score": {"dataType":"double","required":true},
-            "title": {"dataType":"string","required":true},
-            "content": {"dataType":"string","required":true},
-            "evaluateTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
-            "userAvatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
-            "pictures": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"string"}},{"dataType":"enum","enums":[null]},{"dataType":"undefined"}]},
         },
         "additionalProperties": false,
     },
@@ -372,6 +408,37 @@ const models: TsoaRoute.Models = {
             "data": {"ref":"PageListType_EvaluateDto_","required":true},
         },
         "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EvaludateListParams": {
+        "dataType": "refObject",
+        "properties": {
+            "pageIndex": {"dataType":"double","required":true},
+            "pageSize": {"dataType":"double","required":true},
+            "keyword": {"dataType":"string"},
+            "productId": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BaseObjectEntity_boolean_": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"dataType":"double","default":0},
+            "message": {"dataType":"string","default":"操作成功"},
+            "data": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_EvaluateDto.productId-or-title-or-content-or-score-or-pictures_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"score":{"dataType":"double","required":true},"productId":{"dataType":"string","required":true},"title":{"dataType":"string","required":true},"content":{"dataType":"string","required":true},"pictures":{"dataType":"array","array":{"dataType":"string"}}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublishEvaluteParams": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_EvaluateDto.productId-or-title-or-content-or-score-or-pictures_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BaseObjectEntity_Array_CateDTO__": {
@@ -396,7 +463,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_CateDTO.title-or-level-or-parentId-or-paramsList_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"title":{"dataType":"string","required":true},"level":{"dataType":"double"},"parentId":{"ref":"mongoose.Types.ObjectId"},"paramsList":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"values":{"dataType":"array","array":{"dataType":"string"},"required":true},"key":{"dataType":"string","required":true}}}}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"title":{"dataType":"string","required":true},"level":{"dataType":"double"},"parentId":{"dataType":"string"},"paramsList":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"values":{"dataType":"array","array":{"dataType":"string"},"required":true},"key":{"dataType":"string","required":true}}}}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Partial_Pick_CateDTO.id__": {
@@ -594,7 +661,8 @@ const models: TsoaRoute.Models = {
             "createTime": {"dataType":"datetime"},
             "modifyTime": {"dataType":"datetime"},
             "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
-            "userId": {"dataType":"union","subSchemas":[{"ref":"mongoose.Types.ObjectId"},{"dataType":"undefined"}],"required":true},
+            "id": {"dataType":"string","required":true},
+            "userId": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
             "description": {"dataType":"string"},
             "type": {"ref":"WishlistType","required":true},
@@ -684,13 +752,32 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"newPassword":{"dataType":"string","required":true},"oldPassword":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_ProductDTO.id-or-productName-or-masterPicture-or-price-or-sales-or-slug_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"sales":{"dataType":"double"},"slug":{"dataType":"string","required":true},"id":{"dataType":"string","required":true},"productName":{"dataType":"string","required":true},"masterPicture":{"dataType":"string","required":true},"price":{"dataType":"double"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CarItemState": {
+        "dataType": "refEnum",
+        "enums": ["in-validate","normal"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CarItemDTO": {
+        "dataType": "refAlias",
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"Pick_ProductDTO.id-or-productName-or-masterPicture-or-price-or-sales-or-slug_"},{"dataType":"nestedObjectLiteral","nestedProperties":{"itemState":{"ref":"CarItemState","required":true},"quantity":{"dataType":"double","required":true}}}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CarDTO": {
         "dataType": "refObject",
         "properties": {
             "createTime": {"dataType":"datetime"},
             "modifyTime": {"dataType":"datetime"},
             "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
-            "carId": {"ref":"mongoose.Types.ObjectId","required":true},
+            "id": {"dataType":"string","required":true},
+            "userId": {"dataType":"string","required":true},
+            "items": {"dataType":"array","array":{"dataType":"refAlias","ref":"CarItemDTO"},"required":true},
+            "totalQuantity": {"dataType":"double","required":true},
+            "totalPrice": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -705,32 +792,22 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "BaseObjectEntity_number_": {
-        "dataType": "refObject",
-        "properties": {
-            "status": {"dataType":"double","default":0},
-            "message": {"dataType":"string","default":"操作成功"},
-            "data": {"dataType":"double"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_CarDTO.carId_": {
+    "Pick_CarItemDTO.id_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"carId":{"ref":"mongoose.Types.ObjectId","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AddToCarParams": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"Pick_CarDTO.carId_"},{"dataType":"nestedObjectLiteral","nestedProperties":{"quantity":{"dataType":"double","required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"Pick_CarItemDTO.id_"},{"dataType":"nestedObjectLiteral","nestedProperties":{"quantity":{"dataType":"double","required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "BaseObjectEntity_boolean_": {
+    "BaseObjectEntity_CarDTO_": {
         "dataType": "refObject",
         "properties": {
             "status": {"dataType":"double","default":0},
             "message": {"dataType":"string","default":"操作成功"},
-            "data": {"dataType":"boolean"},
+            "data": {"ref":"CarDTO"},
         },
         "additionalProperties": false,
     },
@@ -788,6 +865,43 @@ const models: TsoaRoute.Models = {
             "status": {"dataType":"double","default":0},
             "message": {"dataType":"string","default":"操作成功"},
             "data": {"ref":"CollectionDTO"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AddressDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "createTime": {"dataType":"datetime"},
+            "modifyTime": {"dataType":"datetime"},
+            "deleteTime": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+            "fullName": {"dataType":"string","required":true},
+            "phone": {"dataType":"string","required":true},
+            "email": {"dataType":"string","required":true},
+            "country": {"dataType":"string","required":true},
+            "state": {"dataType":"string","required":true},
+            "city": {"dataType":"string","required":true},
+            "district": {"dataType":"string","required":true},
+            "streetAddressLine1": {"dataType":"string","required":true},
+            "streetAddressLine2": {"dataType":"string","required":true},
+            "postalCode": {"dataType":"string","required":true},
+            "isDefault": {"dataType":"boolean","required":true},
+            "userId": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PageListType_AddressDTO_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"pages":{"dataType":"double","required":true},"pageIndex":{"dataType":"double","required":true},"pageSize":{"dataType":"double","required":true},"total":{"dataType":"double","required":true},"list":{"dataType":"array","array":{"dataType":"refObject","ref":"AddressDTO"},"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BasePageListEntity_AddressDTO_": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"dataType":"double","default":0},
+            "message": {"dataType":"string","default":"操作成功"},
+            "data": {"ref":"PageListType_AddressDTO_","required":true},
         },
         "additionalProperties": false,
     },
@@ -1242,6 +1356,37 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/order/list',
+            ...(fetchMiddlewares<RequestHandler>(OrderController)),
+            ...(fetchMiddlewares<RequestHandler>(OrderController.prototype.getOrderList)),
+
+            async function OrderController_getOrderList(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    query: {"in":"queries","name":"query","required":true,"ref":"PageDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new OrderController();
+
+              await templateService.apiHandler({
+                methodName: 'getOrderList',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/file/uploadFile',
             ...(fetchMiddlewares<RequestHandler>(FileController)),
             ...(fetchMiddlewares<RequestHandler>(FileController.prototype.wrapFile)),
@@ -1310,7 +1455,7 @@ export function RegisterRoutes(app: Router) {
             async function EvaluateController_getEvaluateByProductId(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                    params: {"in":"queries","name":"params","required":true,"ref":"PageDTO"},
+                    params: {"in":"queries","name":"params","required":true,"ref":"EvaludateListParams"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1323,6 +1468,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getEvaluateByProductId',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/evaluate/publicEvaludate',
+            ...(fetchMiddlewares<RequestHandler>(EvaluateController)),
+            ...(fetchMiddlewares<RequestHandler>(EvaluateController.prototype.publicEvaludate)),
+
+            async function EvaluateController_publicEvaludate(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"body","name":"params","required":true,"ref":"PublishEvaluteParams"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new EvaluateController();
+
+              await templateService.apiHandler({
+                methodName: 'publicEvaludate',
                 controller,
                 response,
                 next,
@@ -2783,6 +2959,161 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/order/list',
+            ...(fetchMiddlewares<RequestHandler>(MallOrderController)),
+            ...(fetchMiddlewares<RequestHandler>(MallOrderController.prototype.getMyOrderList)),
+
+            async function MallOrderController_getMyOrderList(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"queries","name":"params","required":true,"ref":"PageDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallOrderController();
+
+              await templateService.apiHandler({
+                methodName: 'getMyOrderList',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/order/info/$:id',
+            ...(fetchMiddlewares<RequestHandler>(MallOrderController)),
+            ...(fetchMiddlewares<RequestHandler>(MallOrderController.prototype.getOrderDetail)),
+
+            async function MallOrderController_getOrderDetail(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallOrderController();
+
+              await templateService.apiHandler({
+                methodName: 'getOrderDetail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/order/preview',
+            ...(fetchMiddlewares<RequestHandler>(MallOrderController)),
+            ...(fetchMiddlewares<RequestHandler>(MallOrderController.prototype.previewOrder)),
+
+            async function MallOrderController_previewOrder(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"body","name":"params","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallOrderController();
+
+              await templateService.apiHandler({
+                methodName: 'previewOrder',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/api/order/add',
+            ...(fetchMiddlewares<RequestHandler>(MallOrderController)),
+            ...(fetchMiddlewares<RequestHandler>(MallOrderController.prototype.createOrder)),
+
+            async function MallOrderController_createOrder(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"body","name":"params","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallOrderController();
+
+              await templateService.apiHandler({
+                methodName: 'createOrder',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/order/cancel',
+            ...(fetchMiddlewares<RequestHandler>(MallOrderController)),
+            ...(fetchMiddlewares<RequestHandler>(MallOrderController.prototype.cancelOrder)),
+
+            async function MallOrderController_cancelOrder(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"body","name":"params","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallOrderController();
+
+              await templateService.apiHandler({
+                methodName: 'cancelOrder',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/decorate/carousel/list',
             ...(fetchMiddlewares<RequestHandler>(MallDecorateController)),
             ...(fetchMiddlewares<RequestHandler>(MallDecorateController.prototype.getCarouselList)),
@@ -2956,6 +3287,193 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'checkIfInCollection',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/address/list',
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController)),
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController.prototype.getAddressList)),
+
+            async function MallAddressController_getAddressList(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"queries","name":"params","required":true,"ref":"PageDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallAddressController();
+
+              await templateService.apiHandler({
+                methodName: 'getAddressList',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/api/address/add',
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController)),
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController.prototype.addAddress)),
+
+            async function MallAddressController_addAddress(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    params: {"in":"body","name":"params","required":true,"ref":"AddressDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallAddressController();
+
+              await templateService.apiHandler({
+                methodName: 'addAddress',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/address/$:id/edit',
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController)),
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController.prototype.editAddress)),
+
+            async function MallAddressController_editAddress(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                    params: {"in":"body","name":"params","required":true,"ref":"AddressDTO"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallAddressController();
+
+              await templateService.apiHandler({
+                methodName: 'editAddress',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/address/$:id',
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController)),
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController.prototype.getAddressInfo)),
+
+            async function MallAddressController_getAddressInfo(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallAddressController();
+
+              await templateService.apiHandler({
+                methodName: 'getAddressInfo',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/api/address/$:id',
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController)),
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController.prototype.removeById)),
+
+            async function MallAddressController_removeById(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallAddressController();
+
+              await templateService.apiHandler({
+                methodName: 'removeById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/api/address/$:id/setDefault',
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController)),
+            ...(fetchMiddlewares<RequestHandler>(MallAddressController.prototype.setDefaultAddress)),
+
+            async function MallAddressController_setDefaultAddress(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MallAddressController();
+
+              await templateService.apiHandler({
+                methodName: 'setDefaultAddress',
                 controller,
                 response,
                 next,

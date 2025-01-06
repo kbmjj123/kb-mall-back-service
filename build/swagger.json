@@ -379,7 +379,7 @@
             "type": "string"
           },
           "parentId": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+            "type": "string"
           },
           "level": {
             "type": "number",
@@ -412,6 +412,73 @@
         "description": "************* 产品相关 ***************",
         "enum": ["on-line", "off-line"],
         "type": "string"
+      },
+      "EvaluateDto": {
+        "properties": {
+          "createTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录创建时间"
+          },
+          "modifyTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录修改时间"
+          },
+          "deleteTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "记录删除时间"
+          },
+          "userId": {
+            "type": "string",
+            "description": "用户id"
+          },
+          "userNick": {
+            "type": "string",
+            "description": "用户昵称"
+          },
+          "userAvatar": {
+            "type": "string",
+            "nullable": true,
+            "description": "用户头像"
+          },
+          "productId": {
+            "type": "string",
+            "description": "产品id"
+          },
+          "score": {
+            "type": "number",
+            "format": "double",
+            "description": "商品分数"
+          },
+          "title": {
+            "type": "string",
+            "description": "发布的标题"
+          },
+          "content": {
+            "type": "string",
+            "description": "发布的内容"
+          },
+          "evaluateTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "发布时间"
+          },
+          "pictures": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "nullable": true,
+            "description": "追加的图片信息"
+          }
+        },
+        "required": ["userId", "userNick", "productId", "score", "title", "content"],
+        "type": "object",
+        "additionalProperties": false
       },
       "ProductDTO": {
         "properties": {
@@ -505,9 +572,25 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "evaluateList": {
+            "items": {
+              "$ref": "#/components/schemas/EvaluateDto"
+            },
+            "type": "array"
           }
         },
-        "required": ["languageList", "id", "cates", "productName", "masterPicture", "descPic", "slug", "state"],
+        "required": [
+          "languageList",
+          "id",
+          "cates",
+          "productName",
+          "masterPicture",
+          "descPic",
+          "slug",
+          "state",
+          "evaluateList"
+        ],
         "type": "object",
         "additionalProperties": false
       },
@@ -727,6 +810,12 @@
             "type": "number",
             "format": "double"
           },
+          "evaluateList": {
+            "items": {
+              "$ref": "#/components/schemas/EvaluateDto"
+            },
+            "type": "array"
+          },
           "languageList": {
             "items": {
               "$ref": "#/components/schemas/LanguageItemType"
@@ -792,23 +881,7 @@
         "type": "object",
         "additionalProperties": false
       },
-      "BaseObjectEntity_any_": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {}
-        },
-        "type": "object",
-        "additionalProperties": false
-      },
-      "EvaluateDto": {
+      "OrderDTO": {
         "properties": {
           "createTime": {
             "type": "string",
@@ -826,43 +899,111 @@
             "nullable": true,
             "description": "记录删除时间"
           },
-          "userId": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
-          },
-          "userNick": {
-            "type": "string"
-          },
-          "productId": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
-          },
-          "score": {
+          "amount": {
             "type": "number",
             "format": "double"
           },
-          "title": {
-            "type": "string"
+          "beneficAmount": {
+            "type": "number",
+            "format": "double"
           },
-          "content": {
-            "type": "string"
+          "payAmount": {
+            "type": "number",
+            "format": "double"
           },
-          "evaluateTime": {
+          "payTime": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
-          "userAvatar": {
+          "cancelTime": {
             "type": "string",
-            "nullable": true
+            "format": "date-time"
           },
-          "pictures": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "nullable": true
+          "finishTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deliveryTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "remark": {
+            "type": "string"
           }
         },
-        "required": ["userId", "userNick", "productId", "score", "title", "content"],
+        "required": [
+          "amount",
+          "beneficAmount",
+          "payAmount",
+          "payTime",
+          "cancelTime",
+          "finishTime",
+          "deliveryTime",
+          "remark"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PageListType_OrderDTO_": {
+        "properties": {
+          "pages": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageIndex": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "list": {
+            "items": {
+              "$ref": "#/components/schemas/OrderDTO"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["pages", "pageIndex", "pageSize", "total", "list"],
+        "type": "object"
+      },
+      "BasePageListEntity_OrderDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageListType_OrderDTO_"
+          }
+        },
+        "required": ["data"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_any_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {}
+        },
         "type": "object",
         "additionalProperties": false
       },
@@ -913,6 +1054,82 @@
         "type": "object",
         "additionalProperties": false
       },
+      "EvaludateListParams": {
+        "description": "获取商品列表所需参数",
+        "properties": {
+          "pageIndex": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "keyword": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string",
+            "description": "产品id"
+          }
+        },
+        "required": ["pageIndex", "pageSize", "productId"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "BaseObjectEntity_boolean_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "type": "boolean"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Pick_EvaluateDto.productId-or-title-or-content-or-score-or-pictures_": {
+        "properties": {
+          "score": {
+            "type": "number",
+            "format": "double",
+            "description": "商品分数"
+          },
+          "productId": {
+            "type": "string",
+            "description": "产品id"
+          },
+          "title": {
+            "type": "string",
+            "description": "发布的标题"
+          },
+          "content": {
+            "type": "string",
+            "description": "发布的内容"
+          },
+          "pictures": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "description": "追加的图片信息"
+          }
+        },
+        "required": ["score", "productId", "title", "content"],
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "PublishEvaluteParams": {
+        "$ref": "#/components/schemas/Pick_EvaluateDto.productId-or-title-or-content-or-score-or-pictures_",
+        "description": "发布一个商品的评价所需参数"
+      },
       "BaseObjectEntity_Array_CateDTO__": {
         "properties": {
           "status": {
@@ -962,7 +1179,7 @@
             "format": "double"
           },
           "parentId": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId"
+            "type": "string"
           },
           "paramsList": {
             "items": {
@@ -1484,8 +1701,11 @@
             "nullable": true,
             "description": "记录删除时间"
           },
+          "id": {
+            "type": "string"
+          },
           "userId": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId",
+            "type": "string",
             "description": "用户id"
           },
           "name": {
@@ -1512,7 +1732,7 @@
             "description": "清单中的商品列表"
           }
         },
-        "required": ["name", "type", "items"],
+        "required": ["id", "userId", "name", "type", "items"],
         "type": "object",
         "additionalProperties": false
       },
@@ -1731,6 +1951,61 @@
         "type": "object",
         "description": "修改密码参数"
       },
+      "Pick_ProductDTO.id-or-productName-or-masterPicture-or-price-or-sales-or-slug_": {
+        "properties": {
+          "sales": {
+            "type": "number",
+            "format": "double"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "masterPicture": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": ["slug", "id", "productName", "masterPicture"],
+        "type": "object",
+        "description": "From T, pick a set of properties whose keys are in the union K"
+      },
+      "CarItemState": {
+        "description": "购物车商品状态",
+        "enum": ["in-validate", "normal"],
+        "type": "string"
+      },
+      "CarItemDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pick_ProductDTO.id-or-productName-or-masterPicture-or-price-or-sales-or-slug_"
+          },
+          {
+            "properties": {
+              "itemState": {
+                "$ref": "#/components/schemas/CarItemState",
+                "description": "加入的商品状态"
+              },
+              "quantity": {
+                "type": "number",
+                "format": "double",
+                "description": "加入的购物车商品数量"
+              }
+            },
+            "required": ["itemState", "quantity"],
+            "type": "object"
+          }
+        ],
+        "description": "购物车中针对用户存储的商品列表item"
+      },
       "CarDTO": {
         "description": "购物车DTO",
         "properties": {
@@ -1750,12 +2025,32 @@
             "nullable": true,
             "description": "记录删除时间"
           },
-          "carId": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId",
-            "description": "购物车id"
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string",
+            "description": "用户id"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CarItemDTO"
+            },
+            "type": "array",
+            "description": "商品列表"
+          },
+          "totalQuantity": {
+            "type": "number",
+            "format": "double",
+            "description": "商品数量汇总"
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "double",
+            "description": "商品价格汇总"
           }
         },
-        "required": ["carId"],
+        "required": ["id", "userId", "items", "totalQuantity", "totalPrice"],
         "type": "object",
         "additionalProperties": false
       },
@@ -1780,40 +2075,20 @@
         "type": "object",
         "additionalProperties": false
       },
-      "BaseObjectEntity_number_": {
+      "Pick_CarItemDTO.id_": {
         "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {
-            "type": "number",
-            "format": "double"
+          "id": {
+            "type": "string"
           }
         },
-        "type": "object",
-        "additionalProperties": false
-      },
-      "Pick_CarDTO.carId_": {
-        "properties": {
-          "carId": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId",
-            "description": "购物车id"
-          }
-        },
-        "required": ["carId"],
+        "required": ["id"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
       "AddToCarParams": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/Pick_CarDTO.carId_"
+            "$ref": "#/components/schemas/Pick_CarItemDTO.id_"
           },
           {
             "properties": {
@@ -1829,7 +2104,7 @@
         ],
         "description": "加入购车的参数"
       },
-      "BaseObjectEntity_boolean_": {
+      "BaseObjectEntity_CarDTO_": {
         "properties": {
           "status": {
             "type": "number",
@@ -1841,7 +2116,7 @@
             "default": "操作成功"
           },
           "data": {
-            "type": "boolean"
+            "$ref": "#/components/schemas/CarDTO"
           }
         },
         "type": "object",
@@ -2013,6 +2288,137 @@
             "$ref": "#/components/schemas/CollectionDTO"
           }
         },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "AddressDTO": {
+        "properties": {
+          "createTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录创建时间"
+          },
+          "modifyTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录修改时间"
+          },
+          "deleteTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "记录删除时间"
+          },
+          "fullName": {
+            "type": "string",
+            "description": "收件人姓名"
+          },
+          "phone": {
+            "type": "string",
+            "description": "收件人手机号码"
+          },
+          "email": {
+            "type": "string",
+            "description": "收件人邮件"
+          },
+          "country": {
+            "type": "string",
+            "description": "国家/地区代码，建议使用 ISO 3166-1 标准（如 US、CN）"
+          },
+          "state": {
+            "type": "string",
+            "description": "省/州/地区名称，长度限制一般为 1-100 字符"
+          },
+          "city": {
+            "type": "string",
+            "description": "城市名称，长度限制一般为 1-100 字符"
+          },
+          "district": {
+            "type": "string",
+            "description": "区"
+          },
+          "streetAddressLine1": {
+            "type": "string",
+            "description": "街道地址一"
+          },
+          "streetAddressLine2": {
+            "type": "string",
+            "description": "街道地址二"
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "邮编"
+          },
+          "isDefault": {
+            "type": "boolean",
+            "description": "是否默认的标识"
+          },
+          "userId": {
+            "type": "string",
+            "description": "用户id"
+          }
+        },
+        "required": [
+          "fullName",
+          "phone",
+          "email",
+          "country",
+          "state",
+          "city",
+          "district",
+          "streetAddressLine1",
+          "streetAddressLine2",
+          "postalCode",
+          "isDefault",
+          "userId"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PageListType_AddressDTO_": {
+        "properties": {
+          "pages": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageIndex": {
+            "type": "number",
+            "format": "double"
+          },
+          "pageSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "list": {
+            "items": {
+              "$ref": "#/components/schemas/AddressDTO"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["pages", "pageIndex", "pageSize", "total", "list"],
+        "type": "object"
+      },
+      "BasePageListEntity_AddressDTO_": {
+        "properties": {
+          "status": {
+            "type": "number",
+            "format": "double",
+            "default": 0
+          },
+          "message": {
+            "type": "string",
+            "default": "操作成功"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageListType_AddressDTO_"
+          }
+        },
+        "required": ["data"],
         "type": "object",
         "additionalProperties": false
       }
@@ -2471,6 +2877,54 @@
         }
       }
     },
+    "/order/list": {
+      "get": {
+        "operationId": "GetOrderList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasePageListEntity_OrderDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取订单列表功能",
+        "tags": ["订单模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageIndex",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
     "/file/uploadFile": {
       "put": {
         "operationId": "WrapFile",
@@ -2559,8 +3013,48 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "description": "产品id",
+            "in": "query",
+            "name": "productId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ]
+      }
+    },
+    "/evaluate/publicEvaludate": {
+      "put": {
+        "operationId": "PublicEvaludate",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_boolean_"
+                }
+              }
+            }
+          }
+        },
+        "description": "发布商品评价",
+        "tags": ["商品评价模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublishEvaluteParams"
+              }
+            }
+          }
+        }
       }
     },
     "/cate/list": {
@@ -2578,6 +3072,7 @@
             }
           }
         },
+        "description": "获取全量的分类列表树集合",
         "tags": ["分类模块"],
         "security": [],
         "parameters": []
@@ -2598,6 +3093,7 @@
             }
           }
         },
+        "description": "发布一分类",
         "tags": ["分类模块"],
         "security": [],
         "parameters": [],
@@ -3679,7 +4175,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_number_"
+                  "$ref": "#/components/schemas/BaseObjectEntity_Boolean_"
                 }
               }
             }
@@ -3710,7 +4206,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                  "$ref": "#/components/schemas/BaseObjectEntity_CarDTO_"
                 }
               }
             }
@@ -3744,7 +4240,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_string_"
+                  "$ref": "#/components/schemas/BaseObjectEntity_CarDTO_"
                 }
               }
             }
@@ -3995,6 +4491,145 @@
         ]
       }
     },
+    "/api/order/list": {
+      "get": {
+        "operationId": "GetMyOrderList",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "description": "获取我的订单列表",
+        "tags": ["商城/订单模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageIndex",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/order/info/${id}": {
+      "get": {
+        "operationId": "GetOrderDetail",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "description": "根据id获取对应的订单详情",
+        "tags": ["商城/订单模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/order/preview": {
+      "post": {
+        "operationId": "PreviewOrder",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "description": "预览待下的订单",
+        "tags": ["商城/订单模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {},
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/add": {
+      "put": {
+        "operationId": "CreateOrder",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "description": "创建订单",
+        "tags": ["商城/订单模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {},
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/cancel": {
+      "post": {
+        "operationId": "CancelOrder",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "description": "取消订单",
+        "tags": ["商城/订单模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {},
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/decorate/carousel/list": {
       "get": {
         "operationId": "GetCarouselList",
@@ -4169,6 +4804,214 @@
           {
             "in": "query",
             "name": "productId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/address/list": {
+      "get": {
+        "operationId": "GetAddressList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasePageListEntity_AddressDTO_"
+                }
+              }
+            }
+          }
+        },
+        "description": "获取当前登录用户的收获地址列表",
+        "tags": ["商城/用户收货地址模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageIndex",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/address/add": {
+      "put": {
+        "operationId": "AddAddress",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
+                }
+              }
+            }
+          }
+        },
+        "description": "新增一用户售后地址",
+        "tags": ["商城/用户收货地址模块"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/address/${id}/edit": {
+      "post": {
+        "operationId": "EditAddress",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
+                }
+              }
+            }
+          }
+        },
+        "description": "编辑用户地址信息",
+        "tags": ["商城/用户收货地址模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/address/${id}": {
+      "get": {
+        "operationId": "GetAddressInfo",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
+                }
+              }
+            }
+          }
+        },
+        "description": "根据地址id查询地址信息",
+        "tags": ["商城/用户收货地址模块"],
+        "security": [],
+        "parameters": [
+          {
+            "description": "待查询的地址id",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "RemoveById",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
+                }
+              }
+            }
+          }
+        },
+        "description": "根据地址id删除一收货地址",
+        "tags": ["商城/用户收货地址模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/address/${id}/setDefault": {
+      "patch": {
+        "operationId": "SetDefaultAddress",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
+                }
+              }
+            }
+          }
+        },
+        "description": "设置默认的收货地址",
+        "tags": ["商城/用户收货地址模块"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
             "required": true,
             "schema": {
               "type": "string"

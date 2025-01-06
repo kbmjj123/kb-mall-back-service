@@ -90,7 +90,11 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	async update(id: string, data: UpdateQuery<T>, req: ExpressRequest, options?: QueryOptions<T> | null | undefined): Promise<T | null> {
 		options = this.getLanguageOptions(req, {new: true})
 		try{
-			return await this.model.findByIdAndUpdate(id, data).setOptions(options)
+			if(options){
+				return await this.model.findByIdAndUpdate(id, data).setOptions(options)
+			}else{
+				return await this.model.findByIdAndUpdate(id, data)
+			}
 		}catch(error){
 			errorLogger.error(`[update]异常`)
 			errorLogger.error(error)
@@ -115,7 +119,7 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	*/
 	async updateMany(filter: FilterQuery<T> | undefined, update: UpdateWithAggregationPipeline | UpdateQuery<T>, req: ExpressRequest, options?: QueryOptions<T> | null | undefined): Promise<UpdateWriteOpResult | null> {
 		options = this.getLanguageOptions(req, {new: true})
-		return this.model.updateMany(filter, update, options)
+		return this.model.updateMany(filter, update)
 	}
 	/************ 以下是单个查询的操作 ************/
 	/**
