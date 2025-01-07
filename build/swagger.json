@@ -132,7 +132,7 @@
         "type": "object",
         "additionalProperties": false
       },
-      "Pick_UserDTO.password-or-email_": {
+      "Pick_UserDTO.password-or-email-or-role_": {
         "properties": {
           "password": {
             "type": "string",
@@ -143,14 +143,19 @@
             "type": "string",
             "description": "用户邮箱",
             "example": "kbmjj123@gmail.com"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["user", "admin"],
+            "description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
           }
         },
-        "required": ["password", "email"],
+        "required": ["password", "email", "role"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
       "UserLoginParams": {
-        "$ref": "#/components/schemas/Pick_UserDTO.password-or-email_",
+        "$ref": "#/components/schemas/Pick_UserDTO.password-or-email-or-role_",
         "description": "用户登录所需参数"
       },
       "BaseObjectEntity_String-or-null_": {
@@ -1512,6 +1517,11 @@
             "description": "用户邮箱",
             "example": "kbmjj123@gmail.com"
           },
+          "role": {
+            "type": "string",
+            "enum": ["user", "admin"],
+            "description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
+          },
           "id": {
             "type": "string"
           },
@@ -1533,11 +1543,6 @@
             "type": "string",
             "format": "date-time",
             "description": "记录删除时间"
-          },
-          "role": {
-            "type": "string",
-            "enum": ["user", "admin"],
-            "description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
           },
           "nickName": {
             "type": "string",
@@ -1569,7 +1574,7 @@
             "description": "姓"
           }
         },
-        "required": ["email", "id", "role", "firstName", "lastName"],
+        "required": ["email", "role", "id", "firstName", "lastName"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },

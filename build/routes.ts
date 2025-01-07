@@ -93,14 +93,14 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_UserDTO.password-or-email_": {
+    "Pick_UserDTO.password-or-email-or-role_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string","required":true},"email":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string","required":true},"email":{"dataType":"string","required":true},"role":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["admin"]}],"required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserLoginParams": {
         "dataType": "refAlias",
-        "type": {"ref":"Pick_UserDTO.password-or-email_","validators":{}},
+        "type": {"ref":"Pick_UserDTO.password-or-email-or-role_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BaseObjectEntity_String-or-null_": {
@@ -587,7 +587,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_UserDTO.Exclude_keyofUserDTO.password-or-refreshToken-or-accessToken-or-logoutTime-or-isPasswordMatched__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string","required":true},"id":{"dataType":"string","required":true},"state":{"ref":"AccountState"},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"},"role":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["admin"]}],"required":true},"nickName":{"dataType":"string"},"avatar":{"dataType":"string"},"address":{"ref":"mongoose.Types.ObjectId"},"loginTime":{"dataType":"datetime"},"account":{"dataType":"string"},"firstName":{"dataType":"string","required":true},"lastName":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string","required":true},"role":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["admin"]}],"required":true},"id":{"dataType":"string","required":true},"state":{"ref":"AccountState"},"createTime":{"dataType":"datetime"},"modifyTime":{"dataType":"datetime"},"deleteTime":{"dataType":"datetime"},"nickName":{"dataType":"string"},"avatar":{"dataType":"string"},"address":{"ref":"mongoose.Types.ObjectId"},"loginTime":{"dataType":"datetime"},"account":{"dataType":"string"},"firstName":{"dataType":"string","required":true},"lastName":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Omit_UserDTO.password-or-refreshToken-or-accessToken-or-logoutTime-or-isPasswordMatched_": {
