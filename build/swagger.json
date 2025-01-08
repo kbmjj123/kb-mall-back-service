@@ -7,13 +7,77 @@
     "requestBodies": {},
     "responses": {},
     "schemas": {
-      "mongoose.Types.ObjectId": {
-        "type": "string"
-      },
       "AccountState": {
         "description": "用户状态",
         "enum": ["in-used", "forbidden"],
         "type": "string"
+      },
+      "AddressDTO": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "地址id"
+          },
+          "fullName": {
+            "type": "string",
+            "description": "收件人姓名"
+          },
+          "phone": {
+            "type": "string",
+            "description": "收件人手机号码"
+          },
+          "email": {
+            "type": "string",
+            "description": "收件人邮件"
+          },
+          "country": {
+            "type": "string",
+            "description": "国家/地区代码，建议使用 ISO 3166-1 标准（如 US、CN）"
+          },
+          "state": {
+            "type": "string",
+            "description": "省/州/地区名称，长度限制一般为 1-100 字符"
+          },
+          "city": {
+            "type": "string",
+            "description": "城市名称，长度限制一般为 1-100 字符"
+          },
+          "district": {
+            "type": "string",
+            "description": "区"
+          },
+          "streetAddressLine1": {
+            "type": "string",
+            "description": "街道地址一"
+          },
+          "streetAddressLine2": {
+            "type": "string",
+            "description": "街道地址二"
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "邮编"
+          },
+          "isDefault": {
+            "type": "boolean",
+            "description": "是否默认的标识"
+          }
+        },
+        "required": [
+          "fullName",
+          "phone",
+          "email",
+          "country",
+          "state",
+          "city",
+          "district",
+          "streetAddressLine1",
+          "streetAddressLine2",
+          "postalCode",
+          "isDefault"
+        ],
+        "type": "object",
+        "additionalProperties": false
       },
       "UserDTO": {
         "properties": {
@@ -71,15 +135,6 @@
             "nullable": true,
             "description": "用户头像"
           },
-          "address": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/mongoose.Types.ObjectId"
-              }
-            ],
-            "nullable": true,
-            "description": "用户地址id"
-          },
           "loginTime": {
             "type": "string",
             "format": "date-time",
@@ -108,9 +163,16 @@
           "lastName": {
             "type": "string",
             "description": "姓"
+          },
+          "addressList": {
+            "items": {
+              "$ref": "#/components/schemas/AddressDTO"
+            },
+            "type": "array",
+            "description": "用户收货地址"
           }
         },
-        "required": ["id", "password", "email", "role", "firstName", "lastName"],
+        "required": ["id", "password", "email", "role", "firstName", "lastName", "addressList"],
         "type": "object",
         "additionalProperties": false
       },
@@ -132,7 +194,7 @@
         "type": "object",
         "additionalProperties": false
       },
-      "Pick_UserDTO.password-or-email-or-role_": {
+      "Pick_UserDTO.password-or-email_": {
         "properties": {
           "password": {
             "type": "string",
@@ -143,19 +205,14 @@
             "type": "string",
             "description": "用户邮箱",
             "example": "kbmjj123@gmail.com"
-          },
-          "role": {
-            "type": "string",
-            "enum": ["user", "admin"],
-            "description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
           }
         },
-        "required": ["password", "email", "role"],
+        "required": ["password", "email"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
       "UserLoginParams": {
-        "$ref": "#/components/schemas/Pick_UserDTO.password-or-email-or-role_",
+        "$ref": "#/components/schemas/Pick_UserDTO.password-or-email_",
         "description": "用户登录所需参数"
       },
       "BaseObjectEntity_String-or-null_": {
@@ -334,6 +391,9 @@
         },
         "type": "object",
         "additionalProperties": false
+      },
+      "mongoose.Types.ObjectId": {
+        "type": "string"
       },
       "Record_string.any_": {
         "properties": {},
@@ -1517,11 +1577,6 @@
             "description": "用户邮箱",
             "example": "kbmjj123@gmail.com"
           },
-          "role": {
-            "type": "string",
-            "enum": ["user", "admin"],
-            "description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
-          },
           "id": {
             "type": "string"
           },
@@ -1544,6 +1599,11 @@
             "format": "date-time",
             "description": "记录删除时间"
           },
+          "role": {
+            "type": "string",
+            "enum": ["user", "admin"],
+            "description": "用户角色，枚举类型，user代表普通用户，admin代表管理员"
+          },
           "nickName": {
             "type": "string",
             "description": "用户昵称"
@@ -1551,10 +1611,6 @@
           "avatar": {
             "type": "string",
             "description": "用户头像"
-          },
-          "address": {
-            "$ref": "#/components/schemas/mongoose.Types.ObjectId",
-            "description": "用户地址id"
           },
           "loginTime": {
             "type": "string",
@@ -1572,9 +1628,16 @@
           "lastName": {
             "type": "string",
             "description": "姓"
+          },
+          "addressList": {
+            "items": {
+              "$ref": "#/components/schemas/AddressDTO"
+            },
+            "type": "array",
+            "description": "用户收货地址"
           }
         },
-        "required": ["email", "role", "id", "firstName", "lastName"],
+        "required": ["email", "id", "role", "firstName", "lastName", "addressList"],
         "type": "object",
         "description": "From T, pick a set of properties whose keys are in the union K"
       },
@@ -2293,137 +2356,6 @@
             "$ref": "#/components/schemas/CollectionDTO"
           }
         },
-        "type": "object",
-        "additionalProperties": false
-      },
-      "AddressDTO": {
-        "properties": {
-          "createTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录创建时间"
-          },
-          "modifyTime": {
-            "type": "string",
-            "format": "date-time",
-            "description": "记录修改时间"
-          },
-          "deleteTime": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true,
-            "description": "记录删除时间"
-          },
-          "fullName": {
-            "type": "string",
-            "description": "收件人姓名"
-          },
-          "phone": {
-            "type": "string",
-            "description": "收件人手机号码"
-          },
-          "email": {
-            "type": "string",
-            "description": "收件人邮件"
-          },
-          "country": {
-            "type": "string",
-            "description": "国家/地区代码，建议使用 ISO 3166-1 标准（如 US、CN）"
-          },
-          "state": {
-            "type": "string",
-            "description": "省/州/地区名称，长度限制一般为 1-100 字符"
-          },
-          "city": {
-            "type": "string",
-            "description": "城市名称，长度限制一般为 1-100 字符"
-          },
-          "district": {
-            "type": "string",
-            "description": "区"
-          },
-          "streetAddressLine1": {
-            "type": "string",
-            "description": "街道地址一"
-          },
-          "streetAddressLine2": {
-            "type": "string",
-            "description": "街道地址二"
-          },
-          "postalCode": {
-            "type": "string",
-            "description": "邮编"
-          },
-          "isDefault": {
-            "type": "boolean",
-            "description": "是否默认的标识"
-          },
-          "userId": {
-            "type": "string",
-            "description": "用户id"
-          }
-        },
-        "required": [
-          "fullName",
-          "phone",
-          "email",
-          "country",
-          "state",
-          "city",
-          "district",
-          "streetAddressLine1",
-          "streetAddressLine2",
-          "postalCode",
-          "isDefault",
-          "userId"
-        ],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "PageListType_AddressDTO_": {
-        "properties": {
-          "pages": {
-            "type": "number",
-            "format": "double"
-          },
-          "pageIndex": {
-            "type": "number",
-            "format": "double"
-          },
-          "pageSize": {
-            "type": "number",
-            "format": "double"
-          },
-          "total": {
-            "type": "number",
-            "format": "double"
-          },
-          "list": {
-            "items": {
-              "$ref": "#/components/schemas/AddressDTO"
-            },
-            "type": "array"
-          }
-        },
-        "required": ["pages", "pageIndex", "pageSize", "total", "list"],
-        "type": "object"
-      },
-      "BasePageListEntity_AddressDTO_": {
-        "properties": {
-          "status": {
-            "type": "number",
-            "format": "double",
-            "default": 0
-          },
-          "message": {
-            "type": "string",
-            "default": "操作成功"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PageListType_AddressDTO_"
-          }
-        },
-        "required": ["data"],
         "type": "object",
         "additionalProperties": false
       }
@@ -4817,54 +4749,6 @@
         ]
       }
     },
-    "/api/address/list": {
-      "get": {
-        "operationId": "GetAddressList",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BasePageListEntity_AddressDTO_"
-                }
-              }
-            }
-          }
-        },
-        "description": "获取当前登录用户的收获地址列表",
-        "tags": ["商城/用户收货地址模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "pageIndex",
-            "required": true,
-            "schema": {
-              "format": "double",
-              "type": "number"
-            }
-          },
-          {
-            "in": "query",
-            "name": "pageSize",
-            "required": true,
-            "schema": {
-              "format": "double",
-              "type": "number"
-            }
-          },
-          {
-            "in": "query",
-            "name": "keyword",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
     "/api/address/add": {
       "put": {
         "operationId": "AddAddress",
@@ -4880,7 +4764,7 @@
             }
           }
         },
-        "description": "新增一用户售后地址",
+        "description": "获取当前登录用户的收获地址列表",
         "tags": ["商城/用户收货地址模块"],
         "security": [],
         "parameters": [],
@@ -4894,135 +4778,6 @@
             }
           }
         }
-      }
-    },
-    "/api/address/${id}/edit": {
-      "post": {
-        "operationId": "EditAddress",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
-                }
-              }
-            }
-          }
-        },
-        "description": "编辑用户地址信息",
-        "tags": ["商城/用户收货地址模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddressDTO"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/address/${id}": {
-      "get": {
-        "operationId": "GetAddressInfo",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
-                }
-              }
-            }
-          }
-        },
-        "description": "根据地址id查询地址信息",
-        "tags": ["商城/用户收货地址模块"],
-        "security": [],
-        "parameters": [
-          {
-            "description": "待查询的地址id",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      },
-      "delete": {
-        "operationId": "RemoveById",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
-                }
-              }
-            }
-          }
-        },
-        "description": "根据地址id删除一收货地址",
-        "tags": ["商城/用户收货地址模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/api/address/${id}/setDefault": {
-      "patch": {
-        "operationId": "SetDefaultAddress",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseObjectEntity_unknown_"
-                }
-              }
-            }
-          }
-        },
-        "description": "设置默认的收货地址",
-        "tags": ["商城/用户收货地址模块"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
       }
     }
   },

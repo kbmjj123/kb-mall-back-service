@@ -35,7 +35,6 @@ export const checkLogin = async (req: Request, res: Response, next: NextFunction
 				}
 			} catch (error) {
 				responseJWTError(req, res, error as jwt.VerifyErrors)
-				res.failed(ResultCode.FORBIT, '', req.t('user.permissionLimitTip'))
 			}
 		}else{
 			res.failed(UserCode.LOGIN_TIMEOUT, null, req.t('token.accessTokenError'))

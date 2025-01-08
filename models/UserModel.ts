@@ -1,8 +1,37 @@
 import mongoose, { InferSchemaType, Types } from "mongoose";
 import bcrypt from 'bcrypt'
 import { UserDTO } from "../dto/UserDTO";
+import { AddressDTO } from "../dto/AddressDTO";
 import { AccountState } from "../enum/business";
 
+const addressSchema = new mongoose.Schema<AddressDTO>({
+	fullName: String,
+	phone: {
+		type: String,
+		required: [true, '请维护手机号码']
+	},
+	email: String,
+	country: {
+		type: String,
+		required: [true, '请维护国家']
+	},
+	state: {
+		type: String,
+		required: [true, '请维护省/州/地区名称']
+	},
+	city: {
+		type: String,
+		required: [true, '请维护城市']
+	},
+	district: String,
+	streetAddressLine1: {
+		type: String,
+		required: [true, '请维护地址一']
+	},
+	streetAddressLine2: String,
+	postalCode: String,
+	isDefault: Boolean
+}, { _id: true })
 
 const userSchema = new mongoose.Schema<UserDTO>({
 	account: {
@@ -34,11 +63,6 @@ const userSchema = new mongoose.Schema<UserDTO>({
 		type: String,
 		default: ''
 	},
-	address: {
-		type: Types.ObjectId,
-		ref: 'addressModel',
-		default: null
-	},
 	loginTime: {
 		type: Date
 	},
@@ -47,10 +71,11 @@ const userSchema = new mongoose.Schema<UserDTO>({
 		enum: Object.values(AccountState),
 		default: AccountState.IN_USED
 	},
+	addressList: [addressSchema],
 	firstName: String,
 	lastName: String,
 	createTime: Date,
-	logoutTime: Date
+	logoutTime: Date,
 })
 export const USER_MODEL_NAME = 'userModal'
 type UserScheType = InferSchemaType<typeof userSchema>

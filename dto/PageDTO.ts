@@ -7,6 +7,7 @@ export interface PageDTO {
 	keyword?: string,
 	[index: string]: any
 }
+
 /**
  * 分页结果DTO
  */

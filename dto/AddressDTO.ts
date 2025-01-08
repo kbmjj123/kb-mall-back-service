@@ -1,7 +1,11 @@
 import { ISoftDeleteDTO } from "./soft-delete-dto/ISoftDeleteDTO";
 
-export interface AddressDTO extends ISoftDeleteDTO{
+export interface AddressDTO {
 
+	/**
+	 * 地址id
+	*/
+	id?: string,
 	/**
 	 * 收件人姓名
 	*/
@@ -46,8 +50,5 @@ export interface AddressDTO extends ISoftDeleteDTO{
 	 * 是否默认的标识
 	*/
 	isDefault: boolean,
-	/**
-	 * 用户id
-	*/
-	userId: string
+	
 }

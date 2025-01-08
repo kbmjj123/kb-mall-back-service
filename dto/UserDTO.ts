@@ -1,6 +1,6 @@
-import { Types } from "mongoose";
 import { ISoftDeleteDTO } from "./soft-delete-dto/ISoftDeleteDTO";
 import { AccountState } from "../enum/business";
+import { AddressDTO } from "./AddressDTO";
 
 export interface UserDTO extends ISoftDeleteDTO{
 
@@ -38,10 +38,6 @@ export interface UserDTO extends ISoftDeleteDTO{
 	*/
 	avatar?: string | null | undefined;
 	/**
-	 * 用户地址id
-	*/
-	address?: Types.ObjectId | null | undefined;
-	/**
 	 * 登录时间
 	*/
 	loginTime?: Date | null | undefined;
@@ -66,6 +62,11 @@ export interface UserDTO extends ISoftDeleteDTO{
 	 * 姓
 	*/
 	lastName: string,
+
+	/**
+	 * 用户收货地址
+	*/
+	addressList: AddressDTO[],
 
 	isPasswordMatched(newPwd: string): Promise<boolean>;
 

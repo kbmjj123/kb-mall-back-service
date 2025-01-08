@@ -1,5 +1,5 @@
 import { IService, PopulateOptionType } from "./IService";
-import { Document, FilterQuery, Model, PopulateOptions, Query, QueryOptions, UpdateQuery, UpdateWithAggregationPipeline, UpdateWriteOpResult } from "mongoose";
+import { FilterQuery, Model, Query, QueryOptions, UpdateQuery, UpdateWithAggregationPipeline, UpdateWriteOpResult } from "mongoose";
 import { Request as ExpressRequest } from "express";
 import { PageDTO, PageResultDTO } from "../../dto/PageDTO";
 import { PAGE_SIZE } from "../../config/ConstantValues";
@@ -217,5 +217,29 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 			pages: Math.ceil(total as number / pageSize)
 		} as PageResultDTO<T>
 		return Promise.resolve(result)
+	}
+	
+	/******* 以下是记录中数组属性的相关操作 ********/
+
+	/**
+	 * @param id - 待处理的文档记录id
+	 * @param itemData - 组装的待插入到数组字段的item
+	 * @returns 操作后的文档记录
+	 */
+	async addItemToListInObj<U>(id: string, itemData: Record<string, Partial<U>>): Promise<T | null> {
+		const targetObj = await this.model.findByIdAndUpdate(id, {
+			$push: itemData
+		}, { new: true })
+		return targetObj
+	}
+	removeItemInListInObj<U>(): Promise<U | null> {
+		throw new Error("Method not implemented.");
+	}
+	getItemInListInObj<U>(): Promise<U | null> {
+		throw new Error("Method not implemented.");
+	}
+
+	findListInObj<U>(filter: FilterQuery<T> | undefined, req: ExpressRequest, select?: []): Promise<U[] | null> {
+		throw new Error("Method not implemented.");
 	}
 }
