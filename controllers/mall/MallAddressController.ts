@@ -1,4 +1,4 @@
-import { Middlewares, Request,  Queries, Route, Tags, Get, Body, Put, Post, Path, Delete, Patch } from "tsoa";
+import { Middlewares, Request, Queries, Route, Tags, Get, Body, Put, Post, Path, Delete, Patch } from "tsoa";
 import { BaseController } from "../BaseController";
 import { checkLogin } from "../../middleware/AuthMiddleware";
 import { Request as ExpressRequest } from 'express'
@@ -10,6 +10,8 @@ import mongoose from "mongoose";
 import { errorLogger } from "../../utils/Logger";
 import { body } from "express-validator";
 import ParamsValidateMW from "../../middleware/ParamsValidateMW";
+import { BaseObjectEntity } from "../../entity/BaseObjectEntity";
+import { UserDTO } from "../../dto/UserDTO";
 
 /**
  * 地址字段校验
@@ -30,10 +32,10 @@ const validateAddressMW = [
 @Route('/api/address')
 @Tags('商城/用户收货地址模块')
 @Middlewares([checkLogin])
-export class MallAddressController extends BaseController{
+export class MallAddressController extends BaseController {
 
-	private userService : UserService
-	constructor(){
+	private userService: UserService
+	constructor() {
 		super()
 		this.userService = new UserService()
 	}
@@ -53,14 +55,16 @@ export class MallAddressController extends BaseController{
 	*/
 	@Put('/add')
 	@Middlewares([validateAddressMW])
-	public async addAddress(@Request() req: ExpressRequest, @Body() params: AddressDTO) {
+	public async addAddress(@Request() req: ExpressRequest, @Body() params: AddressDTO): Promise<BaseObjectEntity<UserDTO>> {
 		const { id: userId } = req.user
-		const result = await this.userService.addItemToListInObj<AddressDTO>(userId, {
-			addressList: params
-		})
-		if(result){
+		const result = await this.userService.update(userId, {
+			$push: {
+				addressList: params
+			}
+		}, req)
+		if (result) {
 			return this.successResponse(req, result)
-		}else{
+		} else {
 			return this.failedResponse(req)
 		}
 	}

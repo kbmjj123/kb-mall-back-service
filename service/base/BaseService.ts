@@ -57,6 +57,12 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 		const doc = await this.model.findById(id)
 		return doc ? doc.softDelete() : null
 	}
+	/**
+	 * 检测文档是否存在
+	 * @param query - 筛选的条件
+	 * @param req - 发起的请求
+	 * @returns 
+	 */
 	isExist(query: FilterQuery<T>, req: ExpressRequest): Promise<T | null> {
 		return this.findOne(query, req)
 	}
@@ -86,15 +92,16 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	/************ 以下是更新的操作 ************/
 	/**
 	 * 根据id来更新文档
-	*/
-	async update(id: string, data: UpdateQuery<T>, req: ExpressRequest, options?: QueryOptions<T> | null | undefined): Promise<T | null> {
-		options = this.getLanguageOptions(req, {new: true})
+	 * @param id - 待更新的id
+	 * @param data - 待更新的内容
+	 * @param req - 客户端发起的请求
+	 * @param options - 更新的其他参数配置
+	 * @returns 
+	 */
+	async update(id: string, data: UpdateQuery<T>, req: ExpressRequest, options?: QueryOptions<T> | null | undefined, select?: string[], populate?: PopulateOptionType): Promise<T | null> {
+		const query = this.buildQuery(this.model.findByIdAndUpdate(id, data, options), req, select, populate)
 		try{
-			if(options){
-				return await this.model.findByIdAndUpdate(id, data).setOptions(options)
-			}else{
-				return await this.model.findByIdAndUpdate(id, data)
-			}
+			return await query.exec()
 		}catch(error){
 			errorLogger.error(`[update]异常`)
 			errorLogger.error(error)
@@ -103,7 +110,14 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	}
 	/**
 	 * 根据条件过滤一个文档并进行更新操作
-	*/
+	 * @param req - 客户端发起的请求
+	 * @param filter - 过滤条件
+	 * @param update - 更新内容
+	 * @param options - 根性参数
+	 * @param select - 控制展示的参数
+	 * @param populate - 关联查询
+	 * @returns 
+	 */
 	async findOneAndUpdate(req: ExpressRequest, filter?: FilterQuery<T> | undefined, update?: UpdateQuery<T> | undefined, options?: QueryOptions<T> | null | undefined, select?: string[], populate?: PopulateOptionType): Promise<T | null> {
 		const query = this.buildQuery(this.model.findOneAndUpdate(filter, update, options), req, select, populate)
 		try{
@@ -219,27 +233,4 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 		return Promise.resolve(result)
 	}
 	
-	/******* 以下是记录中数组属性的相关操作 ********/
-
-	/**
-	 * @param id - 待处理的文档记录id
-	 * @param itemData - 组装的待插入到数组字段的item
-	 * @returns 操作后的文档记录
-	 */
-	async addItemToListInObj<U>(id: string, itemData: Record<string, Partial<U>>): Promise<T | null> {
-		const targetObj = await this.model.findByIdAndUpdate(id, {
-			$push: itemData
-		}, { new: true })
-		return targetObj
-	}
-	removeItemInListInObj<U>(): Promise<U | null> {
-		throw new Error("Method not implemented.");
-	}
-	getItemInListInObj<U>(): Promise<U | null> {
-		throw new Error("Method not implemented.");
-	}
-
-	findListInObj<U>(filter: FilterQuery<T> | undefined, req: ExpressRequest, select?: []): Promise<U[] | null> {
-		throw new Error("Method not implemented.");
-	}
 }

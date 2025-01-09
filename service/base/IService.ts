@@ -7,7 +7,7 @@ export type PopulateOptionType = string | string[] | PopulateOptions | PopulateO
 
 export interface IService<T extends ISoftDeleteDTO> {
 	create(data: Partial<T>, req: ExpressRequest): Promise<T>;
-	update(id: string, data: UpdateQuery<T>, req: ExpressRequest, options?: QueryOptions<T> | null | undefined): Promise<T | null>;
+	update(id: string, data: UpdateQuery<T>, req: ExpressRequest, options?: QueryOptions<T> | null | undefined, select?: string[], populate?: PopulateOptionType): Promise<T | null>;
 	updateMany(filter: FilterQuery<T> | undefined, update: UpdateQuery<T> | UpdateWithAggregationPipeline, req: ExpressRequest, options?: QueryOptions<T> | null | undefined): Promise<UpdateWriteOpResult | null>;
 	findOneAndUpdate(req: ExpressRequest, filter?: FilterQuery<T> | undefined, update?: UpdateQuery<T> | undefined, options?: QueryOptions<T> | null | undefined, select?: string[], populate?: PopulateOptionType): Promise<T | null>;
 	sofeDeleteById(id: string, req: ExpressRequest): Promise<T | null>;
@@ -16,9 +16,4 @@ export interface IService<T extends ISoftDeleteDTO> {
 	isExist(filter: FilterQuery<T>, req: ExpressRequest): Promise<T | null>;
 	findList(filter: FilterQuery<T> | undefined, req: ExpressRequest, pageInfo: PageDTO, select?: string[], populate?: PopulateOptionType): Promise<PageResultDTO<T>>
 	findAll(filter: FilterQuery<T> | undefined, req: ExpressRequest): Promise<T[]>;
-	/*********** 以下是对象中数组属性的操作 ************/
-	addItemToListInObj<U>(id: string, itemData: Record<string, Partial<U>>): Promise<T | null>;
-	removeItemInListInObj<U>(): Promise<U | null>;
-	getItemInListInObj<U>(): Promise<U | null>;
-	findListInObj<U>(filter: FilterQuery<T> | undefined, req: ExpressRequest, select?: []): Promise<U[] | null>
 }
