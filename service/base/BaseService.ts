@@ -21,7 +21,7 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 	/**
 	 * 将结果转为DTO对象
 	*/
-	protected toDTO(doc: any) {
+	public toDTO(doc: any) {
 		return doc && doc.toObject()
 	}
 
@@ -40,7 +40,7 @@ export class BaseService<T extends ISoftDeleteDTO> implements IService<T> {
 		if(populate){
 			query.populate(populate)
 		}
-		query.setOptions(this.getLanguageOptions(req, {}))
+		query.setOptions(this.getLanguageOptions(req, { new: true, runValidators: true }))
 		return query
 	}
 

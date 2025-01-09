@@ -2,16 +2,13 @@ import { Middlewares, Request, Queries, Route, Tags, Get, Body, Put, Post, Path,
 import { BaseController } from "../BaseController";
 import { checkLogin } from "../../middleware/AuthMiddleware";
 import { Request as ExpressRequest } from 'express'
-import { PageDTO } from "../../dto/PageDTO";
 import { AddressDTO } from "../../dto/AddressDTO";
 import { ResultCode } from "../../enum/http";
 import { UserService } from "../../service/UserService";
 import mongoose from "mongoose";
-import { errorLogger } from "../../utils/Logger";
 import { body } from "express-validator";
 import ParamsValidateMW from "../../middleware/ParamsValidateMW";
 import { BaseObjectEntity } from "../../entity/BaseObjectEntity";
-import { UserDTO } from "../../dto/UserDTO";
 
 /**
  * 地址字段校验
@@ -55,7 +52,7 @@ export class MallAddressController extends BaseController {
 	*/
 	@Put('/add')
 	@Middlewares([validateAddressMW])
-	public async addAddress(@Request() req: ExpressRequest, @Body() params: AddressDTO): Promise<BaseObjectEntity<UserDTO>> {
+	public async addAddress(@Request() req: ExpressRequest, @Body() params: AddressDTO): Promise<BaseObjectEntity<AddressDTO>> {
 		const { id: userId } = req.user
 		const result = await this.userService.update(userId, {
 			$push: {
@@ -63,7 +60,8 @@ export class MallAddressController extends BaseController {
 			}
 		}, req)
 		if (result) {
-			return this.successResponse(req, result)
+			const addressList = this.userService.toDTO(result).addressList as AddressDTO[]
+			return this.successResponse(req, addressList[addressList.length - 1])
 		} else {
 			return this.failedResponse(req)
 		}
@@ -72,75 +70,89 @@ export class MallAddressController extends BaseController {
 	 * 编辑用户地址信息
 	 * @param params 
 	*/
-	// @Post('/${id}/edit')
-	// public async editAddress(@Request() req: ExpressRequest, @Path() id: string, @Body() params: AddressDTO){
-	// 	const updateAAddress = await this.addressService.update(id, params, req)
-	// 	if(updateAAddress){
-	// 		return this.successResponse(req, updateAAddress)
-	// 	}else{
-	// 		return this.failedResponse(req)
-	// 	}
-	// }
+	@Post('/${id}/edit')
+	public async editAddress(@Request() req: ExpressRequest, @Path() id: string, @Body() params: AddressDTO): Promise<BaseObjectEntity<boolean>> {
+		const { id: userId } = req.user
+		const { id: addressId, ...updateAddress } = params
+		const result = await this.userService.findOneAndUpdate(req, {
+			_id: userId,
+			'addressList.id': addressId
+		}, {
+			$set: {
+				'addressList.$': updateAddress
+			}
+		})
+		if(result){
+			return this.successResponse(req, !!result)
+		}else{
+			return this.failedResponse(req)
+		}
+	}
 	/**
 	 * 根据地址id查询地址信息
 	 * @param id 待查询的地址id
 	 */
-	// @Get('/${id}')
-	// public async getAddressInfo(@Request() req: ExpressRequest, @Path() id: string) {
-	// 	const findAAddress = await this.addressService.findById(id, req)
-	// 	if(findAAddress){
-	// 		return this.successResponse(req, findAAddress)
-	// 	}else{
-	// 		return this.failedResponse(req, req.t('tip.noExistError'), ResultCode.NO_FOUND)
-	// 	}
-	// }
+	@Get('/${id}')
+	public async getAddressInfo(@Request() req: ExpressRequest, @Path() id: string): Promise<BaseObjectEntity<AddressDTO>> {
+		const { id: userId } = req.user
+		const result = await this.userService.findOne({
+			_id: userId,
+			addressList: { $elemMatch: { id: new mongoose.Types.ObjectId(id) } }
+		}, req)
+		const findAAddress = result?.addressList[0]
+		if(findAAddress){
+			return this.successResponse(req, findAAddress)
+		}else{
+			return this.failedResponse(req, req.t('tip.noExistError'), ResultCode.NO_FOUND)
+		}
+	}
 	/**
 	 * 根据地址id删除一收货地址
 	*/
-	// @Delete('/${id}')
-	// public async removeById(@Request() req: ExpressRequest, @Path() id: string){
-	// 	const deleteAAddress = await this.addressService.sofeDeleteById(id, req)
-	// 	if(deleteAAddress){
-	// 		return this.successResponse(req, !!deleteAAddress)
-	// 	}else{
-	// 		return this.failedResponse(req)
-	// 	}
-	// }
+	@Delete('/${id}')
+	public async removeById(@Request() req: ExpressRequest, @Path() id: string){
+		const { id: userId } = req.user
+		const result = await this.userService.findOneAndUpdate(req, {
+			_id: userId,
+		}, {
+			$pull: {
+				addressList: {
+					id: new mongoose.Types.ObjectId(id)
+				}
+			}
+		})
+		if(result){
+			return this.successResponse(req, !!result)
+		}else{
+			return this.failedResponse(req)
+		}
+	}
 
 	/**
 	 * 设置默认的收货地址
 	*/
-	// @Patch('/${id}/setDefault')
-	// public async setDefaultAddress(@Request() req: ExpressRequest, @Path() id: string){
-	// 	const { id: userId } = req.user
-	// 	const myAddress = await this.addressService.findOne({userId, _id: id}, req)
-	// 	if(!myAddress){
-	// 		return this.failedResponse(req, req.t('tip.noExistError'), ResultCode.NO_FOUND)
-	// 	}
-	// 	const session = await mongoose.startSession()
-	// 	session.startTransaction()
-	// 	try{
-	// 		// 将非目标id给设置isDefault为false
-	// 		await this.addressService.updateMany({
-	// 			userId,
-	// 		}, { isDefault: false }, req, { session })
-	// 		const setADefaultAddress = await this.addressService.update(id, {
-	// 			isDefault: true,
-	// 		}, req, { session })
-	// 		await session.commitTransaction()
-	// 		session.endSession()
-	// 		if(setADefaultAddress){
-	// 			return this.successResponse(req, setADefaultAddress)
-	// 		}else{
-	// 			return this.failedResponse(req)
-	// 		}
-	// 	}catch(error){
-	// 		await session.abortTransaction()
-	// 		session.endSession()
-	// 		errorLogger.error(`[setDefaultAddress]异常`)
-	// 		errorLogger.error(error)
-	// 		throw new Error(`数据库setDefaultAddress操作异常`)
-	// 	}
-	// }
+	@Patch('/${id}/setDefault')
+	public async setDefaultAddress(@Request() req: ExpressRequest, @Path() id: string){
+		const { id: userId } = req.user
+		const result = await this.userService.findOneAndUpdate(req, {
+			_id: userId,
+			'addressList.id': id
+		}, [
+			{
+				$set: {
+					'addressList.$[].isDefault': false
+				},
+			},
+			{
+				$set: {
+					'addressList.$[elem].isDefault': true
+				}
+			},
+		], {
+			arrayFilters: [{ 'elem.id': id }],
+			new: true
+		})
+		
+	}
 
 }
